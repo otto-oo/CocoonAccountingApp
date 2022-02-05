@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
 
-@SpringBootApplication
+@Spring
+
+BootApplication
 public class CocoonAccountingAppApplication {
 
     public static void main(String[] args) {
