@@ -15,7 +15,7 @@ public class Company extends BaseEntity {
     private String zip;
     private String representative;
     private String email;
-    @Column(name = "establishmentDate")
+    @Column(name = "establishment_date")
     private String establishmentDate;
     private boolean enabled;
 
