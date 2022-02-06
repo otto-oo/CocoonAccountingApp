@@ -9,9 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 import javax.annotation.PostConstruct;
 
-@Spring
-
-BootApplication
+@SpringBootApplication
 public class CocoonAccountingAppApplication {
 
     public static void main(String[] args) {

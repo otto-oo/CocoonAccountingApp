@@ -1,10 +1,17 @@
 package com.cocoon.entity;
 
-import javax.persistence.Column;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "company")
 public class Company extends BaseEntity {
 
@@ -15,8 +22,7 @@ public class Company extends BaseEntity {
     private String zip;
     private String representative;
     private String email;
-    @Column(name = "establishment_date")
-    private String establishmentDate;
+    private LocalDate establishmentDate;
     private boolean enabled;
-
+    private String phone;
 }
