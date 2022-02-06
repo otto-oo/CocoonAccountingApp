@@ -64,8 +64,6 @@ public class CompanyServiceImpl implements CompanyService {
         Company savedCompany = companyRepo.save(mapperUtil.convert(companyDTO, new Company()));
     }
 
-
-
     /**
      * checks whether the provided companyDTO object's establishment date is at a time in the future
      * @param companyDTO
