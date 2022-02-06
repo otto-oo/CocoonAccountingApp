@@ -1,5 +1,7 @@
 package com.cocoon.util;
 
+import com.cocoon.dto.CompanyDTO;
+import com.cocoon.entity.Company;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +19,6 @@ public class MapperUtil {
     public <T> T convert(Object objectToBeConverted, T convertedObject){
         return modelMapper.map(objectToBeConverted,(Type) convertedObject.getClass());
     }
+
 
 }

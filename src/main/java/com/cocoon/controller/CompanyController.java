@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,7 +23,7 @@ public class CompanyController {
 
     @GetMapping("/list")
     public String getCompanies(Model model){
-        model.addAttribute("company", companyService.getAllCompanies());
+        model.addAttribute("companies", companyService.getAllCompanies());
 
         return "company/company-list";
     }
@@ -38,8 +39,12 @@ public class CompanyController {
     @PostMapping("/create")
     public String saveCompany(CompanyDTO companyDTO) throws CocoonException {
         companyService.save(companyDTO);
-
         return "company/company-list";
     }
 
+    @GetMapping("/update/{id}")
+    public String updateCompany(@PathVariable("id") String id){
+
+        return "company/company-list";
+    }
 }
