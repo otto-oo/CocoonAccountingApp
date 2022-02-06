@@ -27,4 +27,8 @@ public class CompanyDTO {
     private boolean enabled;
     private String phone;
 
+    public String getFullAddress(){
+        return address1 + (address2 != null ? " " : "") + address2;
+    }
+
 }

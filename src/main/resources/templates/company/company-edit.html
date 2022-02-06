@@ -33,7 +33,6 @@
                     <!-- Filter starts -->
                     <div class="users-list-filter px-2">
 
-
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
                             <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/company/list}"><i
                                     class="fa fa-list mr-1"></i>Company List</a>
@@ -42,7 +41,6 @@
                     <!-- Filter ends -->
 
                     <!-- Table starts -->
-
 
                     <div class="row">
                         <div class="col-12">
@@ -56,7 +54,10 @@
                                                  aria-labelledby="account-tab">
 
                                                 <!-- Account form starts -->
-                                                <form class="needs-validation" novalidate>
+                                                <form class="needs-validation" novalidate th:method="post" th:object="${company}"
+                                                    th:action="@{/company/update}">
+                                                    <input type="text" th:hidden="hidden" th:field="*{id}">
+                                                    <input type="text" th:hidden="hidden" th:field="*{enabled}">
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
                                                             <div class="form-group">
@@ -65,6 +66,7 @@
                                                                     <input type="text" id="users-edit-username"
                                                                            class="form-control" placeholder="title"
                                                                            required
+                                                                           th:field="*{title}"
                                                                            aria-invalid="false" >
                                                                 </div>
                                                             </div>
@@ -73,6 +75,7 @@
                                                                     <label for="zip">Zip</label>
                                                                     <input type="text" id="zip" class="form-control"
                                                                            placeholder="zipcode" required
+                                                                           th:field="*{zip}"
                                                                            aria-invalid="false" >
                                                                 </div>
                                                             </div>
@@ -83,6 +86,7 @@
                                                                            class="form-control"
                                                                            placeholder="address"
                                                                            required
+                                                                           th:field="*{address1}"
                                                                            aria-invalid="false" >
                                                                 </div>
                                                             </div>
@@ -92,6 +96,7 @@
                                                                     <input type="email" id="email"
                                                                            class="form-control" placeholder="email"
                                                                            required
+                                                                           th:field="*{email}"
                                                                            aria-invalid="false" >
                                                                 </div>
                                                             </div>
@@ -102,9 +107,9 @@
                                                                 <div class="controls">
                                                                     <label for="state">State</label>
                                                                     <select id="state" class="form-control"
-                                                                            required >
-                                                                        <option selected></option>
-                                                                        <option ></option>
+                                                                            required th:field="*{state}">
+<!--                                                                        <option ></option>-->
+                                                                        <option th:each="eachState : ${states}" th:text="${eachState.stateName}" th:value="${eachState.stateName}"></option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -116,6 +121,7 @@
                                                                            class="form-control"
                                                                            placeholder="establishment date"
                                                                            required
+                                                                           th:field="*{establishmentDate}"
                                                                            aria-invalid="false">
                                                                 </div>
                                                             </div>
@@ -125,6 +131,7 @@
                                                                     <input type="text" id="representative"
                                                                            class="form-control"
                                                                            placeholder="representative"
+                                                                           th:field="*{representative}"
                                                                            aria-invalid="false">
                                                                 </div>
                                                             </div>
@@ -133,6 +140,7 @@
                                                                     <label for="phone">Phone</label>
                                                                     <input type="text" id="phone"
                                                                            class="form-control"
+                                                                           th:field="*{phone}"
                                                                            placeholder="phone" aria-invalid="false">
                                                                 </div>
                                                             </div>

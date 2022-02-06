@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface CompanyService {
 
+    CompanyDTO getCompanyById(Long id) throws CocoonException;
+
     List<CompanyDTO> getAllCompanies();
-    CompanyDTO save(CompanyDTO company) throws CocoonException;
+
+    void save(CompanyDTO company) throws CocoonException;
+
+    void update(CompanyDTO companyDTO) throws CocoonException;
 
 }

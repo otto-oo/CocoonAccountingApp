@@ -43,8 +43,17 @@ public class CompanyController {
     }
 
     @GetMapping("/update/{id}")
-    public String updateCompany(@PathVariable("id") String id){
+    public String getUpdatePage(@PathVariable("id") String id, Model model) throws CocoonException{
+        model.addAttribute("company", companyService.getCompanyById(Long.valueOf(id)));
+        model.addAttribute("states", stateRepo.findAll());
 
-        return "company/company-list";
+        return "company/company-edit";
+    }
+
+    @PostMapping("/update")
+    public String updateCompany(CompanyDTO companyDTO) throws CocoonException{
+        companyService.update(companyDTO);
+
+        return "redirect:list";
     }
 }
