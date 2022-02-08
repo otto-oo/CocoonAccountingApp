@@ -12,16 +12,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "category")
 public class Category extends BaseEntity {
 
     private String description;
-
     @JoinColumn(name = "company_id",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
-
     private boolean enabled;
 
 
