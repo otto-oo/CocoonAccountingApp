@@ -51,7 +51,7 @@
                                                         <tr th:each="invoice : ${invoices}">
                                                             <td class="text-truncate" th:text="${invoice.getInvoiceNo()}" ></td>
                                                             <td class="text-truncate" th:text="${invoice.getInvoiceDate()}"></td>
-                                                            <td class="text-truncate" th:text="${invoice.getClient()}"></td>
+                                                            <td class="text-truncate" th:text="${invoice.getClientVendor().getCompanyName()}"></td>
                                                             <td class="text-truncate" ></td>
                                                             <td class="text-truncate" ></td>
                                                             <td class="text-truncate" ></td>

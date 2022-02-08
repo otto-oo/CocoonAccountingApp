@@ -1,7 +1,7 @@
 package com.cocoon.entity;
 
+import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,9 +16,10 @@ import java.time.LocalDate;
 @Setter
 public class Invoice extends BaseEntity{
 
-    private String invoiceNo;
-    private String invoiceStatus;
-    private int invoiceNumber;
+    private String invoiceNo; //TODO - invoice number will be evaluated somewhere else...
+
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus invoiceStatus;
 
     @Enumerated(EnumType.STRING)
     private InvoiceType invoiceType;
@@ -33,8 +34,8 @@ public class Invoice extends BaseEntity{
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sptable_id")
-    private Client client;
+    @JoinColumn(name = "sptable_id") //TODO foreign key will be replaced with "client_vendor_id"....
+    private ClientVendor clientVendor;
 
 
 }

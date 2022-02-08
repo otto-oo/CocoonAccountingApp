@@ -8,11 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "sptable")
+@Table(name = "client_vendor_list")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Client extends BaseEntity {
+public class ClientVendor extends BaseEntity {
 
     private String companyName;
 }

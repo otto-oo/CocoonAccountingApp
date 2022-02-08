@@ -1,7 +1,8 @@
 package com.cocoon.dto;
 
-import com.cocoon.entity.Client;
+import com.cocoon.entity.ClientVendor;
 import com.cocoon.entity.Company;
+import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,12 +20,12 @@ public class InvoiceDTO {
 
     private Long id;
     private String invoiceNo;
-    private String invoiceStatus;
+    private InvoiceStatus invoiceStatus;
     private int invoiceNumber;
     private InvoiceType invoiceType;
     private boolean enabled;
     private Company company;
-    private Client client;
+    private ClientVendor clientVendor;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
