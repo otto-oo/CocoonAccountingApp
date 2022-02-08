@@ -74,12 +74,4 @@ public class CompanyServiceImpl implements CompanyService {
             throw new CocoonException("Establishment date should not be at a time in future.");
     }
 
-    @Override
-    public void update(CompanyDTO companyDTO) throws CocoonException {
-        //if establishment date is a date in the future, it makes no sense. it is not permitted
-        checkEstablishmentDate(companyDTO);
-
-        Company updatedCompany = companyRepo.save(mapperUtil.convert(companyDTO, new Company()));
-    }
-
 }

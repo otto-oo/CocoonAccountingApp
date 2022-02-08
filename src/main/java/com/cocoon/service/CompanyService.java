@@ -14,6 +14,4 @@ public interface CompanyService {
 
     void save(CompanyDTO company) throws CocoonException;
 
-    void update(CompanyDTO companyDTO) throws CocoonException;
-
 }

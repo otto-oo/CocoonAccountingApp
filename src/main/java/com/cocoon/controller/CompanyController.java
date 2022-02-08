@@ -50,10 +50,4 @@ public class CompanyController {
         return "company/company-edit";
     }
 
-    @PostMapping("/update")
-    public String updateCompany(CompanyDTO companyDTO) throws CocoonException{
-        companyService.update(companyDTO);
-
-        return "redirect:list";
-    }
 }
