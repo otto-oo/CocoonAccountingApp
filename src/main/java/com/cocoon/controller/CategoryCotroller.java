@@ -3,6 +3,7 @@ package com.cocoon.controller;
 import com.cocoon.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,9 +17,9 @@ public class CategoryCotroller {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/create")
+    @GetMapping("/create")
     public String createCategory(){
-     return "/category/category-add";
+     return "category/category-add";
     }
 
 }
