@@ -2,6 +2,8 @@ package com.cocoon.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -9,4 +11,7 @@ import lombok.*;
 @Builder
 public class CategoryDTO {
 
+    private String description;
+    private int companyId;
+    private boolean enabled;
 }
