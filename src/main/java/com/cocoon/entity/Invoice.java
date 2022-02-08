@@ -32,5 +32,9 @@ public class Invoice extends BaseEntity{
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sptable_id")
+    private Client client;
+
 
 }
