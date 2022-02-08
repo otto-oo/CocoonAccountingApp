@@ -3,9 +3,11 @@ package com.cocoon.implementation;
 import com.cocoon.dto.UserDTO;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.service.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
 
