@@ -8,5 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class CategoryDTO {
-
+    private String description;
+    private int companyId;
+    private boolean enabled;
 }

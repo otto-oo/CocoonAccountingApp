@@ -1,9 +1,10 @@
 package com.cocoon.repository;
 
-import com.cocoon.entity.Category;
+import com.cocoon.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CategoryRepo extends JpaRepository<Category,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
+}
