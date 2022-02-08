@@ -4,6 +4,8 @@ import com.cocoon.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -20,5 +22,6 @@ public class CategoryCotroller {
     public String createCategory(){
      return "/category/category-add";
     }
+
 
 }
