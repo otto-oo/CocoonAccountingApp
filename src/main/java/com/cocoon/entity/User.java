@@ -13,15 +13,11 @@ import javax.persistence.*;
 @Where(clause = "is_deleted=false")
 public class User extends BaseEntity {
 
-
     private String email;
     private String firstname;
     private String lastname;
     private String password;
-
- //   @Enumerated(EnumType.STRING)
-//    private Status status;
-
+    private boolean enabled;
     private String phone;
 
  //   @ManyToOne(fetch = FetchType.LAZY)
@@ -29,6 +25,6 @@ public class User extends BaseEntity {
  //   private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Company company;
+    private Company company_id;
 
 }
