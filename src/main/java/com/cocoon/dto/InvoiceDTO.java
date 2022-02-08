@@ -23,7 +23,7 @@ public class InvoiceDTO {
     private InvoiceStatus invoiceStatus;
     private int invoiceNumber;
     private InvoiceType invoiceType;
-    private boolean enabled;
+    private Byte enabled;
     private Company company;
     private ClientVendor clientVendor;
 
