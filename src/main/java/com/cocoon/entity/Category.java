@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -15,15 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category")
-public class Category extends BaseEntity{
+public class Category extends BaseEntity {
 
     private String description;
+    @Column(name = "company_id")
     private int companyId;
     private boolean enabled;
-    private int createdBy;
 
-    private int updatedBy;
 
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
 }
