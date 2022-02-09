@@ -62,4 +62,14 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findProductsByInvoiceId2(id);
         return products.stream().map(product -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteById(Long id) throws CocoonException {
+        Optional<Product> product = productRepository.findById(id);
+        if(!product.isPresent()){
+            throw new CocoonException("There is no product belongs to this id " + id);
+        }
+        product.get().setIsDeleted(true); // soft delete
+        productRepository.save(product.get());
+    }
 }

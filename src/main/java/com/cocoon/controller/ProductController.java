@@ -58,12 +58,22 @@ public class ProductController {
         productService.save(productDTO);
         return "redirect:/product/list";
     }
-    // TODO @Sezgin
+    // TODO @Sezgin bring the product page to be deleted
     @GetMapping("/edit/{id}")
-    public String deleteProduct(@PathVariable("id") Long id, Model model) throws CocoonException {
+    public String getDeleteProductPage(@PathVariable("id") Long id, Model model) throws CocoonException {
         model.addAttribute("product", productService.getProductById(id));
 
+//        model.addAttribute("product", productService.getProductById(id).getProductStatus().getValue());
+//        model.addAttribute("product", productService.getProductById(id).getUnit().getValue());
+//        model.addAttribute("product", productService.getProductById(id).getCategory().getDescription());
 
         return "product/product-edit";
     }
+    @GetMapping("/delete")
+    public String delete(@PathVariable("id") Long id) throws CocoonException {
+        productService.deleteById(id);
+
+        return "redirect:/product/list";
+    }
+
 }

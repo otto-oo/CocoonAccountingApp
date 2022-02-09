@@ -15,5 +15,5 @@ public interface ProductService {
     ProductDTO getProductById(Long id) throws CocoonException;
     void update(ProductDTO productDTO);
     List<ProductDTO> getProductsByInvoiceId(Long id);
-
+    void deleteById (Long id) throws CocoonException;
 }

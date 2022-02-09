@@ -52,7 +52,7 @@
 
                                                 <!-- Account form starts -->
                                                 <form novalidate
-                                                       method="post"
+                                                       method="post" th:object="${product}" >
                                                       >
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
@@ -76,6 +76,7 @@
                                                                            class="form-control"
                                                                            placeholder="Product Name"
                                                                            value="" required
+                                                                           th:field="*{name}"
                                                                            aria-invalid="false"
                                                                            >
                                                                 </div>
