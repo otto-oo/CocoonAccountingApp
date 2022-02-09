@@ -1,8 +1,5 @@
 package com.cocoon.controller;
 
-import com.cocoon.dto.CategoryDTO;
-import com.cocoon.dto.CompanyDTO;
-import com.cocoon.exception.CocoonException;
 import com.cocoon.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,22 +20,9 @@ public class CategoryCotroller {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/create")
-    public String createCategory(Model model){
-        model.addAttribute("category", new CategoryDTO());
-        return "category/category-add";
-    }
-
     @PostMapping("/create")
-    public String saveCategory(CategoryDTO categoryDTO) throws CocoonException {
-     categoryService.save(categoryDTO);
-        return "redirect:/category/list";
-    }
-
-    @GetMapping("/list")
-    public String getCategories(Model model){
-        model.addAttribute("categories", categoryService.getAllCategories());
-        return "category/category-list";
+    public String createCategory(){
+     return "/category/category-add";
     }
 
 
