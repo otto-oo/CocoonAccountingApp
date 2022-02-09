@@ -50,4 +50,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapperUtil.convert(productDTO, new Product());
         productRepository.save(product);
     }
+    @Override
+    public void delete (Long id) throws CocoonException{
+        Product product = mapperUtil.convert(productDTO, new Product());
+        product.setIsDeleted(true);
+        productRepository.save(product);
+    }
 }

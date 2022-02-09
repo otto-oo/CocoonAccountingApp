@@ -51,6 +51,12 @@ public class ProductController {
         productService.save(productDTO);
         return "/product/product-list";
     }
+    // TODO @Sezgin
+    @GetMapping("/edit/{id}")
+    public String deleteProduct(@PathVariable("id") Long id, Model model) throws CocoonException {
+        model.addAttribute("product", productService.getProductById(id));
 
 
+        return "product/product-edit";
+    }
 }

@@ -12,5 +12,7 @@ public interface ProductService {
     void save(ProductDTO productDTO);
     ProductDTO getProductById(Long id) throws CocoonException;
     void update(ProductDTO productDTO);
+    void deleteById(Long id) throws CocoonException;
+
 
 }
