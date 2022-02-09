@@ -1,24 +1,22 @@
 package com.cocoon.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@Table(name = "test")
-public class TestEntity {
-
+public class Role {
     @Id
-    private Integer id;
-    private String testval;
-    //this line
+    private Long id;
 
+    private String name;
+    private boolean enabled;
 }

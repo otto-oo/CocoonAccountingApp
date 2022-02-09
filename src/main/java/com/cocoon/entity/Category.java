@@ -5,17 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "category")
 public class Category extends BaseEntity {
 
     private String description;
+
+
+
     @JoinColumn(name = "company_id",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
