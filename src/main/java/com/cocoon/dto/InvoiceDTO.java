@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,13 +22,18 @@ public class InvoiceDTO {
     private Long id;
     private String invoiceNo;
     private InvoiceStatus invoiceStatus;
-    private int invoiceNumber;
     private InvoiceType invoiceType;
-    private boolean enabled;
+    private Byte enabled;
     private Company company;
     private ClientVendor clientVendor;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
+
+    private List<ProductDTO> products;
+
+    private int InvoiceCostWithoutTax;
+    private int InvoiceCostWithTax;
+    private int totalCost;
 
 }

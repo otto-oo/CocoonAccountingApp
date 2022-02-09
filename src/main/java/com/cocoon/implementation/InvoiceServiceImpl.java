@@ -2,11 +2,14 @@ package com.cocoon.implementation;
 
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.entity.Invoice;
+import com.cocoon.enums.InvoiceStatus;
+import com.cocoon.enums.InvoiceType;
 import com.cocoon.repository.InvoiceRepository;
 import com.cocoon.service.InvoiceService;
 import com.cocoon.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void save(InvoiceDTO dto) {
+        dto.setInvoiceStatus(InvoiceStatus.PENDING);
+        dto.setEnabled((byte) 1);
+        dto.setInvoiceType(InvoiceType.SALE);
         Invoice invoice = mapperUtil.convert(dto,new Invoice());
         invoiceRepository.save(invoice);
     }
@@ -31,5 +37,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceDTO> getAllInvoices() {
         List<Invoice> invoices = invoiceRepository.findAll();
         return invoices.stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
+    }
+
+    @Override
+    public InvoiceDTO getInvoiceById(Long id) {
+        Invoice invoice = invoiceRepository.getById(id);
+        return mapperUtil.convert(invoice, new InvoiceDTO());
     }
 }
