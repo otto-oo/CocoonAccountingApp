@@ -30,7 +30,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findAllRoles() {
         List<Role> allRoles = roleRepo.findAll();
-        return allRoles.stream().map(obj -> mapperUtil.convert(obj, new Role())).collect(Collectors.toList());
+        return allRoles.stream().map(obj -> mapperUtil.convert(obj, new Role()))
+                .collect(Collectors.toList());
     }
 
 }
