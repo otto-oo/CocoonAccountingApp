@@ -42,4 +42,8 @@ public class CategoryCotroller {
         return "category/category-list";
     }
 
+    @GetMapping("/edit")
+    public String getEditPage(){
+        return "category/category-edit";
+    }
 }
