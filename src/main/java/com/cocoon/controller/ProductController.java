@@ -63,6 +63,11 @@ public class ProductController {
     public String getDeleteProductPage(@PathVariable("id") Long id, Model model) throws CocoonException {
         model.addAttribute("product", productService.getProductById(id));
 
+        model.addAttribute("productStatus", ProductStatus.values());
+        model.addAttribute("units", Unit.values());
+        model.addAttribute("categories", categoryService.getAllCategories());
+
+//        model.addAttribute("companyName", ClientVendor.class.getName());
 //        model.addAttribute("product", productService.getProductById(id).getProductStatus().getValue());
 //        model.addAttribute("product", productService.getProductById(id).getUnit().getValue());
 //        model.addAttribute("product", productService.getProductById(id).getCategory().getDescription());
