@@ -58,14 +58,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void update(ProductDTO productDTO) throws CocoonException {
         Optional<Product> product = productRepository.findById(productDTO.getId());
-        if(!product.isPresent()){
-            throw new CocoonException("There is no product belongs to this id " + productDTO.getId());
-        }
-        //Product convertedProduct = mapperUtil.convert(productDTO, new Product());
-        //System.out.println("product.get().getId() = " + product.get().getId());
-        //System.out.println("productDTO.getId() = " + productDTO.getId());
-        //convertedProduct.setId(productDTO.getId());
-        //product.get().setName(productDTO.getName());
+        product.get().setName(productDTO.getName());
+        product.get().setDescription(productDTO.getDescription());
+        product.get().setQty(productDTO.getQty());
+        product.get().setLowLimitAlert(productDTO.getLowLimitAlert());
         productRepository.save(product.get());
     }
 
