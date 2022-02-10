@@ -1,6 +1,7 @@
 package com.cocoon.controller;
 
 import com.cocoon.dto.ProductDTO;
+import com.cocoon.entity.ClientVendor;
 import com.cocoon.enums.ProductStatus;
 import com.cocoon.enums.Unit;
 import com.cocoon.exception.CocoonException;
@@ -66,14 +67,15 @@ public class ProductController {
         model.addAttribute("productStatus", ProductStatus.values());
         model.addAttribute("units", Unit.values());
         model.addAttribute("categories", categoryService.getAllCategories());
+        //TODO @Sezgin Once security implemented, based on company user, company name will be displayed.
 
-//        model.addAttribute("companyName", ClientVendor.class.getName());
 //        model.addAttribute("product", productService.getProductById(id).getProductStatus().getValue());
 //        model.addAttribute("product", productService.getProductById(id).getUnit().getValue());
 //        model.addAttribute("product", productService.getProductById(id).getCategory().getDescription());
 
         return "product/product-edit";
     }
+
     @GetMapping("/delete")
     public String delete(@PathVariable("id") Long id) throws CocoonException {
         productService.deleteById(id);
