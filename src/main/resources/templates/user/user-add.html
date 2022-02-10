@@ -1,33 +1,34 @@
+<!--
 <!DOCTYPE html>
 <html class="loading" lang="en" xmlns:th="http://www.thymeleaf.org">
-<!-- BEGIN : Head-->
+&lt;!&ndash; BEGIN : Head&ndash;&gt;
 
 <head>
     <head th:replace="fragments :: page_head"/>
     <title>Add User</title>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/ico/favicon.ico}">
 </head>
-<!-- END : Head-->
+&lt;!&ndash; END : Head&ndash;&gt;
 
-<!-- BEGIN : Body-->
+&lt;!&ndash; BEGIN : Body&ndash;&gt;
 
 <body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns  navbar-sticky" data-open="hover"
       data-menu="horizontal-menu" data-col="2-columns">
 <div th:replace="fragments :: page_header"/>
-<!-- Navbar (Header) Ends-->
+&lt;!&ndash; Navbar (Header) Ends&ndash;&gt;
 
-<!-- ////////////////////////////////////////////////////////////////////////////-->
+&lt;!&ndash; ////////////////////////////////////////////////////////////////////////////&ndash;&gt;
 <div class="wrapper">
     <div th:replace="fragments :: page_menu"/>
 
 
     <div class="main-panel">
-        <!-- BEGIN : Main Content-->
+        &lt;!&ndash; BEGIN : Main Content&ndash;&gt;
         <div class="main-content">
             <div class="content-overlay"></div>
             <div class="content-wrapper">
                 <section class="users-list-wrapper">
-                    <!-- Filter starts -->
+                    &lt;!&ndash; Filter starts &ndash;&gt;
                     <div class="users-list-filter px-2">
 
 
@@ -37,9 +38,9 @@
                         </div>
                     </div>
 
-                    <!-- Filter ends -->
+                    &lt;!&ndash; Filter ends &ndash;&gt;
 
-                    <!-- Table starts -->
+                    &lt;!&ndash; Table starts &ndash;&gt;
 
 
                     <div class="row">
@@ -49,11 +50,11 @@
                                     <div class="card-body">
 
                                         <div class="tab-content">
-                                            <!-- Account content starts -->
+                                            &lt;!&ndash; Account content starts &ndash;&gt;
                                             <div class="tab-pane fade mt-2 show active" id="account" role="tabpanel"
                                                  aria-labelledby="account-tab">
 
-                                                <!-- Account form starts -->
+                                                &lt;!&ndash; Account form starts &ndash;&gt;
                                                 <form novalidate th:method="post" th:action="@{/user/create}" th:object="${users}">
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
@@ -133,18 +134,18 @@
 
                                                                     </select>
                                                                 </div>
-                                                            </div>
-<!--                                                            <div class="form-group">-->
-<!--                                                                <div class="controls">-->
-<!--                                                                    <label for="users-edit-status">Status</label>-->
-<!--                                                                    <select id="users-edit-status" class="form-control"-->
-<!--                                                                            required>-->
-<!--                                                                        <option value="">Select Status</option>-->
-<!--                                                                        <option value="1">Active</option>-->
-<!--                                                                        <option value="3">Close</option>-->
-<!--                                                                    </select>-->
-<!--                                                                </div>-->
-<!--                                                            </div>-->
+                                                           </div>
+&lt;!&ndash;                                                            <div class="form-group">&ndash;&gt;
+&lt;!&ndash;                                                                <div class="controls">&ndash;&gt;
+&lt;!&ndash;                                                                    <label for="users-edit-status">Status</label>&ndash;&gt;
+&lt;!&ndash;                                                                    <select id="users-edit-status" class="form-control"&ndash;&gt;
+&lt;!&ndash;                                                                            required>&ndash;&gt;
+&lt;!&ndash;                                                                        <option value="">Select Status</option>&ndash;&gt;
+&lt;!&ndash;                                                                        <option value="1">Active</option>&ndash;&gt;
+&lt;!&ndash;                                                                        <option value="3">Close</option>&ndash;&gt;
+&lt;!&ndash;                                                                    </select>&ndash;&gt;
+&lt;!&ndash;                                                                </div>&ndash;&gt;
+&lt;!&ndash;                                                            </div>&ndash;&gt;
                                                         </div>
 
 
@@ -153,18 +154,18 @@
                                                                     class="btn btn-primary mb-2 mb-sm-0 mr-sm-2">
                                                                 Save Changes
                                                             </button>
-                                                    <!--        <button type="submit"
+                                                    &lt;!&ndash;        <button type="submit"
                                                                     class="btn btn-danger mb-2 mb-sm-0 mr-sm-2">
                                                                 Delete User
-                                                            </button> -->
-<!--                                                            <button type="reset" class="btn btn-secondary" th:href="@{/user/list}">Cancel</button>-->
+                                                            </button> &ndash;&gt;
+&lt;!&ndash;                                                            <button type="reset" class="btn btn-secondary" th:href="@{/user/list}">Cancel</button>&ndash;&gt;
                                                             <button class="btn btn-secondary" >Cancel</button>
                                                         </div>
                                                     </div>
                                                 </form>
-                                                <!-- Account form ends -->
+                                                &lt;!&ndash; Account form ends &ndash;&gt;
                                             </div>
-                                            <!-- Account content ends -->
+                                            &lt;!&ndash; Account content ends &ndash;&gt;
 
 
                                         </div>
@@ -173,31 +174,32 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Table ends -->
+                    &lt;!&ndash; Table ends &ndash;&gt;
                 </section>
 
             </div>
         </div>
-        <!-- END : End Main Content-->
+        &lt;!&ndash; END : End Main Content&ndash;&gt;
 
 
-        <!-- Scroll to top button -->
+        &lt;!&ndash; Scroll to top button &ndash;&gt;
         <button class="btn btn-primary scroll-top" type="button"><i class="ft-arrow-up"></i></button>
 
     </div>
 </div>
-<!-- ////////////////////////////////////////////////////////////////////////////-->
+&lt;!&ndash; ////////////////////////////////////////////////////////////////////////////&ndash;&gt;
 
 <footer th:replace="fragments :: page_footer"></footer>
 <div class="sidenav-overlay"></div>
-<!-- BEGIN PAGE LEVEL JS-->
+&lt;!&ndash; BEGIN PAGE LEVEL JS&ndash;&gt;
 <script th:src="@{/js/dashboard2.js}"></script>
-<!-- END PAGE LEVEL JS-->
-<!-- BEGIN: Custom CSS-->
+&lt;!&ndash; END PAGE LEVEL JS&ndash;&gt;
+&lt;!&ndash; BEGIN: Custom CSS&ndash;&gt;
 <script th:src="@{/assets/js/scripts.js}"></script>
-<!-- END: Custom CSS-->
+&lt;!&ndash; END: Custom CSS&ndash;&gt;
 </body>
-<!-- END : Body-->
+&lt;!&ndash; END : Body&ndash;&gt;
 
 </html>
 
+-->
