@@ -1,7 +1,10 @@
 package com.cocoon.controller;
 
+import com.cocoon.dto.CompanyDTO;
 import com.cocoon.dto.UserDTO;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.repository.RoleRepo;
+import com.cocoon.repository.UserRepo;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.RoleService;
 import com.cocoon.service.UserService;
@@ -25,18 +28,25 @@ public class UserController {
         this.companyService = companyService;
     }
 
+    @GetMapping("/list")
+    public String findUsers(Model model){
+        model.addAttribute("users", userService.findAllUsers());
+        return "user/user-list";
+    }
+
     @PostMapping("/addUser")
     public String createUser(UserDTO userDTO, Model model) throws CocoonException {
         userService.save(userDTO);
-        return "redirect:/user/registration";
+        return "redirect:/user/list";
     }
 
- /*   @GetMapping("/registration")
-    public String registration(Model model) throws CocoonException {
-        model.addAttribute("users", userService.listAllUsersByCompanyId(???));
-        return "/user/registration";
+    @GetMapping("/addUser")
+    public String getCreatePage(Model model){
+        model.addAttribute("users", new UserDTO());
+        model.addAttribute("role", RoleService.findAllRoles());
+
+        return "user/user-add";
     }
-*/
 
 
 }
