@@ -19,9 +19,9 @@ public class UserController {
     private RoleService roleService;
     private CompanyService companyService;
 
-    public UserController(UserService userService, CompanyService companyService) {
+    public UserController(UserService userService,RoleService roleService, CompanyService companyService) {
         this.userService = userService;
- //       this.roleService = roleService;
+        this.roleService = roleService;
         this.companyService = companyService;
     }
 
