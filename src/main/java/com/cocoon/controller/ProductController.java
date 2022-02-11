@@ -65,24 +65,7 @@ public class ProductController {
         productService.update(productDTO);
         return "redirect:/product/list";
     }
-    // TODO @Sezgin bring the product page to be deleted
-    @GetMapping("/edit/{id}")
-    public String getDeleteProductPage(@PathVariable("id") Long id, Model model) throws CocoonException {
-        model.addAttribute("product", productService.getProductById(id));
 
-        model.addAttribute("productStatus", ProductStatus.values());
-        model.addAttribute("units", Unit.values());
-        model.addAttribute("categories", categoryService.getAllCategories());
-        //TODO Once security implemented, based on company user, company name will be displayed.
-
-        return "product/product-edit";
-    }
-
-    @GetMapping("/delete")
-    public String delete(@PathVariable("id") Long id) throws CocoonException {
-        productService.deleteById(id);
-        return "redirect:/product/list";
-    }
     @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id, ProductDTO productDTO) throws CocoonException {
 
