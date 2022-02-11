@@ -61,15 +61,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = productRepository.findById(productDTO.getId());
         Product convertedProduct = mapperUtil.convert(productDTO, new Product());
         convertedProduct.setId(product.get().getId());
-
-//        product.get().setName(productDTO.getName());
-//        product.get().setDescription(productDTO.getDescription());
-//        product.get().setQty(productDTO.getQty());
-//        product.get().setLowLimitAlert(productDTO.getLowLimitAlert());
-//        product.get().setUnit(productDTO.getUnit());
-//        product.get().setProductStatus(productDTO.getProductStatus());
-
-        //product.get().setCategory(productDTO.getCategory().getId());
+        convertedProduct.setEnabled(product.get().getEnabled());
         productRepository.save(convertedProduct);
     }
 
