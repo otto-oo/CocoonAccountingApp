@@ -40,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void save(ProductDTO productDTO) {
         Product product = mapperUtil.convert(productDTO, new Product());
+        product.setEnabled((byte) 1);
+        //productRepository.findCompanyIdByUserEmail() TODO implementation after security
         productRepository.save(product);
     }
 
@@ -54,9 +56,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(ProductDTO productDTO) {
-        Product product = mapperUtil.convert(productDTO, new Product());
-        productRepository.save(product);
+    public void update(ProductDTO productDTO) throws CocoonException {
+        Optional<Product> product = productRepository.findById(productDTO.getId());
+        product.get().setName(productDTO.getName());
+        product.get().setDescription(productDTO.getDescription());
+        product.get().setQty(productDTO.getQty());
+        product.get().setLowLimitAlert(productDTO.getLowLimitAlert());
+        productRepository.save(product.get());
     }
 
     @Override
