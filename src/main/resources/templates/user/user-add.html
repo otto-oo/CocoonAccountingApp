@@ -92,9 +92,9 @@
                                                                 <div class="controls">
                                                                     <label for="users-edit-status3">Company</label>
                                                                     <select id="users-edit-status3" class="form-control"
-                                                                            required th:field="*{}">
+                                                                            required th:field="*{state}">
                                                                         <option th:value=" ''" >Select Company</option>
-                                                                        <option th:each="eachState : ${}" th:value="${}" th:text="${}" ></option>
+                                                                        <option th:each="eachState : ${states}" th:value="${eachState.getId()}" th:text="${eachState.getStateName()}"></option>
 
                                                                     </select>
                                                                 </div>
