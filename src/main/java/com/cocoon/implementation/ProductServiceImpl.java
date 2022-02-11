@@ -2,6 +2,7 @@ package com.cocoon.implementation;
 
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.ProductDTO;
+import com.cocoon.entity.Category;
 import com.cocoon.entity.Invoice;
 import com.cocoon.entity.Product;
 import com.cocoon.enums.ProductStatus;
@@ -58,11 +59,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void update(ProductDTO productDTO) throws CocoonException {
         Optional<Product> product = productRepository.findById(productDTO.getId());
-        product.get().setName(productDTO.getName());
-        product.get().setDescription(productDTO.getDescription());
-        product.get().setQty(productDTO.getQty());
-        product.get().setLowLimitAlert(productDTO.getLowLimitAlert());
-        productRepository.save(product.get());
+        Product convertedProduct = mapperUtil.convert(productDTO, new Product());
+        convertedProduct.setId(product.get().getId());
+
+//        product.get().setName(productDTO.getName());
+//        product.get().setDescription(productDTO.getDescription());
+//        product.get().setQty(productDTO.getQty());
+//        product.get().setLowLimitAlert(productDTO.getLowLimitAlert());
+//        product.get().setUnit(productDTO.getUnit());
+//        product.get().setProductStatus(productDTO.getProductStatus());
+
+        //product.get().setCategory(productDTO.getCategory().getId());
+        productRepository.save(convertedProduct);
     }
 
     @Override
