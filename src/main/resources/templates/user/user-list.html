@@ -1,35 +1,34 @@
-<!--
 <!DOCTYPE html>
 <html class="loading" lang="en" xmlns:th="http://www.thymeleaf.org">
-&lt;!&ndash; BEGIN : Head&ndash;&gt;
+<!-- BEGIN : Head-->
 
 <head>
     <head th:replace="fragments :: page_head"/>
     <title>List User</title>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/ico/favicon.ico}">
-    &lt;!&ndash; END Page Level CSS&ndash;&gt;
+    <!-- END Page Level CSS-->
 </head>
-&lt;!&ndash; END : Head&ndash;&gt;
+<!-- END : Head-->
 
-&lt;!&ndash; BEGIN : Body&ndash;&gt;
+<!-- BEGIN : Body-->
 
 <body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns  navbar-sticky" data-open="hover"
       data-menu="horizontal-menu" data-col="2-columns">
 <div th:replace="fragments :: page_header"/>
-&lt;!&ndash; Navbar (Header) Ends&ndash;&gt;
+<!-- Navbar (Header) Ends-->
 
-&lt;!&ndash; ////////////////////////////////////////////////////////////////////////////&ndash;&gt;
+<!-- ////////////////////////////////////////////////////////////////////////////-->
 <div class="wrapper">
     <div th:replace="fragments :: page_menu"/>
 
 
     <div class="main-panel">
-        &lt;!&ndash; BEGIN : Main Content&ndash;&gt;
+        <!-- BEGIN : Main Content-->
         <div class="main-content">
             <div class="content-overlay"></div>
             <div class="content-wrapper">
                 <section class="users-list-wrapper">
-                    &lt;!&ndash; Filter starts &ndash;&gt;
+                    <!-- Filter starts -->
                     <div class="users-list-filter px-2">
 
 
@@ -39,16 +38,16 @@
                         </div>
                     </div>
 
-                    &lt;!&ndash; Filter ends &ndash;&gt;
+                    <!-- Filter ends -->
 
-                    &lt;!&ndash; Table starts &ndash;&gt;
+                    <!-- Table starts -->
                     <div class="users-list-table">
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-content fw-container">
                                         <div class="card-body fw-body">
-                                            &lt;!&ndash; Datatable starts &ndash;&gt;
+                                            <!-- Datatable starts -->
                                             <div class="table-responsive content demo-html">
                                                 <table id="example" class="table table-striped table-bordered file-export" style="width:100%">
                                                     <thead>
@@ -94,35 +93,35 @@
                                                          </tbody>
                                                      </table>
                                                  </div>
-                                                 &lt;!&ndash; Datatable ends &ndash;&gt;
+                                                 <!-- Datatable ends -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    &lt;!&ndash; Table ends &ndash;&gt;
+                    <!-- Table ends -->
                 </section>
 
             </div>
         </div>
-        &lt;!&ndash; END : End Main Content&ndash;&gt;
+        <!-- END : End Main Content-->
 
-        &lt;!&ndash; BEGIN : Footer&ndash;&gt;
+        <!-- BEGIN : Footer-->
     </div>
 </div>
-&lt;!&ndash; ////////////////////////////////////////////////////////////////////////////&ndash;&gt;
+<!-- ////////////////////////////////////////////////////////////////////////////-->
 
 
 <footer th:replace="fragments :: page_footer"></footer>
 <div class="sidenav-overlay"></div>
-&lt;!&ndash; BEGIN PAGE LEVEL JS&ndash;&gt;
+<!-- BEGIN PAGE LEVEL JS-->
 <script th:src="@{/js/dashboard2.js}"></script>
-&lt;!&ndash; END PAGE LEVEL JS&ndash;&gt;
-&lt;!&ndash; BEGIN: Custom CSS&ndash;&gt;
+<!-- END PAGE LEVEL JS-->
+<!-- BEGIN: Custom CSS-->
 <script th:src="@{/assets/js/scripts.js}"></script>
-&lt;!&ndash; END: Custom CSS&ndash;&gt;
+<!-- END: Custom CSS-->
 </body>
-&lt;!&ndash; END : Body&ndash;&gt;
+<!-- END : Body-->
 
-</html>-->
+</html>
