@@ -52,7 +52,7 @@
                                                  aria-labelledby="account-tab">
 
                                                 <!-- Account form starts -->
-                                                <form novalidate th:method="post" th:action="@{/product/update}" th:object="${product}" >
+                                                <form novalidate th:method="post" th:action="@{/product/update/{id}(id=${product.id})}" th:object="${product}" >
                                                     <div class="row">
                                                         <div class="col-12 col-md-6">
                                                             <div class="form-group">
