@@ -5,6 +5,7 @@ import com.cocoon.enums.ProductStatus;
 import com.cocoon.enums.Unit;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.service.CategoryService;
+import com.cocoon.service.CompanyService;
 import com.cocoon.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ public class ProductController {
 
     private ProductService productService;
     private CategoryService categoryService;
+    private CompanyService companyService;
 
     public ProductController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
@@ -37,6 +39,7 @@ public class ProductController {
         model.addAttribute("productStatus", ProductStatus.values());
         model.addAttribute("unit", Unit.values());
         model.addAttribute("categories", categoryService.getAllCategories());
+        // TODO @otto There should be an attribute to call user's company, this has to be done after security portion
         return "product/product-add";
     }
 
@@ -49,36 +52,19 @@ public class ProductController {
     @GetMapping("/update/{id}")
     public String getUpdateProductPage(@PathVariable("id") Long id, Model model) throws CocoonException {
         model.addAttribute("product", productService.getProductById(id));
-        model.addAttribute("categories", categoryService.getAllCategories());
-        return "product/product-edit";
-    }
-
-    @PostMapping("/update")
-    public String updateProduct(ProductDTO productDTO){
-        productService.save(productDTO);
-        return "redirect:/product/list";
-    }
-    // TODO @Sezgin bring the product page to be deleted
-    @GetMapping("/edit/{id}")
-    public String getDeleteProductPage(@PathVariable("id") Long id, Model model) throws CocoonException {
-        model.addAttribute("product", productService.getProductById(id));
-
-        model.addAttribute("productStatus", ProductStatus.values());
+        model.addAttribute("productStatuses", ProductStatus.values());
+        model.addAttribute("productStatus", productService.getProductStatusById(id));
         model.addAttribute("units", Unit.values());
+        model.addAttribute("unit", productService.getUnitById(id));
         model.addAttribute("categories", categoryService.getAllCategories());
-
-//        model.addAttribute("companyName", ClientVendor.class.getName());
-//        model.addAttribute("product", productService.getProductById(id).getProductStatus().getValue());
-//        model.addAttribute("product", productService.getProductById(id).getUnit().getValue());
-//        model.addAttribute("product", productService.getProductById(id).getCategory().getDescription());
-
         return "product/product-edit";
     }
-    @GetMapping("/delete")
-    public String delete(@PathVariable("id") Long id) throws CocoonException {
-        productService.deleteById(id);
 
+    @PostMapping("/update/{id}")
+    public String updateProduct(@PathVariable("id") Long id, ProductDTO productDTO) throws CocoonException {
+        productService.update(productDTO);
         return "redirect:/product/list";
     }
+
 
 }
