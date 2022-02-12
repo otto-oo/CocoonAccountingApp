@@ -19,4 +19,6 @@ public interface ProductService {
     List<ProductDTO> getProductsByInvoiceId(Long id);
     ProductStatus getProductStatusById(Long id) throws CocoonException;
     Unit getUnitById(Long id) throws CocoonException;
+
+    void deleteById (Long id) throws CocoonException;
 }
