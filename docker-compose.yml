@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   db:
-    image: mysql:5.7
+    image: mysql:5.5.51
     restart: unless-stopped
     env_file: ./.env
     environment:
@@ -17,16 +17,15 @@ services:
       - db:/var/lib/mysql
     networks:
       - cocoon-network
-  accounting:
+  cocoonapp:
     depends_on:
       - db
     build: .
-    image: bahadockerhub/cocoonapp:01
+    image: bahadockerhub/cocoonapp:02
     restart: on-failure
     env_file: ./.env
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
-    #      - 9095:9095
     environment:
       SPRING_APPLICATION_JSON: '{
        "spring.datasource.url"  : "jdbc:mysql://n1nlmysql55plsk.secureserver.net:3306/cacoon_accounting?useSSL=false",
