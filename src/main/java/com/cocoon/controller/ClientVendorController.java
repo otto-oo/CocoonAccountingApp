@@ -40,7 +40,7 @@ public class ClientVendorController {
     public String editCompany(@PathVariable("id") long id, Model model) throws CocoonException {
         model.addAttribute("client", clientVendorService.findById(id));
         model.addAttribute("states", stateRepo.findAll());
-        return "/client-vendor-edit";
+        return "client-vendor-edit";
     }
 
 
