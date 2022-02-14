@@ -56,8 +56,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     public List<ClientVendorDTO> getAllClientsVendorsActivesFirst() {
         List<ClientVendor> list = clientVendorRepo.findAll();
-        //todo this line raises error
-        //list.sort((o1, o2) -> o2.getEnabled().compareTo(o1.getEnabled()));
+        list.sort((o1, o2) -> o2.getEnabled().compareTo(o1.getEnabled()));
         return list.stream().map(client -> mapperUtil.convert(client, new ClientVendorDTO())).collect(Collectors.toList());
     }
 

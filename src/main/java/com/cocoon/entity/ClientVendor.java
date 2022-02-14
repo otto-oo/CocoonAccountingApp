@@ -32,5 +32,5 @@ public class ClientVendor extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    private boolean enabled;
+    private Byte enabled;
 }
