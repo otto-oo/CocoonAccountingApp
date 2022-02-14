@@ -66,6 +66,6 @@ public class ClientVendorController {
     @PostMapping("/create")
     public String saveClient(ClientVendorDTO clientVendorDTO) throws CocoonException {
         clientVendorService.save(clientVendorDTO);
-        return "redirect:/client/list";
+        return "redirect:/client-vendor/list";
     }
 }

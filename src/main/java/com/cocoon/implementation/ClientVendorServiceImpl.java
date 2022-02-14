@@ -2,6 +2,7 @@ package com.cocoon.implementation;
 
 import com.cocoon.dto.ClientVendorDTO;
 import com.cocoon.entity.ClientVendor;
+import com.cocoon.entity.Company;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.repository.ClientVendorRepo;
 import com.cocoon.repository.CompanyRepo;
@@ -43,7 +44,14 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         if (clientVendorDTO.getAddress().length() > 254)
             throw new CocoonException("Address length should be lesser then 255");
 
-        ClientVendor savedClient = clientVendorRepo.save(mapperUtil.convert(clientVendorDTO, new ClientVendor()));
+        //region todo we need companyId. This section will be updated at security implementation @kicchi
+        ClientVendor toSave = mapperUtil.convert(clientVendorDTO, new ClientVendor());
+        Company company = new Company();
+        company.setId(9L);
+        toSave.setCompany(company);
+        ///endregion
+
+        ClientVendor savedClient = clientVendorRepo.save(toSave);
     }
 
     public List<ClientVendorDTO> getAllClientsVendorsActivesFirst() {
