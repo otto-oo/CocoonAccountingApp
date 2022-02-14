@@ -11,7 +11,10 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,10 +33,14 @@ public class InvoiceDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
 
-    private List<ProductDTO> products;
+    private Set<ProductDTO> products = new HashSet<>();
 
     private int InvoiceCostWithoutTax;
     private int InvoiceCostWithTax;
     private int totalCost;
 
+    public InvoiceDTO(String invoiceNo, LocalDate invoiceDate) {
+        this.invoiceNo = invoiceNo;
+        this.invoiceDate = invoiceDate;
+    }
 }

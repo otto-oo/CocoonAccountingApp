@@ -2,6 +2,7 @@ package com.cocoon.implementation;
 
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.ProductDTO;
+import com.cocoon.entity.Category;
 import com.cocoon.entity.Invoice;
 import com.cocoon.entity.Product;
 import com.cocoon.enums.ProductStatus;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,9 +40,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void save(ProductDTO productDTO) {
+    public ProductDTO save(ProductDTO productDTO) {
         Product product = mapperUtil.convert(productDTO, new Product());
+        product.setEnabled((byte) 1);
+        //productRepository.findCompanyIdByUserEmail() TODO implementation after security
         productRepository.save(product);
+        return mapperUtil.convert(product, new ProductDTO());
     }
 
 
@@ -54,15 +59,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(ProductDTO productDTO) {
-        Product product = mapperUtil.convert(productDTO, new Product());
-        productRepository.save(product);
+    public void update(ProductDTO productDTO) throws CocoonException {
+        Optional<Product> product = productRepository.findById(productDTO.getId());
+        Product convertedProduct = mapperUtil.convert(productDTO, new Product());
+        convertedProduct.setId(product.get().getId());
+        convertedProduct.setEnabled(product.get().getEnabled());
+        productRepository.save(convertedProduct);
     }
 
     @Override
-    public List<ProductDTO> getProductsByInvoiceId(Long id) {
+    public Set<ProductDTO> getProductsByInvoiceId(Long id) {
         List<Product> products = productRepository.findProductsByInvoiceId2(id);
-        return products.stream().map(product -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
+        return products.stream().map(product -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toSet());
     }
 
     @Override
@@ -81,5 +89,15 @@ public class ProductServiceImpl implements ProductService {
             throw new CocoonException("There is no product belongs to this id " + id);
         }
         return product.get().getUnit();
+    }
+
+    @Override
+    public void deleteById(Long id) throws CocoonException {
+        Optional<Product> product = productRepository.findById(id);
+        if(!product.isPresent()){
+            throw new CocoonException("There is no product belongs to this id " + id);
+        }
+        product.get().setIsDeleted(true); // soft delete
+        productRepository.save(product.get());
     }
 }
