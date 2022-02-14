@@ -4,6 +4,10 @@ import com.cocoon.dto.ClientVendorDTO;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.repository.StateRepo;
 import com.cocoon.service.ClientVendorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ClientVendorController {
 
     ClientVendorService clientVendorService;
+    private StateRepo stateRepo;
 
-    public ClientVendorController(ClientVendorService clientVendorService) {
+    public ClientVendorController(ClientVendorService clientVendorService, StateRepo stateRepo) {
         this.clientVendorService = clientVendorService;
+        this.stateRepo = stateRepo;
     }
 
     @GetMapping("/list")
@@ -47,5 +53,19 @@ public class ClientVendorController {
     public String deleteUser(@PathVariable("email") String email,ClientVendorDTO vendorClientDto) throws CocoonException {
         clientVendorService.deleteClientVendor(email);
         return "redirect:/client-vendor-list";
+    }
+
+    @GetMapping("/create")
+    public String getCreatePage(Model model){
+        model.addAttribute("client", new ClientVendorDTO());
+        model.addAttribute("states", stateRepo.findAll());
+
+        return "clientvendor/client-vendor-add";
+    }
+
+    @PostMapping("/create")
+    public String saveClient(ClientVendorDTO clientVendorDTO) throws CocoonException {
+        clientVendorService.save(clientVendorDTO);
+        return "redirect:/client-vendor/list";
     }
 }
