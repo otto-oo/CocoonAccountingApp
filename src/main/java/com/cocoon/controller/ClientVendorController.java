@@ -38,7 +38,8 @@ public class ClientVendorController {
 
     @GetMapping("/update/{id}")
     public String editCompany(@PathVariable("id") long id, Model model) throws CocoonException {
-        //todo
+        model.addAttribute("client", clientVendorService.findById(id));
+        model.addAttribute("states", stateRepo.findAll());
         return "/client-vendor-edit";
     }
 
