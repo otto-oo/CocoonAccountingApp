@@ -45,9 +45,9 @@ public class Product extends BaseEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
-
+/*
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_product_id")
     private InvoiceProduct invoiceProduct;
-
+*/
 }
