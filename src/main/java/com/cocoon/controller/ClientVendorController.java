@@ -53,7 +53,7 @@ public class ClientVendorController {
     @GetMapping("/delete/{email}")
     public String deleteUser(@PathVariable("email") String email,ClientVendorDTO vendorClientDto) throws CocoonException {
         clientVendorService.deleteClientVendor(email);
-        return "redirect:/client-vendor-list";
+        return "redirect:/client-vendor/list";
     }
 
     @GetMapping("/create")
