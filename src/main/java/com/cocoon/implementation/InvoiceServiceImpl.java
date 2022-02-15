@@ -1,11 +1,8 @@
 package com.cocoon.implementation;
 
 import com.cocoon.dto.InvoiceDTO;
-import com.cocoon.entity.Company;
 import com.cocoon.entity.Invoice;
-import com.cocoon.entity.InvoiceNumber;
 import com.cocoon.enums.InvoiceStatus;
-import com.cocoon.enums.InvoiceType;
 import com.cocoon.repository.InvoiceNumberRepo;
 import com.cocoon.repository.InvoiceRepository;
 import com.cocoon.service.InvoiceService;
@@ -33,12 +30,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO save(InvoiceDTO dto) {
-        dto.setInvoiceStatus(InvoiceStatus.PENDING);
-        dto.setEnabled((byte) 1);
-        dto.setInvoiceType(InvoiceType.SALE);
-        invoiceNumberRepo.save(new InvoiceNumber(count.getAndIncrement()));
+
         Invoice invoice = mapperUtil.convert(dto,new Invoice());
-        return mapperUtil.convert(invoiceRepository.save(invoice), new InvoiceDTO());
+        invoice.setInvoiceStatus(InvoiceStatus.PENDING);
+        invoice.setEnabled((byte) 1);
+
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+        return mapperUtil.convert(savedInvoice, new InvoiceDTO());
     }
 
     @Override
@@ -56,12 +54,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void update(InvoiceDTO dto, Long id) {
 
-
         Invoice convertedInvoice = mapperUtil.convert(dto, new Invoice());
         Invoice invoice = invoiceRepository.getById(id);
         convertedInvoice.setInvoiceNo(invoice.getInvoiceNo());
         convertedInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-        convertedInvoice.setProducts(invoice.getProducts());
         invoiceRepository.save(convertedInvoice);
     }
 
@@ -72,3 +68,21 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
 }
+
+
+//            for (InvoiceDTO invoice : invoices){
+//                Set<ProductDTO> products = productService.getProductsByInvoiceId(invoice.getId());
+//                int costWithoutTax = products.stream().mapToInt(ProductDTO::getPrice).sum();
+//                invoice.setInvoiceCostWithoutTax(costWithoutTax);
+//                int costWithTax = calculateTaxedCost(products);
+//                invoice.setTotalCost(costWithTax);
+//                invoice.setInvoiceCostWithTax(costWithTax - costWithoutTax);
+//            }
+
+//    private int calculateTaxedCost(Set<ProductDTO> products){
+////        int result = 0;
+////        for (ProductDTO product : products){
+////            result += product.getPrice() + (product.getPrice() * product.getTax() * 0.01);
+////        }
+////        return result;
+////    }
