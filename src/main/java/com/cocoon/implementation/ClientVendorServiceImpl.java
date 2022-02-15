@@ -62,15 +62,6 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return list.stream().map(client -> mapperUtil.convert(client, new ClientVendorDTO())).collect(Collectors.toList());
     }
 
-  /*  @Override
-    public ClientVendorDTO findByEmail(String email) throws CocoonException {
-        ClientVendor clientVendor = clientVendorRepo.findByEmail(email);
-        if (clientVendor==null){
-            throw new CocoonException("Vendor/Client with " + email + " not exist");
-        }
-        return mapperUtil.convert(clientVendor, new ClientVendorDTO());
-    }
-*/
     @Override
     public ClientVendorDTO findById(Long id) throws CocoonException {
         ClientVendor clientVendor = clientVendorRepo.findById(id).orElseThrow();
