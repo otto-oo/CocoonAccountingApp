@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,9 +46,8 @@ public class Product extends BaseEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
-/*
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "invoice_product_id")
-    private InvoiceProduct invoiceProduct;
-*/
+
+//    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+//    private List<InvoiceProduct> invoiceProduct;
+
 }
