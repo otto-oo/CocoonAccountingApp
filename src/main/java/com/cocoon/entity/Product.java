@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,8 +18,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @Table(name="product")
+@Where(clause = "is_deleted=false")
 public class Product extends BaseEntity implements Serializable {
 
     private String name;
@@ -45,10 +46,8 @@ public class Product extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
-    @ManyToMany
-    @JoinTable(name = "invoice_product_rel",
-               joinColumns = {@JoinColumn(name = "invoice_id")},
-               inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private Set<Invoice> invoices = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "invoice_product_id")
+    private InvoiceProduct invoiceProduct;
 
 }

@@ -9,6 +9,7 @@ import com.cocoon.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +32,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO update(UserDTO userDTO) throws CocoonException {
+        User updatedUser = mapperUtil.convert(userDTO, new User());
+        User savedUser = userRepo.save(updatedUser);
+        return mapperUtil.convert(savedUser, new UserDTO());
+    }
+
+    @Override
     public UserDTO save(UserDTO userDTO) throws CocoonException {
-        return null;
+        User foundUser = userRepo.findByEmail(userDTO.getEmail());
+        if (foundUser != null) throw new CocoonException("User already exists");
+        User user = mapperUtil.convert(userDTO, new User());
+        User savedUser = userRepo.save(user);
+        return mapperUtil.convert(savedUser, new UserDTO());
     }
 
     @Override
@@ -45,6 +57,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delete(Long id) {
+        User user = userRepo.findById(id).orElseThrow();
+        user.setIsDeleted(true);
+        userRepo.save(user);
+    }
+
+    @Override
     public List<UserDTO> listAllUsersByCompanyId(Long id) {
         List<User> allUsers = userRepo.findAllByCompanyId(id);
         return allUsers.stream().map(obj -> mapperUtil.convert(obj, new UserDTO()))
@@ -53,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findByEmail(String email) throws CocoonException {
-        return null;
+        User foundUser = userRepo.findByEmail(email);
+        return mapperUtil.convert(foundUser, new UserDTO());
     }
 }

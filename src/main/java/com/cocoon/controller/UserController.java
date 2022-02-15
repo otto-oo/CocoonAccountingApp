@@ -10,9 +10,7 @@ import com.cocoon.service.RoleService;
 import com.cocoon.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
@@ -22,31 +20,50 @@ public class UserController {
     private RoleService roleService;
     private CompanyService companyService;
 
-    public UserController(UserService userService,RoleService roleService, CompanyService companyService) {
+    public UserController(UserService userService, RoleService roleService, CompanyService companyService) {
         this.userService = userService;
         this.roleService = roleService;
         this.companyService = companyService;
     }
 
     @GetMapping("/list")
-    public String findUsers(Model model){
+    public String findUsers(Model model) {
         model.addAttribute("users", userService.findAllUsers());
         return "user/user-list";
     }
 
-    @PostMapping("/addUser")
-    public String createUser(UserDTO userDTO, Model model) throws CocoonException {
+    @PostMapping("/create")
+    public String createUser(UserDTO userDTO) throws CocoonException {
         userService.save(userDTO);
         return "redirect:/user/list";
     }
 
-    @GetMapping("/addUser")
-    public String getCreatePage(Model model){
-        model.addAttribute("users", new UserDTO());
-        model.addAttribute("role", roleService.findAllRoles());
-
+    @GetMapping("/create")
+    public String getCreatePage(Model model) {
+        model.addAttribute("user", new UserDTO());
+        model.addAttribute("roles", roleService.findAllRoles());
+        model.addAttribute("companies", companyService.getAllCompanies());
         return "user/user-add";
     }
 
+    @GetMapping("update/{id}")
+    public String updateUser(@PathVariable Long id, Model model) throws CocoonException {
+        UserDTO foundUser = userService.findById(id);
+        model.addAttribute("userToEdit", foundUser);
+        model.addAttribute("companies", companyService.getAllCompanies());
+        model.addAttribute("roles", roleService.findAllRoles());
+        return "user/user-update";
+    }
 
+    @PostMapping("update/{id}")
+    public String updateUser(@ModelAttribute UserDTO userDTO) throws CocoonException {
+        userService.update(userDTO);
+        return "redirect:/user/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id){
+        userService.delete(id);
+        return "redirect:/user/list";
+    }
 }

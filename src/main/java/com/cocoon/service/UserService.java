@@ -9,9 +9,13 @@ public interface UserService {
 
     List<UserDTO> findAllUsers();
 
+    UserDTO update(UserDTO userDTO) throws CocoonException;
 
     UserDTO save(UserDTO userDTO) throws CocoonException;
+
     UserDTO findById(Long id) throws CocoonException;
+
+    void delete(Long id);
 
     List<UserDTO> listAllUsersByCompanyId(Long id);
 
