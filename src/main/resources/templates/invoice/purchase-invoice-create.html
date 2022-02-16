@@ -17,14 +17,14 @@
             <div class="content-overlay"></div>
             <div class="content-wrapper">
                 <section class="users-list-wrapper">
-                    <!-- SALES INVOICE LIST LINK -->
+                    <!-- PURCHASE INVOICE LIST LINK -->
                     <div class="users-list-filter px-2">
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
                             <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/purchase-invoice/list(cancel='true')}"
                             ><i class="fa fa-list mr-1"></i>Purchase Invoices list</a>
                         </div>
                     </div>
-                    <!-- SALES INVOICE LIST LINK END-->
+                    <!-- PURCHASE INVOICE LIST LINK END-->
                     <!-- FORMS BEGIN -->
                     <div class="row">
                         <div class="col-12">
@@ -35,7 +35,7 @@
                                             <div class="tab-pane fade mt-2 show active" id="account" role="tabpanel"
                                                  aria-labelledby="account-tab">
                                                 <!-- INVOICE PART BEGIN-->
-                                                <form class="needs-validation" th:action="@{/sales-invoice/create-invoice}" method="post"
+                                                <form class="needs-validation" th:action="@{/purchase-invoice/create-invoice}" method="post"
                                                       th:object="${invoice}" novalidate>
                                                     <div class="row">
                                                         <div class="col-12 col-md-3">
@@ -77,7 +77,7 @@
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label>CANCEL</label>
-                                                                    <a class="btn btn-danger" th:href="@{/sales-invoice/list(cancel='true')}"
+                                                                    <a class="btn btn-danger" th:href="@{/purchase-invoice/list(cancel='true')}"
                                                                             type="cancel" value="cancel">Cancel
                                                                     </a>
                                                                 </div>
@@ -98,7 +98,7 @@
                                                 </form>
                                                 <hr class="solid">
                                                 <!-- INVOICE PART END -->
-                                                <form th:object="${product}" th:action="@{/sales-invoice/create-invoice-product}" method="post">
+                                                <form th:object="${product}" th:action="@{/purchase-invoice/create-invoice-product}" method="post">
                                                     <div class="needs-validation" novalidate>
                                                         <div class="row">
                                                             <div class="col-12 col-md-3">
