@@ -18,11 +18,11 @@
                     <!-- ADD SALES INVOICE LINK BEGIN -->
                     <div class="users-list-filter px-2">
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
-                            <a class="btn btn-success bg-light-success mb-1" th:href="@{/sales-invoice/create}"
-                               ><i class="fa fa-plus mr-1"></i>Create Sales Invoice</a>
+                            <a class="btn btn-success bg-light-success mb-1" th:href="@{/purchase-invoice/create}"
+                               ><i class="fa fa-plus mr-1"></i>Create Purchase Invoice</a>
                         </div>
                     </div>
-                    <!-- ADD SALES INVOICE LINK END -->
+                    <!-- ADD PURCHASE INVOICE LINK END -->
                     <!-- LIST BEGIN -->
                     <div class="users-list-table">
                         <div class="row">
@@ -53,13 +53,13 @@
                                                             <td class="text-truncate" th:text="${invoice.getInvoiceCostWithTax()}"></td>
                                                             <td class="text-truncate" th:text="${invoice.getTotalCost()}"></td>
                                                             <td>
-                                                                <a class="ft-list" th:href="@{/sales-invoice/update/{id}(id=${invoice.id})}">
+                                                                <a class="ft-list" th:href="@{/purchase-invoice/update/{id}(id=${invoice.id})}">
                                                                 </a>
                                                             </td>
                                                             <td>
                                                                 <form action="#"
                                                                       method="post">
-                                                                    <a  th:href="@{/sales-invoice/delete/{id}(id=${invoice.id})}"
+                                                                    <a  th:href="@{/purchase-invoice/delete/{id}(id=${invoice.id})}"
                                                                         class="btn btn-danger mb-2 mb-sm-0 mr-sm-2"
                                                                         type="submit" name="action" value="delete">Delete
                                                                     </a>
