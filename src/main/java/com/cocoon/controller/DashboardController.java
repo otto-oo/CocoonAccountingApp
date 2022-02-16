@@ -25,13 +25,13 @@ public class DashboardController {
     }
 
 
-    @GetMapping("/invoice")
-    public String invoiceTopThreeList(Model model){
-
-        List<InvoiceDTO> invoices = invoiceService.getAllInvoicesSorted();
-        model.addAttribute("invoices", invoices);
-
-        return "dashboard";
-    }
+//    @GetMapping("/invoice")
+//    public String invoiceTopThreeList(Model model){
+//
+//        List<InvoiceDTO> invoices = invoiceService.getAllInvoicesSorted();
+//        model.addAttribute("invoices", invoices);
+//
+//        return "dashboard";
+//    }
 
 }
