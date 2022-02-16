@@ -40,7 +40,7 @@ public class CompanyController {
 
     @GetMapping("/create")
     public String getCreatePage(Model model) {
-        model.addAttribute("company", new CompanyDTO());
+        model.addAttribute("company", new Company());
         model.addAttribute("states", stateRepo.findAll());
 
         return "company/company-add";
