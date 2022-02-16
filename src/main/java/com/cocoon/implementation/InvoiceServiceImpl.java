@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
-    private static final AtomicInteger count = new AtomicInteger(1);
+    private int count = 0;
     private final MapperUtil mapperUtil;
     private final InvoiceRepository invoiceRepository;
     private final InvoiceNumberRepo invoiceNumberRepo;
@@ -34,8 +34,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = mapperUtil.convert(dto,new Invoice());
         invoice.setInvoiceStatus(InvoiceStatus.PENDING);
         invoice.setEnabled((byte) 1);
-
         Invoice savedInvoice = invoiceRepository.save(invoice);
+        count++;
         return mapperUtil.convert(savedInvoice, new InvoiceDTO());
     }
 
@@ -52,18 +52,27 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void update(InvoiceDTO dto, Long id) {
+    public InvoiceDTO update(InvoiceDTO dto, Long id) {
 
         Invoice convertedInvoice = mapperUtil.convert(dto, new Invoice());
         Invoice invoice = invoiceRepository.getById(id);
         convertedInvoice.setInvoiceNo(invoice.getInvoiceNo());
         convertedInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-        invoiceRepository.save(convertedInvoice);
+        Invoice savedInvoice = invoiceRepository.save(convertedInvoice);
+        return mapperUtil.convert(savedInvoice, new InvoiceDTO());
     }
 
     @Override
     public String getInvoiceNumber(){
-        return "INV-"+count;
+        return "INV-"+ count;
+    }
+
+
+    @Override
+    public void deleteInvoiceById(Long id) {
+        Invoice invoice = invoiceRepository.getById(id);
+        invoice.setIsDeleted(true);
+        invoiceRepository.save(invoice);
     }
 
 
