@@ -47,7 +47,7 @@ public class CompanyController {
     }
 
     @PostMapping("/create")
-    public String saveCompany(Company company, BindingResult result) throws CocoonException {
+    public String saveCompany(Company company, BindingResult result, Model model) {
         try{
             companyService.save(mapperUtil.convert(company, new CompanyDTO()));
             return "redirect:/company/list";
