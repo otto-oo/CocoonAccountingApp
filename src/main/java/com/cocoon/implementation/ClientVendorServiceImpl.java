@@ -62,43 +62,26 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
 
     @Override
-    public ClientVendorDTO findByEmail(String email) throws CocoonException {
-        ClientVendor clientVendor = clientVendorRepo.findByEmail(email);
-        if (clientVendor==null){
-            throw new CocoonException("Vendor/Client with " + email + " not exist");
-        }
-        return mapperUtil.convert(clientVendor, new ClientVendorDTO());
-    }
-
-    @Override
     public ClientVendorDTO findById(Long id) throws CocoonException {
-        ClientVendor clientVendor = clientVendorRepo.findById(id).orElseThrow();
-        if (clientVendor==null){
-            throw new CocoonException("Vendor/Client with " + id + " not exist");
-        }
+        ClientVendor clientVendor = clientVendorRepo.findById(id).orElseThrow(()-> new CocoonException("Vendor/Client with " + id + " not exist"));
         return mapperUtil.convert(clientVendor, new ClientVendorDTO());
     }
 
     @Override
     public ClientVendorDTO update(ClientVendorDTO clientVendorDTO) throws CocoonException {
-        clientVendorDTO.setEnabled(true);
         if (clientVendorDTO.getAddress().length() > 254)
             throw new CocoonException("Address length should be lesser then 255");
         ClientVendor updatedClientVendor = mapperUtil.convert(clientVendorDTO, new ClientVendor());
-        //region todo we need companyId. This section will be updated at security implementation @kicchi
+        //region todo we need companyId. This section will be updated at security implementation
         updatedClientVendor.setCompany(companyRepo.getById(9L));
         ClientVendor savedClientVendor = clientVendorRepo.save(updatedClientVendor);
         return mapperUtil.convert(savedClientVendor, new ClientVendorDTO());
     }
 
     @Override
-    public void deleteClientVendor(String email) throws CocoonException {
-        ClientVendor clientVendor = clientVendorRepo.findByEmail(email);
-        if (clientVendor == null) {
-            throw new CocoonException("Vendor/Client with " + email + " not exist");
-        }
+    public void deleteClientVendor(Long id) throws CocoonException {
+        ClientVendor clientVendor = clientVendorRepo.findById(id).orElseThrow(()-> new CocoonException("Vendor/Client with " + id + " not exist"));
         clientVendor.setIsDeleted(true);
         clientVendorRepo.save(clientVendor);
     }
-
 }
