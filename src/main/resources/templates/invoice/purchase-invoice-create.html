@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html class="loading" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <head th:replace="fragments :: page_head"><title>Create Sales Invoice</title></head>
-    <title>Add-Line | Sales | Invoice</title>
+    <head th:replace="fragments :: page_head"><title>Create Purchase Invoice</title></head>
+    <title>Add-Line | Purchase | Invoice</title>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/ico/favicon.ico}">
     <script type="text/javascript" th:src="@{/js/cssandjs/actions.js}"></script>
 </head>
@@ -20,8 +20,8 @@
                     <!-- SALES INVOICE LIST LINK -->
                     <div class="users-list-filter px-2">
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
-                            <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/sales-invoice/list(cancel='true')}"
-                            ><i class="fa fa-list mr-1"></i>Sales Invoices list</a>
+                            <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/purchase-invoice/list(cancel='true')}"
+                            ><i class="fa fa-list mr-1"></i>Purchase Invoices list</a>
                         </div>
                     </div>
                     <!-- SALES INVOICE LIST LINK END-->
