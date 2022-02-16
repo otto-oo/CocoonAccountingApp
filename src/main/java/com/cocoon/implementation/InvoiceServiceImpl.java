@@ -74,7 +74,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceDTO> getAllInvoicesSorted() {
         List<Invoice> invoices = invoiceRepository.findAll();
 
-        invoices.sort((o2, o1) -> o2.getInvoiceDate().compareTo(o1.getInvoiceDate());
+        invoices.sort((o2, o1) -> o2.getInvoiceDate().compareTo(o1.getInvoiceDate()));
 
         // get first 3
         return invoices.stream().limit(3).map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());

@@ -15,4 +15,7 @@ public interface InvoiceService {
     void update(InvoiceDTO dto, Long id);
 
     String getInvoiceNumber();
+
+    List<InvoiceDTO> getAllInvoicesSorted();
+
 }
