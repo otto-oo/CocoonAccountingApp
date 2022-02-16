@@ -153,7 +153,7 @@
 
                                                         <div th:if="${#fields.hasErrors('global')}">
 <!--                                                            <h3>Global errors:</h3>-->
-                                                            <p th:class="right" th:each="err : ${#fields.errors('global')}" th:text="${err}"
+                                                            <p style="color: red;" th:each="err : ${#fields.errors('global')}" th:text="${err}"
                                                                class="error" />
                                                         </div>
 
