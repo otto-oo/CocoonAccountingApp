@@ -19,7 +19,7 @@
                     <!-- SALES INVOICE LIST LINK -->
                     <div class="users-list-filter px-2">
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
-                            <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/sales-invoice/list}"
+                            <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/sales-invoice/list(cancel='true')}"
                             ><i class="fa fa-list mr-1"></i>Sales Invoices list</a>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                                             <div class="tab-pane fade mt-2 show active" id="account" role="tabpanel"
                                                  aria-labelledby="account-tab">
                                                 <!-- INVOICE PART BEGIN-->
-                                                <form class="needs-validation" th:action="@{/sales-invoice/update/{id}(id=${invoice.id})}" method="post"
+                                                <form class="needs-validation" th:action="@{/sales-invoice/invoice-update/{id}(id=${invoice.id})}" method="post"
                                                       th:object="${invoice}" novalidate>
                                                     <div class="row">
                                                         <div class="col-12 col-md-3">
@@ -44,7 +44,7 @@
                                                                     <input type="text"
                                                                            class="form-control" required
                                                                            aria-invalid="false"
-                                                                           th:field="*{invoiceNo}"
+                                                                           th:field="*{invoiceNumber}"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -67,7 +67,7 @@
                                                                     <select th:field="*{clientVendor}" class="custom-select" required="required">
                                                                         <option th:value=" ''" th:text="Select"></option>
                                                                         <option th:each="client : ${clients}" th:value="${client.id}"
-                                                                                th:text="${client.getCompanyName()}"></option>
+                                                                                th:text="${client.companyName}"></option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -76,7 +76,7 @@
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label>CANCEL</label>
-                                                                    <a class="btn btn-danger" th:href="@{/sales-invoice/list}"
+                                                                    <a class="btn btn-danger" th:href="@{/sales-invoice/list(cancel='true')}"
                                                                             type="cancel" value="cancel">Cancel
                                                                     </a>
                                                                 </div>
@@ -87,7 +87,7 @@
                                                                 <div class="controls">
                                                                     <label>SUBMIT</label>
                                                                     <button class="btn btn-success"
-                                                                            type="submit" name="action" >Submit
+                                                                            type="submit" name="action" th:disabled="${active}" >Submit
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -104,7 +104,7 @@
                                                                 <div class="form-group">
                                                                     <div class="controls">
                                                                         <label>Product</label>
-                                                                        <select th:field="*{id}" class="custom-select" required="required" >
+                                                                        <select th:field="*{productDTO}" class="custom-select" required="required" >
                                                                             <option th:value=" ''" th:text="Select"></option>
                                                                             <option th:each="theProduct : ${products}" th:value="${theProduct.id}"
                                                                                     th:text="${theProduct.name}"></option>
@@ -166,9 +166,9 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 <tr th:each="product : ${invoiceProducts}">
-                                                                    <td th:text="${product.getName()}"></td>
-                                                                    <td th:text="${product.getPrice()}"></td>
-                                                                    <td th:text="${product.getQty()}"></td>
+                                                                    <td th:text="${product.name}"></td>
+                                                                    <td th:text="${product.price}"></td>
+                                                                    <td th:text="${product.qty}"></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>

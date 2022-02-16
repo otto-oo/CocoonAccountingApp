@@ -6,12 +6,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,9 +20,10 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode
+@Where(clause = "is_deleted=false")
 public class Invoice extends BaseEntity implements Serializable {
 
-    private String invoiceNo; //TODO - invoice number will be evaluated somewhere else...
+    private String invoiceNumber; //TODO - invoice number will be evaluated somewhere else...
 
     @Enumerated(EnumType.STRING)
     private InvoiceStatus invoiceStatus;
@@ -43,9 +44,8 @@ public class Invoice extends BaseEntity implements Serializable {
     @JoinColumn(name = "sptable_id") //TODO foreign key will be replaced with "client_vendor_id"....
     private ClientVendor clientVendor;
 
-    @ManyToMany(mappedBy = "invoices",cascade = CascadeType.MERGE)
-    private Set<Product> products = new HashSet<>();
-
+//    @OneToMany(mappedBy = "invoice")
+//    private Set<InvoiceProduct> invoiceProduct;
 
 
 }

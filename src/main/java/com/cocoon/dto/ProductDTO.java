@@ -31,6 +31,7 @@ public class ProductDTO {
     private Company company;
     private Byte enabled;
     private ProductStatus productStatus;
-
-    private Set<InvoiceDTO> invoices = new HashSet<>();
+    /*
+    private InvoiceProductDTO invoiceProductDTO;
+*/
 }

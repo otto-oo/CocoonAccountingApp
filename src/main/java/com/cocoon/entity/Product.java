@@ -12,13 +12,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @Table(name="product")
 @Where(clause = "is_deleted=false")
 public class Product extends BaseEntity implements Serializable {
@@ -47,10 +47,7 @@ public class Product extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
-    @ManyToMany
-    @JoinTable(name = "invoice_product_rel",
-               joinColumns = {@JoinColumn(name = "invoice_id")},
-               inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private Set<Invoice> invoices = new HashSet<>();
+//    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+//    private List<InvoiceProduct> invoiceProduct;
 
 }
