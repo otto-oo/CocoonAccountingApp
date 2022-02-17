@@ -4,10 +4,13 @@ import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.ProductDTO;
 import com.cocoon.entity.Category;
 import com.cocoon.entity.Invoice;
+import com.cocoon.entity.InvoiceProduct;
 import com.cocoon.entity.Product;
 import com.cocoon.enums.ProductStatus;
 import com.cocoon.enums.Unit;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.repository.CompanyRepo;
+import com.cocoon.repository.InvoiceProductRepo;
 import com.cocoon.repository.ProductRepository;
 import com.cocoon.service.InvoiceService;
 import com.cocoon.service.ProductService;
@@ -26,11 +29,16 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private InvoiceService invoiceService;
     private MapperUtil mapperUtil;
+    private CompanyRepo companyRepo;
+    private InvoiceProductRepo invoiceProductRepo;
 
-    public ProductServiceImpl(ProductRepository productRepository, InvoiceService invoiceService, MapperUtil mapperUtil) {
+
+    public ProductServiceImpl(ProductRepository productRepository, InvoiceService invoiceService, MapperUtil mapperUtil, CompanyRepo companyRepo, InvoiceProductRepo invoiceProductRepo) {
         this.productRepository = productRepository;
         this.invoiceService = invoiceService;
         this.mapperUtil = mapperUtil;
+        this.companyRepo = companyRepo;
+        this.invoiceProductRepo = invoiceProductRepo;
     }
 
     @Override
@@ -43,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO save(ProductDTO productDTO) {
         Product product = mapperUtil.convert(productDTO, new Product());
         product.setEnabled((byte) 1);
-        //productRepository.findCompanyIdByUserEmail() TODO implementation after security
+        product.setCompany(companyRepo.findById(9L).get()); // TODO implementation after security
         productRepository.save(product);
         return mapperUtil.convert(product, new ProductDTO());
     }
@@ -64,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
         Product convertedProduct = mapperUtil.convert(productDTO, new Product());
         convertedProduct.setId(product.get().getId());
         convertedProduct.setEnabled(product.get().getEnabled());
+        convertedProduct.setCompany(companyRepo.findById(9L).get()); // TODO implementation after security
         productRepository.save(convertedProduct);
     }
 
@@ -97,7 +106,19 @@ public class ProductServiceImpl implements ProductService {
         if(!product.isPresent()){
             throw new CocoonException("There is no product belongs to this id " + id);
         }
-        product.get().setIsDeleted(true); // soft delete
-        productRepository.save(product.get());
+        // check if product has related invoice or not
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByProductId(id);
+        if (invoiceProducts.size() ==0) {
+            product.get().setIsDeleted(true); // soft delete
+            productRepository.save(product.get());
+        }
+    }
+
+
+    @Override
+    public List<ProductDTO> findProductsByCategoryId(Long id) {
+        List<Product> products = productRepository.findAllByCategoryId(id);
+        List<ProductDTO> productDTOList = products.stream().map((p) -> mapperUtil.convert(p, new ProductDTO())).collect(Collectors.toList());
+        return productDTOList;
     }
 }

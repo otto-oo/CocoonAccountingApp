@@ -19,7 +19,7 @@
                     <!-- SALES INVOICE LIST LINK -->
                     <div class="users-list-filter px-2">
                         <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-right">
-                            <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/sales-invoice/list}"
+                            <a class="btn btn-primary bg-light-primary mb-1" th:href="@{/sales-invoice/list(cancel='true')}"
                             ><i class="fa fa-list mr-1"></i>Sales Invoices list</a>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                                                                     <input type="text"
                                                                            class="form-control" required
                                                                            aria-invalid="false"
-                                                                           th:field="*{invoiceNo}"
+                                                                           th:field="*{invoiceNumber}"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -76,7 +76,7 @@
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label>CANCEL</label>
-                                                                    <a class="btn btn-danger" th:href="@{/sales-invoice/list}"
+                                                                    <a class="btn btn-danger" th:href="@{/sales-invoice/list(cancel='true')}"
                                                                             type="cancel" value="cancel">Cancel
                                                                     </a>
                                                                 </div>
@@ -87,7 +87,7 @@
                                                                 <div class="controls">
                                                                     <label>SUBMIT</label>
                                                                     <button class="btn btn-success"
-                                                                            type="submit" name="action" >Submit
+                                                                            type="submit" name="action" th:disabled="${active}" >Submit
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -160,17 +160,22 @@
                                                                     <th>Product</th>
                                                                     <th>Price</th>
                                                                     <th>Quantity</th>
+                                                                    <th>Tax</th>
                                                                     <th>Total</th>
                                                                     <th>Delete</th>
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                 <tr th:each="product : ${invoiceProducts}">
-                                                                    <td th:text="${product.id}"></td>
+                                                                    <td th:text="${product.name}"></td>
                                                                     <td th:text="${product.price}"></td>
                                                                     <td th:text="${product.qty}"></td>
-                                                                    <td></td>
-                                                                    <td></td>
+                                                                    <td th:text="${product.tax}"></td>
+                                                                    <td th:text="${(product.qty * product.price) + (product.qty * product.price * product.tax * 0.01)}"></td>
+                                                                    <td>
+                                                                        <a class="ft-trash" th:href="@{/sales-invoice/delete-product-update/{id}/{name}(id=${invoice.id}, name=${product.name})}">
+                                                                        </a>
+                                                                    </td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
