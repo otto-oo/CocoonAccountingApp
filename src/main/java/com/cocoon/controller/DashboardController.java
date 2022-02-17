@@ -24,7 +24,6 @@ public class DashboardController {
         this.invoiceService = invoiceService;
     }
 
-
     @GetMapping()
     public String invoiceTopThreeList(Model model){
 
@@ -35,3 +34,4 @@ public class DashboardController {
     }
 
 }
+
