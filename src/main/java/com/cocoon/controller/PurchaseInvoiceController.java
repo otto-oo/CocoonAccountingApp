@@ -2,7 +2,6 @@ package com.cocoon.controller;
 
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
-import com.cocoon.dto.ProductDTO;
 import com.cocoon.enums.InvoiceType;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.service.ClientVendorService;
@@ -14,16 +13,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
 @Controller
-@RequestMapping("/sales-invoice")
-public class InvoiceController {
+@RequestMapping("/purchase-invoice")
+public class PurchaseInvoiceController {
 
     private InvoiceDTO currentInvoiceDTO = new InvoiceDTO();
-    private List<InvoiceProductDTO> addedInvoiceProducts = new ArrayList<>();
-    private List<InvoiceProductDTO> deletedInvoiceProducts = new ArrayList<>();
+    private InvoiceProductDTO invoiceProductDTO = new InvoiceProductDTO();
     private boolean active = true;
 
     private final InvoiceService invoiceService;
@@ -31,7 +29,7 @@ public class InvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
 
-    public InvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
         this.invoiceService = invoiceService;
         this.productService = productService;
         this.invoiceProductService = invoiceProductService;
@@ -46,13 +44,13 @@ public class InvoiceController {
         List<InvoiceDTO> invoices = invoiceService.getAllInvoices();
         model.addAttribute("invoices", invoices);
 
-        return "invoice/sales-invoice-list";
+        return "invoice/purchase-invoice-list";
     }
 
     @GetMapping("/create")
-    public String salesInvoiceCreate(Model model){
+    public String purchaseInvoiceCreate(Model model){
 
-        currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.SALE));
+        currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.PURCHASE));
         currentInvoiceDTO.setInvoiceDate(LocalDate.now());
         model.addAttribute("active", active);
         model.addAttribute("invoice", currentInvoiceDTO);
@@ -61,7 +59,7 @@ public class InvoiceController {
         model.addAttribute("clients", clientVendorService.getAllClientsVendors());
         model.addAttribute("selectedproducts", currentInvoiceDTO.getInvoiceProduct());
 
-        return "invoice/sales-invoice-create";
+        return "invoice/purchase-invoice-create";
     }
 
     @PostMapping("/create-invoice-product")
@@ -71,7 +69,7 @@ public class InvoiceController {
         invoiceProductDTO.setName(name);
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         this.active = false;
-        return "redirect:/sales-invoice/create";
+        return "redirect:/purchase-invoice/create";
     }
 
 
@@ -81,13 +79,13 @@ public class InvoiceController {
         currentInvoiceDTO.setInvoiceDate(dto.getInvoiceDate());
         currentInvoiceDTO.setInvoiceNumber(dto.getInvoiceNumber());
         currentInvoiceDTO.setClientVendor(dto.getClientVendor());
-        currentInvoiceDTO.setInvoiceType(InvoiceType.SALE);
+        currentInvoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
         InvoiceDTO savedInvoice = invoiceService.save(currentInvoiceDTO);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(savedInvoice));
         invoiceProductService.save(currentInvoiceDTO.getInvoiceProduct());
         this.active = true;
 
-        return "redirect:/sales-invoice/list";
+        return "redirect:/purchase-invoice/list";
     }
 
     // Update ----------------------------------------------------------------------------------------------------------
@@ -96,20 +94,18 @@ public class InvoiceController {
 
         InvoiceDTO invoiceDTO = invoiceService.getInvoiceById(id);
         Set<InvoiceProductDTO> databaseInvoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(id);
-        currentInvoiceDTO.setInvoiceProduct(databaseInvoiceProducts);
 
-        if (this.addedInvoiceProducts.size() > 0 || this.deletedInvoiceProducts.size() > 0){
-            addedInvoiceProducts.forEach(obj -> currentInvoiceDTO.getInvoiceProduct().add(obj));
-            deletedInvoiceProducts.forEach(deleted -> currentInvoiceDTO.getInvoiceProduct().removeIf(obj -> obj.getName().equals(deleted.getName())));
+        if (this.invoiceProductDTO.getName() != null){
+            databaseInvoiceProducts.add(this.invoiceProductDTO);
         }
         model.addAttribute("active", active);
         model.addAttribute("invoice", invoiceDTO);
         model.addAttribute("product", new InvoiceProductDTO());
         model.addAttribute("products", productService.getAllProducts());
         model.addAttribute("clients", clientVendorService.getAllClientsVendors());
-        model.addAttribute("invoiceProducts", currentInvoiceDTO.getInvoiceProduct());
+        model.addAttribute("invoiceProducts", databaseInvoiceProducts);
 
-        return "invoice/sales-invoice-update";
+        return "invoice/purchase-invoice-update";
     }
 
     @PostMapping("/create-product-update/{id}")
@@ -117,9 +113,9 @@ public class InvoiceController {
 
         String name = invoiceProductDTO.getProductDTO().getName();
         invoiceProductDTO.setName(name);
-        this.addedInvoiceProducts.add(invoiceProductDTO);
+        this.invoiceProductDTO = invoiceProductDTO;
         this.active = false;
-        return "redirect:/sales-invoice/update/"+id;
+        return "redirect:/purchase-invoice/update/"+id;
     }
 
     @PostMapping("/invoice-update/{id}")
@@ -127,11 +123,9 @@ public class InvoiceController {
 
         InvoiceDTO updatedInvoice = invoiceService.update(invoiceDTO, id);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(updatedInvoice));
-        invoiceProductService.updateInvoiceProducts(id,currentInvoiceDTO.getInvoiceProduct());
+        invoiceProductService.save(currentInvoiceDTO.getInvoiceProduct());
         this.active = true;
-        this.addedInvoiceProducts.clear();
-        this.deletedInvoiceProducts.clear();
-        return "redirect:/sales-invoice/list";
+        return "redirect:/purchase-invoice/list";
     }
 
     // Delete ----------------------------------------------------------------------------------------------------------
@@ -139,25 +133,8 @@ public class InvoiceController {
     public String deleteInvoiceById(@PathVariable("id") Long id){
 
         invoiceService.deleteInvoiceById(id);
-        return "redirect:/sales-invoice/list";
-    }
+        return "redirect:/purchase-invoice/list";
 
-    @GetMapping("/delete-product/{name}")
-    public String deleteInvoiceProduct(@PathVariable("name") String name){
-
-        Set<InvoiceProductDTO> selectedInvoiceProducts = currentInvoiceDTO.getInvoiceProduct();
-        Set<InvoiceProductDTO> filteredInvoiceProducts = selectedInvoiceProducts.stream().filter(obj -> !obj.getName().equals(name)).collect(Collectors.toSet());
-        currentInvoiceDTO.setInvoiceProduct(filteredInvoiceProducts);
-        if (currentInvoiceDTO.getInvoiceProduct().size()==0) this.active = true;
-        return "redirect:/sales-invoice/create";
-    }
-
-    @GetMapping("/delete-product-update/{id}/{name}")
-    public String deleteInvoiceProductInUpdatePage(@PathVariable("id") Long id, @PathVariable("name") String name){
-        this.active = false;
-        Set<InvoiceProductDTO> selectedInvoiceProducts = currentInvoiceDTO.getInvoiceProduct();
-        selectedInvoiceProducts.stream().filter(obj -> obj.getName().equals(name)).forEach(obj -> deletedInvoiceProducts.add(obj));
-        return "redirect:/sales-invoice/update/"+id;
     }
 
 }

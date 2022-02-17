@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InvoiceDTO {
 
     private Long id;
-    private String invoiceNo;
+    private String invoiceNumber;
     private InvoiceStatus invoiceStatus;
     private InvoiceType invoiceType;
     private Byte enabled;
@@ -39,8 +39,4 @@ public class InvoiceDTO {
     private int InvoiceCostWithTax;
     private int totalCost;
 
-    public InvoiceDTO(String invoiceNo, LocalDate invoiceDate) {
-        this.invoiceNo = invoiceNo;
-        this.invoiceDate = invoiceDate;
-    }
 }
