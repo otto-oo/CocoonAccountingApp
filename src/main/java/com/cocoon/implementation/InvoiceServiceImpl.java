@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +60,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Invoice convertedInvoice = mapperUtil.convert(dto, new Invoice());
         Invoice invoice = invoiceRepository.getById(id);
-
         convertedInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
         convertedInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
         Invoice savedInvoice = invoiceRepository.save(convertedInvoice);
@@ -71,7 +69,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void deleteInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.getById(id);
-        Set<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByInvoiceId(invoice.getId());
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByInvoiceId(invoice.getId());
         invoiceProducts.stream().peek(obj -> obj.setIsDeleted(true)).forEach(invoiceProductRepo::save);
         invoice.setIsDeleted(true);
         invoiceRepository.save(invoice);
@@ -102,7 +100,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoices.stream().limit(3).map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
 
     }
-
 }
 
 
