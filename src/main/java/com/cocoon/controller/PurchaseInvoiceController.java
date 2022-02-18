@@ -1,9 +1,13 @@
 package com.cocoon.controller;
 
+import com.cocoon.dto.ClientVendorDTO;
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
+import com.cocoon.enums.CompanyType;
+import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.repository.ClientVendorRepo;
 import com.cocoon.service.ClientVendorService;
 import com.cocoon.service.InvoiceProductService;
 import com.cocoon.service.InvoiceService;
@@ -16,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,35 +36,47 @@ public class PurchaseInvoiceController {
     private final ProductService productService;
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
+    private final ClientVendorRepo clientVendorRepo;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ClientVendorRepo clientVendorRepo) {
         this.invoiceService = invoiceService;
         this.productService = productService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
+        this.clientVendorRepo = clientVendorRepo;
     }
 
     @GetMapping({"/list", "/list/{cancel}"})
     public String invoiceList(@RequestParam(required = false) String cancel, Model model){
 
-        if (cancel != null) this.active = true;
+        if (cancel != null){
+            this.active = true;
+            this.addedInvoiceProducts.clear();
+            this.deletedInvoiceProducts.clear();
+        }
         currentInvoiceDTO = new InvoiceDTO();
-        List<InvoiceDTO> invoices = invoiceService.getAllInvoices();
-        model.addAttribute("invoices", invoices);
+        List<InvoiceDTO> invoices = invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
+        List<InvoiceDTO> updatedInvoices = invoices.stream().map(invoiceService::calculateInvoiceCost).collect(Collectors.toList());
+        model.addAttribute("invoices", updatedInvoices);
+        model.addAttribute("client", new ClientVendorDTO());
+        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
 
         return "invoice/purchase-invoice-list";
     }
 
     @GetMapping("/create")
-    public String purchaseInvoiceCreate(Model model){
+    public String purchaseInvoiceCreate(@RequestParam(required = false) Long id, Model model) throws CocoonException{
 
+        if (id != null){
+            currentInvoiceDTO.setClientVendor(clientVendorRepo.getById(id));
+        }
         currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.PURCHASE));
         currentInvoiceDTO.setInvoiceDate(LocalDate.now());
         model.addAttribute("active", active);
         model.addAttribute("invoice", currentInvoiceDTO);
         model.addAttribute("product", new InvoiceProductDTO());
         model.addAttribute("products", productService.getAllProducts());
-        model.addAttribute("clients", clientVendorService.getAllClientsVendors());
+        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
         model.addAttribute("selectedproducts", currentInvoiceDTO.getInvoiceProduct());
 
         return "invoice/purchase-invoice-create";
@@ -77,11 +94,8 @@ public class PurchaseInvoiceController {
 
 
     @PostMapping("/create-invoice")
-    public String createInvoice(InvoiceDTO dto) throws CocoonException {
+    public String createInvoice() throws CocoonException {
 
-        currentInvoiceDTO.setInvoiceDate(dto.getInvoiceDate());
-        currentInvoiceDTO.setInvoiceNumber(dto.getInvoiceNumber());
-        currentInvoiceDTO.setClientVendor(dto.getClientVendor());
         currentInvoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
         InvoiceDTO savedInvoice = invoiceService.save(currentInvoiceDTO);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(savedInvoice));
@@ -101,13 +115,13 @@ public class PurchaseInvoiceController {
 
         if (this.addedInvoiceProducts.size() > 0 || this.deletedInvoiceProducts.size() > 0){
             addedInvoiceProducts.forEach(obj -> currentInvoiceDTO.getInvoiceProduct().add(obj));
-            deletedInvoiceProducts.forEach(deleted -> currentInvoiceDTO.getInvoiceProduct().removeIf(obj -> obj.getName().equals(deleted.getName())));
+            deletedInvoiceProducts.forEach(deleted -> currentInvoiceDTO.getInvoiceProduct().removeIf(obj -> (""+obj.getName() + obj.getPrice() + obj.getQty() + obj.getTax()).equals((""+deleted.getName() + deleted.getPrice() + deleted.getQty() + deleted.getTax()))));
         }
         model.addAttribute("active", active);
         model.addAttribute("invoice", invoiceDTO);
         model.addAttribute("product", new InvoiceProductDTO());
         model.addAttribute("products", productService.getAllProducts());
-        model.addAttribute("clients", clientVendorService.getAllClientsVendors());
+        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
         model.addAttribute("invoiceProducts", currentInvoiceDTO.getInvoiceProduct());
 
         return "invoice/purchase-invoice-update";
@@ -126,6 +140,7 @@ public class PurchaseInvoiceController {
     @PostMapping("/invoice-update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, InvoiceDTO invoiceDTO){
 
+        invoiceDTO.setInvoiceStatus(InvoiceStatus.APPROVED);
         InvoiceDTO updatedInvoice = invoiceService.update(invoiceDTO, id);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(updatedInvoice));
         invoiceProductService.updateInvoiceProducts(id,currentInvoiceDTO.getInvoiceProduct());
@@ -148,7 +163,8 @@ public class PurchaseInvoiceController {
     public String deleteInvoiceProduct(@PathVariable("name") String name){
 
         Set<InvoiceProductDTO> selectedInvoiceProducts = currentInvoiceDTO.getInvoiceProduct();
-        Set<InvoiceProductDTO> filteredInvoiceProducts = selectedInvoiceProducts.stream().filter(obj -> !obj.getName().equals(name)).collect(Collectors.toSet());
+        Predicate<InvoiceProductDTO> selectedProductFinder = (obj) -> !(""+obj.getName() + obj.getPrice() + obj.getQty() + obj.getTax()).equals(name);
+        Set<InvoiceProductDTO> filteredInvoiceProducts = selectedInvoiceProducts.stream().filter(selectedProductFinder).collect(Collectors.toSet());
         currentInvoiceDTO.setInvoiceProduct(filteredInvoiceProducts);
         if (currentInvoiceDTO.getInvoiceProduct().size()==0) this.active = true;
         return "redirect:/purchase-invoice/create";
@@ -156,9 +172,10 @@ public class PurchaseInvoiceController {
 
     @GetMapping("/delete-product-update/{id}/{name}")
     public String deleteInvoiceProductInUpdatePage(@PathVariable("id") Long id, @PathVariable("name") String name){
-        this.active = false;
+        if (currentInvoiceDTO.getInvoiceProduct().size()!=0) this.active = false;
         Set<InvoiceProductDTO> selectedInvoiceProducts = currentInvoiceDTO.getInvoiceProduct();
-        selectedInvoiceProducts.stream().filter(obj -> obj.getName().equals(name)).forEach(obj -> deletedInvoiceProducts.add(obj));
+        Predicate<InvoiceProductDTO> selectedProductFinder = (obj) -> (""+obj.getName() + obj.getPrice() + obj.getQty() + obj.getTax()).equals(name);
+        selectedInvoiceProducts.stream().filter(selectedProductFinder).forEach(obj -> deletedInvoiceProducts.add(obj));
         return "redirect:/purchase-invoice/update/"+id;
     }
 
