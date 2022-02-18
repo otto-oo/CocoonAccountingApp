@@ -4,9 +4,9 @@ import com.cocoon.dto.ClientVendorDTO;
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
 import com.cocoon.enums.CompanyType;
-import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.repository.ClientVendorRepo;
 import com.cocoon.service.ClientVendorService;
 import com.cocoon.service.InvoiceProductService;
 import com.cocoon.service.InvoiceService;
@@ -34,12 +34,14 @@ public class PurchaseInvoiceController {
     private final ProductService productService;
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
+    private final ClientVendorRepo clientVendorRepo;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ClientVendorRepo clientVendorRepo) {
         this.invoiceService = invoiceService;
         this.productService = productService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
+        this.clientVendorRepo = clientVendorRepo;
     }
 
     @GetMapping({"/list", "/list/{cancel}"})
@@ -64,9 +66,8 @@ public class PurchaseInvoiceController {
     public String purchaseInvoiceCreate(@RequestParam(required = false) Long id, Model model) throws CocoonException{
 
         if (id != null){
-            currentInvoiceDTO.setClientVendor(clientVendorService.findById(id));
+            currentInvoiceDTO.setClientVendor(clientVendorRepo.getById(id));
         }
-
         currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.PURCHASE));
         currentInvoiceDTO.setInvoiceDate(LocalDate.now());
         model.addAttribute("active", active);
@@ -137,7 +138,6 @@ public class PurchaseInvoiceController {
     @PostMapping("/invoice-update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, InvoiceDTO invoiceDTO){
 
-        invoiceDTO.setInvoiceStatus(InvoiceStatus.APPROVED);
         InvoiceDTO updatedInvoice = invoiceService.update(invoiceDTO, id);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(updatedInvoice));
         invoiceProductService.updateInvoiceProducts(id,currentInvoiceDTO.getInvoiceProduct());
