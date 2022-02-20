@@ -1,22 +1,25 @@
 package com.cocoon.service;
 
-import com.cocoon.dto.ClientVendorDTO;
+import com.cocoon.dto.ClientDTO;
+import com.cocoon.enums.CompanyType;
 import com.cocoon.exception.CocoonException;
 
 import java.util.List;
 
 public interface ClientVendorService {
 
-    List<ClientVendorDTO> getAllClientsVendors();
+    List<ClientDTO> getAllClientsVendors();
 
-    void save(ClientVendorDTO clientVendorDTO) throws CocoonException;
+    void save(ClientDTO clientDTO) throws CocoonException;
 
-    List<ClientVendorDTO> getAllClientsVendorsActivesFirst();
+    List<ClientDTO> getAllClientsVendorsActivesFirst();
 
-    ClientVendorDTO findById(Long id) throws CocoonException;
+    ClientDTO findById(Long id) throws CocoonException;
 
-    ClientVendorDTO update (ClientVendorDTO clientVendorDTO) throws CocoonException;
+    ClientDTO update (ClientDTO clientDTO) throws CocoonException;
 
     void deleteClientVendor(Long id) throws CocoonException;
+
+    List<ClientDTO> getAllClientVendorsByType(CompanyType type);
 
 }
