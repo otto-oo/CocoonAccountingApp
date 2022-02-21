@@ -45,6 +45,7 @@
                                                                            class="form-control" required
                                                                            aria-invalid="false"
                                                                            th:field="*{invoiceNumber}"
+                                                                           disabled
                                                                     />
                                                                 </div>
                                                             </div>
@@ -56,15 +57,16 @@
                                                                     <input type="date"
                                                                        class="form-control"
                                                                        th:field="*{invoiceDate}"
-                                                                       required="" aria-invalid="false">
+                                                                       required="" aria-invalid="false"
+                                                                           disabled>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-3">
                                                             <div class="form-group">
                                                                 <div class="controls">
-                                                                    <label>Client</label>
-                                                                    <select th:field="*{clientVendor}" class="custom-select" required="required">
+                                                                    <label>Vendor</label>
+                                                                    <select th:field="*{client}" class="custom-select" required="required">
                                                                         <option th:value=" ''" th:text="Select"></option>
                                                                         <option th:each="client : ${clients}" th:value="${client.id}"
                                                                                 th:text="${client.companyName}"></option>
@@ -173,7 +175,7 @@
                                                                     <td th:text="${product.tax}"></td>
                                                                     <td th:text="${(product.qty * product.price) + (product.qty * product.price * product.tax * 0.01)}"></td>
                                                                     <td>
-                                                                        <a class="ft-trash" th:href="@{/purchase-invoice/delete-product-update/{id}/{name}(id=${invoice.id}, name=${product.name})}">
+                                                                        <a class="ft-trash" th:href="@{/purchase-invoice/delete-product-update/{id}/{name}(id=${invoice.id}, name=${product.name + product.price + product.qty + product.tax})}">
                                                                         </a>
                                                                     </td>
                                                                 </tr>

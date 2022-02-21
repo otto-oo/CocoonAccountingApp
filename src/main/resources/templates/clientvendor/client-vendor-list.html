@@ -50,7 +50,7 @@
                                                 <table id="example" class="table table-striped table-bordered file-export" style="width:100%">
                                                     <thead>
                                                     <tr>
-                                                        <th>ID</th>
+                                                        <th>#</th>
                                                         <th>Company Name</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
@@ -63,24 +63,24 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr th:each="eachClientVendor : ${clientVendorList}">
-                                                        <td th:text="${eachClientVendor.getId()}"></td>
-                                                        <td th:text="${eachClientVendor.getCompanyName()}" class="text-truncate"></td>
-                                                        <td th:text="${eachClientVendor.getPhone()}" ></td>
-                                                        <td th:text="${eachClientVendor.getEmail()}" ></td>
-                                                        <td th:text="${eachClientVendor.getType()}" ></td>
-                                                        <td th:text="${eachClientVendor.getZipCode()}"></td>
-                                                        <td th:text="${eachClientVendor.getAddress()}"></td>
-                                                        <td th:text="${eachClientVendor.getState().getStateCode()}" ></td>
-                                                        <td>
+                                                    <tr th:each="eachClientVendor,row : ${clientVendorList}">
+                                                        <td style ="word-break:break-all;" th:text="${row.count}"></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getCompanyName()}" class="text-truncate"></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getPhone()}" ></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getEmail()}" ></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getType()}" ></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getZipCode()}"></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getAddress()}"></td>
+                                                        <td style ="word-break:break-all;" th:text="${eachClientVendor.getState().getStateCode()}" ></td>
+                                                        <td style ="word-break:break-all;">
                                                             <span
-                                                                    th:if="${eachClientVendor.isEnabled()}"
+                                                                    th:if="${eachClientVendor.getEnabled()}"
                                                                     class="badge bg-light-success">Active</span>
                                                             <span
-                                                                    th:unless="${eachClientVendor.isEnabled()}"
+                                                                    th:unless="${eachClientVendor.getEnabled()}"
                                                                     class="badge bg-light-DANGER">Passive</span>
                                                         </td>
-                                                        <td>
+                                                        <td style ="word-break:break-all;">
                                                             <a th:href="@{/client-vendor/update/{id}(id=${eachClientVendor.id})}">
                                                                 <i class="ft-edit" type="submit" ></i>
                                                             </a>
