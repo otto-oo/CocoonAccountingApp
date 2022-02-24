@@ -17,10 +17,10 @@ public class User extends BaseEntity {
     private String firstname;
     private String lastname;
     private String password;
-    private Byte enabled;
+    private boolean enabled;
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 

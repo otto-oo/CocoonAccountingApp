@@ -11,6 +11,7 @@ import com.cocoon.repository.ClientVendorRepo;
 import com.cocoon.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -193,9 +194,10 @@ public class InvoiceController {
     public String toInvoice(@PathVariable("id") Long id, Model model) throws CocoonException {
 
         InvoiceDTO invoiceDTO = invoiceService.getInvoiceById(id);
+        InvoiceDTO updatedInvoiceDTO = invoiceService.calculateInvoiceCost(invoiceDTO);
         Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(id);
-        model.addAttribute("company", companyService.getCompanyById(9L));
-        model.addAttribute("invoice", invoiceDTO);
+        model.addAttribute("company", companyService.getCompanyByLoggedInUser());
+        model.addAttribute("invoice", updatedInvoiceDTO);
         model.addAttribute("invoiceProducts",invoiceProducts);
 
         return "invoice/toInvoice";
