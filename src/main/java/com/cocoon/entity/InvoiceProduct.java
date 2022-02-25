@@ -19,7 +19,7 @@ public class InvoiceProduct extends BaseEntity{
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
