@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -81,11 +82,17 @@ public class InvoiceController {
     }
 
     @PostMapping("/create-invoice-product")
-    public String createInvoiceProduct(InvoiceProductDTO invoiceProductDTO) throws CocoonException {
+    public String createInvoiceProduct(InvoiceProductDTO invoiceProductDTO, RedirectAttributes redirAttrs) throws CocoonException {
 
         String name = invoiceProductDTO.getProductDTO().getName();
         invoiceProductDTO.setName(name);
-        if (!productService.validateProductQuantity(invoiceProductDTO)) throw new CocoonException("Not enough product quantity");
+
+        if (!productService.validateProductQuantity(invoiceProductDTO) ||
+            !invoiceProductService.validateProductQtyForPendingInvoicesIncluded(invoiceProductDTO)) {
+
+            redirAttrs.addFlashAttribute("error", "Not enough quantity to sell, check your inventory... Your Pending Invoices might have this very same Product to be sold");
+            return "redirect:/sales-invoice/create";
+        }
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         this.active = false;
         return "redirect:/sales-invoice/create";
@@ -194,9 +201,10 @@ public class InvoiceController {
     public String toInvoice(@PathVariable("id") Long id, Model model) throws CocoonException {
 
         InvoiceDTO invoiceDTO = invoiceService.getInvoiceById(id);
+        InvoiceDTO updatedInvoiceDTO = invoiceService.calculateInvoiceCost(invoiceDTO);
         Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(id);
-        model.addAttribute("company", companyService.getCompanyById(9L));
-        model.addAttribute("invoice", invoiceDTO);
+        model.addAttribute("company", companyService.getCompanyByLoggedInUser());
+        model.addAttribute("invoice", updatedInvoiceDTO);
         model.addAttribute("invoiceProducts",invoiceProducts);
 
         return "invoice/toInvoice";
