@@ -21,26 +21,23 @@ public class ReportController {
     private ProductService productService;
     private InvoiceService invoiceService;
     private InvoiceProductService invoiceProductService;
-
-    private InvoiceDTO currentInvoiceDTO = new InvoiceDTO();
-
-    @Autowired
     private InvoiceProductRepo invoiceProductRepo;
 
-    private boolean active = true;
-
-    public ReportController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService) {
+    public ReportController(InvoiceService invoiceService, ProductService productService,
+                            InvoiceProductService invoiceProductService, InvoiceProductRepo invoiceProductRepo) {
         this.invoiceService = invoiceService;
         this.productService = productService;
         this.invoiceProductService = invoiceProductService;
+        this.invoiceProductRepo = invoiceProductRepo;
     }
 
     @GetMapping("/stock")
     public String getStock(Model model){
 
-        ArrayList<InvoiceProduct> products = (ArrayList<InvoiceProduct>) invoiceProductRepo.getStockReportList();
+        ArrayList<InvoiceProduct> stock = (ArrayList<InvoiceProduct>) invoiceProductRepo.getStockReportListProducts();
+//        ArrayList<InvoiceProductDTO> stock = invoiceProductService.getStockReportList();
 
-        model.addAttribute("stock", new ArrayList<InvoiceProductDTO>());
+        model.addAttribute("stock", stock);
 
         return "report/stock-report.html";
     }
