@@ -21,7 +21,8 @@ public class Payee extends BaseEntity{
 
     private String name;
 
-    private List<> accountIdentifications = new ArrayList();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<TypeIdentification> accountIdentifications = new ArrayList();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address AddressObject;
