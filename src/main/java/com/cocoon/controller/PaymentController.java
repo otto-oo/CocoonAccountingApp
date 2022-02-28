@@ -1,6 +1,6 @@
 package com.cocoon.controller;
 
-import com.cocoon.entity.Payment;
+import com.cocoon.entity.payment.Payment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import reactor.core.publisher.Mono;
 public class PaymentController {
 
     private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
-    //private WebClient webClient = WebClient.builder().baseUrl("http://localhost:8082").build();
+    //private WebClient webClient = WebClient.builder().baseUrl("http://localhost:8080").build();
 
-    @PostMapping("/payment")
+    @PostMapping("/payments")
     public Mono<Payment> createWebClient(@RequestBody Payment payment) {
         return webClient.post()
                 .uri("/payment-auth-requests")
@@ -22,5 +22,15 @@ public class PaymentController {
                 .body(Mono.just(payment), Payment.class)
                 .retrieve()
                 .bodyToMono(Payment.class);
+    }
+
+    @GetMapping("/payments/{id}/details")
+    public Mono<Payment> readMonoWithWebClient(@PathVariable("id") String id){
+        return webClient
+                .get()
+                .uri("/payments/{id}/details", id)
+                .retrieve()
+                .bodyToMono(Payment.class);
+
     }
 }

@@ -1,5 +1,6 @@
-package com.cocoon.entity;
+package com.cocoon.entity.payment;
 
+import com.cocoon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "payment")
 @JsonIgnoreProperties(value={"hibernate_Lazy_Initializer"}, ignoreUnknown = true)
-public class Payment extends BaseEntity{
+public class Payment extends BaseEntity {
 
     private String applicationUserId;
     private String institutionId;
