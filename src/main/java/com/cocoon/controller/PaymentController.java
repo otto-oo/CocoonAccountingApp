@@ -1,5 +1,6 @@
 package com.cocoon.controller;
 
+import com.cocoon.entity.payment.AuthorizationResponse;
 import com.cocoon.entity.payment.Payment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,15 +14,18 @@ public class PaymentController {
     private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
     //private WebClient webClient = WebClient.builder().baseUrl("http://localhost:8080").build();
 
-    @PostMapping("/payments")
-    public Mono<Payment> createWebClient(@RequestBody Payment payment) {
-        return webClient.post()
+    @GetMapping("/payments")
+    public Mono<AuthorizationResponse> createWebClient() {
+        Payment payment1 = new Payment();
+        System.out.println("payment1.toString() = " + payment1.toString());
+        return webClient
+                .post()
                 .uri("/payment-auth-requests")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Basic ODZlM2ZmZWEtNjFkOC00MTQ5LTk2NmMtM2YzMjFiZWJhYTEyOmZkYTdkZGFlLTE5OWEtNDM3ZS1iMTRkLTI2ZmRjNGI2MmU4Nw==")
-                .body(Mono.just(payment), Payment.class)
+                .body(Mono.just(payment1), Payment.class)
                 .retrieve()
-                .bodyToMono(Payment.class);
+                .bodyToMono(AuthorizationResponse.class);
     }
 
     @GetMapping("/payments/{id}/details")

@@ -1,28 +1,24 @@
 package com.cocoon.entity.payment;
 
-import com.cocoon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-@Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "payee")
 @JsonIgnoreProperties(value={"hibernate_Lazy_Initializer"}, ignoreUnknown = true)
-public class Payee extends BaseEntity {
+@ToString
+public class Payee{
 
-    private String name;
+    private String name = "BILLS COFFEE LTD";
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<TypeIdentification> accountIdentifications = new ArrayList();
+    private List<TypeIdentification> accountIdentifications = Arrays.asList(new TypeIdentification("ACCOUNT_NUMBER", "99998888"), new TypeIdentification("SORT_CODE", "556677"));
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Address AddressObject;
+    private Address AddressObject = new Address();
 }

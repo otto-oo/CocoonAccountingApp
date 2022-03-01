@@ -2,28 +2,26 @@ package com.cocoon.entity.payment;
 
 import com.cocoon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.*;
+import java.util.UUID;
 
-@Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "payment_request")
 @JsonIgnoreProperties(value={"hibernate_Lazy_Initializer"}, ignoreUnknown = true)
-public class PaymentRequest extends BaseEntity {
+@ToString
+public class PaymentRequest{
 
-    private String type;
-    private String reference;
-    private String paymentIdempotencyId;
+    private String type = "DOMESTIC_PAYMENT";
+    private String reference = "Bills Coffee Shop";
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Amount AmountObject;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Payee PayeeObject;
+    private String paymentIdempotencyId = "1d54cf71bfe44b1b8e64547ae45455zsaf";
+
+    private Amount AmountObject = new Amount();
+
+    private Payee PayeeObject = new Payee();
 
 }

@@ -1,26 +1,20 @@
 package com.cocoon.entity.payment;
 
-import com.cocoon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.*;
-
-@Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "payment")
 @JsonIgnoreProperties(value={"hibernate_Lazy_Initializer"}, ignoreUnknown = true)
-public class Payment extends BaseEntity {
+@ToString
+public class Payment{
 
-    private String applicationUserId;
-    private String institutionId;
-    private String callback;
+    private String applicationUserId = "single-payment-tutorial";
+    private String institutionId = "modelo-sandbox";
+    private String callback = "https://display-parameters.com/";
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private PaymentRequest PaymentRequestObject;
+    private PaymentRequest PaymentRequestObject = new PaymentRequest();
 
 }

@@ -1,23 +1,17 @@
 package com.cocoon.entity.payment;
 
-import com.cocoon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-@Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "amount")
 @JsonIgnoreProperties(value={"hibernate_Lazy_Initializer"}, ignoreUnknown = true)
-public class Amount extends BaseEntity {
+@ToString
+public class Amount{
 
-    private float amount;
-    private String currency;
+    private float amount = 8.70f;
+    private String currency = "GBP";
 
 }
