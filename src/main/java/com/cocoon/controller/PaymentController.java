@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @RestController
 public class PaymentController {
 
@@ -20,7 +23,7 @@ public class PaymentController {
         System.out.println("payment1.toString() = " + payment1.toString());
         return webClient
                 .post()
-                .uri("/payment-auth-requests")
+                .uri("https://api.yapily.com/payment-auth-requests")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Basic ODZlM2ZmZWEtNjFkOC00MTQ5LTk2NmMtM2YzMjFiZWJhYTEyOmZkYTdkZGFlLTE5OWEtNDM3ZS1iMTRkLTI2ZmRjNGI2MmU4Nw==")
                 .body(Mono.just(payment1), Payment.class)
@@ -35,6 +38,18 @@ public class PaymentController {
                 .uri("/payments/{id}/details", id)
                 .retrieve()
                 .bodyToMono(Payment.class);
+
+    }
+
+    @GetMapping("/institutions")
+    public Mono<Object> readMonoWithInstitutions(){
+        return webClient
+                .get()
+                .uri("/institutions")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Basic ODZlM2ZmZWEtNjFkOC00MTQ5LTk2NmMtM2YzMjFiZWJhYTEyOmZkYTdkZGFlLTE5OWEtNDM3ZS1iMTRkLTI2ZmRjNGI2MmU4Nw==")
+                .retrieve()
+                .bodyToMono(Object.class);
 
     }
 }
