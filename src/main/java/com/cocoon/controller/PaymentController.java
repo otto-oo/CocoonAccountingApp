@@ -13,7 +13,7 @@ public class PaymentController {
 
     private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
 
-    @GetMapping("/payments")
+    @GetMapping("/payment-auth-requests")
     public Mono<Object> createWebClient() {
         Payment payment1 = new Payment();
         System.out.println("payment1.toString() = " + payment1.toString());
@@ -21,9 +21,7 @@ public class PaymentController {
                 .post()
                 .uri("/payment-auth-requests")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header("Accept", "application/json;charset=UTF-8")
                 .header("Authorization", "Basic ODZlM2ZmZWEtNjFkOC00MTQ5LTk2NmMtM2YzMjFiZWJhYTEyOmZkYTdkZGFlLTE5OWEtNDM3ZS1iMTRkLTI2ZmRjNGI2MmU4Nw==")
-                .header("Consent", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJJTlNUSVRVVElPTiI6Im1vZGVsby1zYW5kYm94IiwiQ09OU0VOVCI6ImE4ZTRmZTAxLTQ2ZmMtNDAwYy05OTdjLWNjMzMyNzEzOGY2ZiIsIkFQUExJQ0FUSU9OX1VTRVJfSUQiOiJzaW5nbGUtcGF5bWVudC10dXRvcmlhbCIsIlVTRVIiOiIzZWM1YTYxNy0zNDdhLTQ5ZTctOTIxYS1mZGY5MjlmNjY4ZWEifQ.v2BI0ry1ogn2qnvIChaHx3Y3MEjZ-E3FCdnmwHVp2MlRfoC-9ZD9ZHxeuSF02T_DgC1E-EuR82243U9PcnceVw")
                 .body(Mono.just(payment1), Payment.class)
                 .retrieve()
                 .bodyToMono(Object.class);

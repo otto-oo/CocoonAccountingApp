@@ -11,8 +11,8 @@ import lombok.*;
 @ToString
 public class Payment{
 
-    private String applicationUserId = "single-payment-tutorial";
-    private String institutionId = "modelo-sandbox";
+    private String applicationUserId = "otto";
+    private String institutionId = "aibgb-sandbox";
     private String callback = "https://display-parameters.com/";
 
     private PaymentRequest PaymentRequestObject = new PaymentRequest();

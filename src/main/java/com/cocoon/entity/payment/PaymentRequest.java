@@ -18,7 +18,7 @@ public class PaymentRequest{
     private String reference = "Bills Coffee Shop";
 
 
-    private String paymentIdempotencyId = "1d54cf71bfe44b1b8e64547ae45455zsaf";
+    private String paymentIdempotencyId = "1d54cf71bfe44b1b8e64547ae45455d96y";
 
     private Amount AmountObject = new Amount();
 
