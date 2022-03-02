@@ -24,4 +24,5 @@ public interface CompanyService {
 
     void save(CompanyDTO company) throws CocoonException;
 
+    CompanyDTO findCompanyByName(String companyTitle);
 }
