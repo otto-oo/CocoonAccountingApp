@@ -115,10 +115,10 @@
                             <li class="nav-item">
                                 <div class="logo"><a class="logo-text" th:href="@{/dashboard}" >
 
-                                    <span th:if="${companyName}==null"><h3 style="color: #0b2e13" sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')">Dashboard</h3></span>
+                                    <span th:if="${companyName.getTitle}==null"><h3 style="color: #0b2e13" sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')">Dashboard</h3></span>
 
-                                    <span th:unless="${companyName}==null"><h3 class="image-ruler login-page-title" sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')"
-                                                                               th:text="${companyName}"></h3></span>
+                                    <span th:unless="${companyName.getTitle}==null"><h3 class="image-ruler login-page-title" sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')"
+                                                                               th:text="${companyName.getTitle}"></h3></span>
                                 </a></div>
                             </li>
                         </ul>

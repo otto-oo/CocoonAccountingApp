@@ -170,10 +170,4 @@ public class CompanyServiceImpl implements CompanyService {
             throw new CocoonException("Establishment date should not be at a time in future.");
     }
 
-
-    @Override
-    public CompanyDTO findCompanyByName(String companyTitle) {
-        return mapperUtil.convert(companyRepo.findByTitle(companyTitle), new CompanyDTO());
-    }
-
 }
