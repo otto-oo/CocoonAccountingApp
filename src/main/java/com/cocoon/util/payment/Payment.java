@@ -61,7 +61,7 @@ public class Payment {
         System.out.println(gson.toJson(paymentAuthorisationRequest));
 
         // Send the payment authorisation request
-        ApiResponseOfPaymentAuthorisationRequestResponse authorizationResponse = paymentsApi.createPaymentAuthorisationUsingPOST(paymentAuthorisationRequest, null, null, null, null);
+        ApiResponseOfPaymentAuthorisationRequestResponse authorizationResponse = paymentsApi.createPaymentAuthorisationUsingPOST(paymentAuthorisationRequest, "", "", "", "");
 
         URI url = new URI(authorizationResponse.getData().getAuthorisationUrl());
 
@@ -100,10 +100,11 @@ public class Payment {
                         .orElseThrow(() -> new RuntimeException(String.format("No consent token present for application user %s", Constants.APPLICATION_USER_ID)));
 
                 final String consentToken = consent.getConsentToken();
-                System.out.println("Consent Token is " + consentToken); // to get the consent token
+                // to get the consent token
+                //System.out.println("Consent Token is " + consentToken);
 
                 // Create the payment with the same payment request object used in the payment authorisation request
-                ApiResponseOfPaymentResponse response = paymentsApi.createPaymentUsingPOST(consentToken, paymentRequest, null, null, null, null);
+                ApiResponseOfPaymentResponse response = paymentsApi.createPaymentUsingPOST(consentToken, paymentRequest, "", "", "", "");
 
                 System.out.println("Payment submitted");
 
@@ -112,7 +113,7 @@ public class Payment {
                 //System.out.println("Payment Response Id = " + response.getData().getId());
 
                 while (status == PaymentResponse.StatusEnum.PENDING) {
-                    ApiResponseOfPaymentResponse apiResponseOfPaymentResponse = paymentsApi.getPaymentStatusUsingGET(response.getData().getId(), consentToken, null, null, null, null);
+                    ApiResponseOfPaymentResponse apiResponseOfPaymentResponse = paymentsApi.getPaymentStatusUsingGET(response.getData().getId(), consentToken, "", "", "", "");
                     status = apiResponseOfPaymentResponse.getData().getStatus();
                     Thread.sleep(1000);
                 }

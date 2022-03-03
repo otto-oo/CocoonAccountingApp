@@ -1,14 +1,19 @@
 package com.cocoon.util.payment;
 
 import yapily.ApiClient;
+import yapily.Configuration;
 import yapily.auth.HttpBasicAuth;
+import yapily.sdk.InstitutionsApi;
 
 public class ApiClientUtils {
     public static ApiClient basicAuth() {
-        ApiClient defaultClient = new ApiClient();
-        HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
-        basicAuth.setUsername("86e3ffea-61d8-4149-966c-3f321bebaa12");
-        basicAuth.setPassword("fda7ddae-199a-437e-b14d-26fdc4b62e87");
-        return defaultClient;
+        ApiClient applicationClient = new ApiClient();
+        // Configure the API authentication
+        HttpBasicAuth basicAuth = (HttpBasicAuth) applicationClient.getAuthentication("basicAuth");
+        basicAuth.setUsername(Constants.APPLICATION_ID);
+        basicAuth.setPassword(Constants.APPLICATION_SECRET);
+        InstitutionsApi institutionsApi = new InstitutionsApi();
+        institutionsApi.setApiClient(applicationClient);
+        return applicationClient;
     }
 }

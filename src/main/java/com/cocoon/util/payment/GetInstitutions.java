@@ -29,7 +29,7 @@ public class GetInstitutions {
 
             // Get all institutions
             System.out.println("Get Institutions from API: /institutions");
-            ApiListResponseOfInstitution institutionsResponse = institutionsApi.getInstitutionsUsingGET(null);
+            ApiListResponseOfInstitution institutionsResponse = institutionsApi.getInstitutionsUsingGET("");
 
             // Print only the names
             final List<String> institutionsNamesList = institutionsResponse.getData().stream()
@@ -42,7 +42,7 @@ public class GetInstitutions {
             String institutionId = institutionsResponse.getData().get(0).getId();
 
             System.out.println("Get Institution from API: /institutions/{institutionId}");
-            Institution institution = institutionsApi.getInstitutionUsingGET(institutionId, null);
+            Institution institution = institutionsApi.getInstitutionUsingGET(institutionId, "");
 
             System.out.println("One institution:");
             System.out.println(gson.toJson(institution));

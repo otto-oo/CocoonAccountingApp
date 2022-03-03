@@ -14,7 +14,7 @@ public class UserUtils {
     public static ApplicationUser createOrUseExistingApplciationUser(String applicationUserId, ApiClient defaultClient) throws ApiException {
         ApplicationUsersApi applicationUsersApi = new ApplicationUsersApi(defaultClient);
         System.out.println("Checking for user " + applicationUserId + " using GET /users?filter[applicationUserId]=" + applicationUserId);
-        List<ApplicationUser> applicationUserList = applicationUsersApi.getUsersUsingGET("Yapily API v1.0", Collections.singletonList(applicationUserId));
+        List<ApplicationUser> applicationUserList = applicationUsersApi.getUsersUsingGET("", Collections.singletonList(applicationUserId));
 
         if (applicationUserList.isEmpty()) {
             return createNewApplicationUser(applicationUserId, defaultClient);
@@ -31,7 +31,7 @@ public class UserUtils {
         user.setApplicationUserId(applicationUserId);
 
         System.out.println("Adding new user [java-sdk] with POST /users");
-        final ApplicationUser applicationUser = applicationUsersApi.addUserUsingPOST(user, "Yapily API v1.0");
+        final ApplicationUser applicationUser = applicationUsersApi.addUserUsingPOST(user, "");
         return applicationUser;
     }
 
