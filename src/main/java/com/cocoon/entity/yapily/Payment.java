@@ -53,9 +53,9 @@ public class Payment {
         PaymentRequest paymentRequest = PaymentRequestUtils.createNewDomesticPaymentRequestWithSortCodeAndAccountNumber(
                 new BigDecimal(1),
                 "GBP",
-                "Test Domestic payment",
+                "Domestic Payment",
                 "cydeoJavaDevMentorsAreTheBest", // anyUniqueStringOver18characters
-                "Bob Smith",
+                "Cocoon Accounting",
                 "700001",
                 "70000005"
         );
@@ -76,7 +76,10 @@ public class Payment {
 
                 // After authentication, you should be redirected to a static page that can be closed
                 System.out.println("After completing authentication, press Enter to continue: [enter]");
+                // to implement with user input
                 System.in.read();
+                // to implement WITHOUT user input
+                //Thread.sleep(1000);
 
                 // Get user consents
                 final ConsentsApi consentsApi = new ConsentsApi(defaultClient);
@@ -101,7 +104,7 @@ public class Payment {
                         .orElseThrow(() -> new RuntimeException(String.format("No consent token present for application user %s", Constants.APPLICATION_USER_ID)));
 
                 final String consentToken = consent.getConsentToken();
-                //System.out.println("Consent Token is " + consentToken);
+                System.out.println("Consent Token is " + consentToken); // to get the consent token
 
                 // Create the payment with the same payment request object used in the payment authorisation request
                 ApiResponseOfPaymentResponse response = paymentsApi.createPaymentUsingPOST(consentToken, paymentRequest, null, null, null, null);
@@ -109,6 +112,8 @@ public class Payment {
                 System.out.println("Payment submitted");
 
                 PaymentResponse.StatusEnum status = response.getData().getStatus();
+                // to get the payment id
+                //System.out.println("Payment Response Id = " + response.getData().getId());
 
                 while (status == PaymentResponse.StatusEnum.PENDING) {
                     ApiResponseOfPaymentResponse apiResponseOfPaymentResponse = paymentsApi.getPaymentStatusUsingGET(response.getData().getId(), consentToken, null, null, null, null);

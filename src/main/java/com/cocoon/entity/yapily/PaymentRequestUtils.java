@@ -13,7 +13,7 @@ public class PaymentRequestUtils {
 
     public static PaymentRequest createNewDomesticPaymentRequestWithSortCodeAndAccountNumber(
             BigDecimal amountToSend, // dynamic
-            String currencyToSend, // static $ olacak
+            String currencyToSend, // static $
             String reference, // static
             String idempotencyId, // static
             String recipientName, // static account holder Cocoon
