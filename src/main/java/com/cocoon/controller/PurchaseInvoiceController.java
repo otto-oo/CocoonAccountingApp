@@ -8,10 +8,7 @@ import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.repository.ClientVendorRepo;
-import com.cocoon.service.ClientVendorService;
-import com.cocoon.service.InvoiceProductService;
-import com.cocoon.service.InvoiceService;
-import com.cocoon.service.ProductService;
+import com.cocoon.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +34,15 @@ public class PurchaseInvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
     private final ClientVendorRepo clientVendorRepo;
+    private final CompanyService companyService;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ClientVendorRepo clientVendorRepo) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ClientVendorRepo clientVendorRepo, CompanyService companyService) {
         this.invoiceService = invoiceService;
         this.productService = productService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
         this.clientVendorRepo = clientVendorRepo;
+        this.companyService = companyService;
     }
 
     @GetMapping({"/list", "/list/{cancel}"})
@@ -86,7 +85,7 @@ public class PurchaseInvoiceController {
     public String createInvoiceProduct(InvoiceProductDTO invoiceProductDTO){
 
         String name = invoiceProductDTO.getProductDTO().getName();
-        invoiceProductDTO.setName(name);
+        invoiceProductDTO.setName(name); // TODO
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         this.active = false;
         return "redirect:/purchase-invoice/create";
@@ -98,8 +97,7 @@ public class PurchaseInvoiceController {
 
         currentInvoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
         InvoiceDTO savedInvoice = invoiceService.save(currentInvoiceDTO);
-        currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(savedInvoice));
-        invoiceProductService.save(currentInvoiceDTO.getInvoiceProduct());
+        invoiceProductService.approveInvoiceProduct(savedInvoice.getId());
         this.active = true;
 
         return "redirect:/purchase-invoice/list";
@@ -154,6 +152,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/delete/{id}")
     public String deleteInvoiceById(@PathVariable("id") Long id){
 
+        invoiceProductService.deleteInvoiceProducts(id);
         invoiceService.deleteInvoiceById(id);
         return "redirect:/purchase-invoice/list";
 

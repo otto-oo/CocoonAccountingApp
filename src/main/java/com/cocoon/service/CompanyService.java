@@ -10,6 +10,8 @@ public interface CompanyService {
 
     CompanyDTO getCompanyById(Long id) throws CocoonException;
 
+    CompanyDTO getCompanyByLoggedInUser();
+
     CompanyDTO update(CompanyDTO companyDTO)throws CocoonException;
 
     void close(CompanyDTO companyDTO)throws CocoonException;
@@ -21,5 +23,4 @@ public interface CompanyService {
     List<CompanyDTO> getAllCompanies();
 
     void save(CompanyDTO company) throws CocoonException;
-
 }

@@ -59,16 +59,17 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr >
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td  ></td>
+                                                <tr th:each="item : ${stock}">
+                                                    <td th:text="${item.invoice.invoiceDate}"></td>
+                                                    <td th:text="${item.product.name}"></td>
+                                                    <td  th:text="${item.getProductQuantityUnitText()}"></td>
                                                     <td >
+                                                        <span  class="badge"
+                                                               th:classappend="${item.invoice.getInvoiceType().name()} eq 'PURCHASE' ? bg-light-blue : bg-light-success"
+                                                                th:text="${item.invoice.getInvoiceType().name()}"></span>
 
-                                                        <span  class="badge bg-light-blue">PURCHASE</span>
-                                                        <span  class="badge bg-light-success">SALE</span>
                                                     </td>
-                                                    <td  ></td>
+                                                    <td  th:text="'$ '+${item.price}"></td>
 
                                                 </tr>
 
