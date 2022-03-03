@@ -1,4 +1,4 @@
-package com.cocoon.entity.yapily;
+package com.cocoon.util.payment;
 
 import yapily.ApiClient;
 import yapily.ApiException;

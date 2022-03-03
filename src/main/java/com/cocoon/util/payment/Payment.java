@@ -1,4 +1,4 @@
-package com.cocoon.entity.yapily;
+package com.cocoon.util.payment;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -6,10 +6,6 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Collections;
 
-import com.cocoon.entity.yapily.ApiClientUtils;
-import com.cocoon.entity.yapily.Constants;
-import com.cocoon.entity.yapily.PaymentRequestUtils;
-import com.cocoon.entity.yapily.UserUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

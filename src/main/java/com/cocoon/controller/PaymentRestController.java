@@ -1,6 +1,6 @@
 package com.cocoon.controller;
 
-import com.cocoon.entity.payment.Payment;
+import com.cocoon.util.payment_old_one.Payment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

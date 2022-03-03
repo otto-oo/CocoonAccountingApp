@@ -1,4 +1,4 @@
-package com.cocoon.entity.payment;
+package com.cocoon.util.payment_old_one;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;

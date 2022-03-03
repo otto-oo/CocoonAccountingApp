@@ -1,6 +1,4 @@
-package com.cocoon.entity.yapily;
-
-import yapily.sdk.Payee;
+package com.cocoon.util.payment;
 
 public class Constants {
     /**

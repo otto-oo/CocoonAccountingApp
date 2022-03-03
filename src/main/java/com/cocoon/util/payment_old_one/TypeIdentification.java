@@ -1,4 +1,4 @@
-package com.cocoon.entity.payment;
+package com.cocoon.util.payment_old_one;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -9,7 +9,9 @@ import lombok.*;
 @Setter
 @JsonIgnoreProperties(value={"hibernate_Lazy_Initializer"}, ignoreUnknown = true)
 @ToString
-public class Address{
+public class TypeIdentification{
 
-    private String country = "GB";
+    private String type;
+    private String identification;
+
 }

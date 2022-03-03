@@ -1,9 +1,8 @@
-package com.cocoon.entity.payment;
+package com.cocoon.util.payment_old_one;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
