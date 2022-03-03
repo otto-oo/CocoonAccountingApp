@@ -1,8 +1,7 @@
 package com.cocoon.controller;
 
 import com.cocoon.dto.InvoiceDTO;
-import com.cocoon.dto.ProductDTO;
-import com.cocoon.service.ClientVendorService;
+import com.cocoon.service.CompanyService;
 import com.cocoon.service.InvoiceService;
 import com.cocoon.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -18,10 +17,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-
+     private  final    CompanyService companyService;
     private final InvoiceService invoiceService;
 
-    public DashboardController(InvoiceService invoiceService) {
+    public DashboardController(CompanyService companyService, InvoiceService invoiceService) {
+        this.companyService = companyService;
         this.invoiceService = invoiceService;
     }
 
@@ -33,7 +33,7 @@ public class DashboardController {
         List<InvoiceDTO> updatedInvoices = invoices.stream().map(invoiceService::calculateInvoiceCost).collect(Collectors.toList());
         model.addAttribute("invoices", updatedInvoices);
         model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
-
+        model.addAttribute("company", companyService.getCompanyByLoggedInUser());
         return "dashboard";
     }
 
