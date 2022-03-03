@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import java.time.Month;
 
 @Entity
 @NoArgsConstructor
@@ -15,6 +18,10 @@ import javax.persistence.Table;
 public class Payment extends BaseEntity{
 
     private String clientName;
+
+    @Enumerated(EnumType.STRING)
+    private Month month;
+
     private int amount;
     private boolean isPaid;
 
