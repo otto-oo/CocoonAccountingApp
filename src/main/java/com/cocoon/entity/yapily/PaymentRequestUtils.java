@@ -12,13 +12,13 @@ import java.util.List;
 public class PaymentRequestUtils {
 
     public static PaymentRequest createNewDomesticPaymentRequestWithSortCodeAndAccountNumber(
-            BigDecimal amountToSend,
-            String currencyToSend,
-            String reference,
-            String idempotencyId,
-            String recipientName,
-            String sortCode,
-            String accountNumber
+            BigDecimal amountToSend, // dynamic
+            String currencyToSend, // static $ olacak
+            String reference, // static
+            String idempotencyId, // static
+            String recipientName, // static account holder Cocoon
+            String sortCode, // static
+            String accountNumber // static
     ) {
         // Create the payment request to attach to the authorisation request
         PaymentRequest paymentRequest = new PaymentRequest();
