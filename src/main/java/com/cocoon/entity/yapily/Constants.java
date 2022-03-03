@@ -6,13 +6,13 @@ public class Constants {
      */
     public static final String PARAMETER_INSTITUTION_ID = "aibgb-sandbox";
     public static final String PARAMETER_APPLICATION_ID = "86e3ffea-61d8-4149-966c-3f321bebaa12";
-    public static final String PARAMETER_USER_ID = "80a7cca7-95ed-47f4-ae07-eb6c7b7934c4";
+    public static final String PARAMETER_USER_ID = "f5199cea-b807-494c-9c5f-bcc5f1204b0b";
     public static final String PARAMETER_CALLBACK_URL = "https://display-parameters.com/";
 
     /**
      * A default user all examples will run with
      */
-    public static final String APPLICATION_USER_ID = "otto";
+    public static final String APPLICATION_USER_ID = "cocoonPayUser";
 
     /**
      * Placeholder for credentials created in the Applications dashboard. Hardcoded here only for
