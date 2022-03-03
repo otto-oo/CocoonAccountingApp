@@ -19,12 +19,17 @@ public class InvoiceProduct extends BaseEntity{
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
     private String name;
+
     private int qty;
     private int price;
     private int tax;
+
+    public String getProductQuantityUnitText(){
+        return qty + " / " + product.getUnit().getValue();
+    }
 }

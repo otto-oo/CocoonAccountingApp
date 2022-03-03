@@ -3,7 +3,9 @@ package com.cocoon.implementation;
 import com.cocoon.dto.InvoiceProductDTO;
 import com.cocoon.entity.Invoice;
 import com.cocoon.entity.InvoiceProduct;
+import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
+import com.cocoon.exception.CocoonException;
 import com.cocoon.repository.InvoiceProductRepo;
 import com.cocoon.repository.InvoiceRepository;
 import com.cocoon.service.InvoiceProductService;
@@ -11,10 +13,7 @@ import com.cocoon.service.ProductService;
 import com.cocoon.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,6 +93,18 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     public void deleteInvoiceProducts(Long id) {
         Set<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByInvoiceId(id);
         invoiceProducts.forEach(obj -> productService.updateProductQuantity(InvoiceType.SALE, obj));
+    }
+
+    public boolean validateProductQtyForPendingInvoicesIncluded(InvoiceProductDTO dto) throws CocoonException {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByProductIdAndInvoiceInvoiceStatus(dto.getProductDTO().getId(), InvoiceStatus.PENDING);
+        int totalQty = invoiceProducts.stream().mapToInt(InvoiceProduct::getQty).sum();
+        return totalQty + dto.getQty() <= productService.getProductById(dto.getProductDTO().getId()).getQty();
+    }
+
+    @Override
+    public ArrayList<InvoiceProductDTO> getStockReportList() {
+        ArrayList<InvoiceProduct> products = (ArrayList<InvoiceProduct>) invoiceProductRepo.getStockReportListProducts();
+        return (ArrayList<InvoiceProductDTO>) products.stream().map(ip -> mapperUtil.convert(ip, new InvoiceProductDTO())).collect(Collectors.toList());
     }
 
 
