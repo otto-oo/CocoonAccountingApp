@@ -37,8 +37,6 @@ public class ProductController {
         model.addAttribute("productStatus", ProductStatus.values());
         model.addAttribute("unit", Unit.values());
         model.addAttribute("categories", categoryService.getAllCategories());
-        // TODO @otto There should be an attribute to call user's company, this has to be done after security portion
-        // TODO @otto Just manager can add product according to picture in SRS.
         return "product/product-add";
     }
 
@@ -71,11 +69,6 @@ public class ProductController {
         productService.deleteById(id);
 
         return "redirect:/product/list";
-    }
-
-    @ModelAttribute("company")
-    public String getCompanyName() {
-        return companyService.getCompanyByLoggedInUser().getTitle();
     }
 
 
