@@ -1,6 +1,9 @@
 package com.cocoon.entity.common;
 
+import com.cocoon.dto.CompanyDTO;
+import com.cocoon.entity.Company;
 import com.cocoon.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-//this is not a bean
+@Getter
 public class UserPrincipal implements UserDetails {
 
     private User user;
@@ -63,4 +66,5 @@ public class UserPrincipal implements UserDetails {
     public Long getId(){
         return this.user.getId();
     }
+
 }

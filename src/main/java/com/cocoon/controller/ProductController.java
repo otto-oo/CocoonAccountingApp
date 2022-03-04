@@ -9,10 +9,7 @@ import com.cocoon.service.CompanyService;
 import com.cocoon.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/product")
@@ -20,11 +17,12 @@ public class ProductController {
 
     private ProductService productService;
     private CategoryService categoryService;
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    public ProductController(ProductService productService, CategoryService categoryService) {
+    public ProductController(ProductService productService, CategoryService categoryService, CompanyService companyService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.companyService = companyService;
     }
 
     @GetMapping("/list")
@@ -39,8 +37,6 @@ public class ProductController {
         model.addAttribute("productStatus", ProductStatus.values());
         model.addAttribute("unit", Unit.values());
         model.addAttribute("categories", categoryService.getAllCategories());
-        // TODO @otto There should be an attribute to call user's company, this has to be done after security portion
-        // TODO @otto Just manager can add product according to picture in SRS.
         return "product/product-add";
     }
 
