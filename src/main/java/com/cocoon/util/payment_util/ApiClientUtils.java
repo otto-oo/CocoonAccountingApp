@@ -1,7 +1,6 @@
-package com.cocoon.util.payment;
+package com.cocoon.util.payment_util;
 
 import yapily.ApiClient;
-import yapily.Configuration;
 import yapily.auth.HttpBasicAuth;
 import yapily.sdk.InstitutionsApi;
 

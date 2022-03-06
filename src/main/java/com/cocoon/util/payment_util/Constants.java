@@ -1,4 +1,4 @@
-package com.cocoon.util.payment;
+package com.cocoon.util.payment_util;
 
 public class Constants {
     /**

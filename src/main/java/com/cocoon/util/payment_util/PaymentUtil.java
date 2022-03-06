@@ -1,4 +1,4 @@
-package com.cocoon.util.payment;
+package com.cocoon.util.payment_util;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import yapily.sdk.PaymentRequest;
 import yapily.sdk.PaymentResponse;
 import yapily.sdk.PaymentsApi;
 
-public class Payment {
+public class PaymentUtil {
 
     private static final String INSTITUTION_ID = Constants.PARAMETER_INSTITUTION_ID;
 

@@ -1,4 +1,4 @@
-package com.cocoon.util.payment;
+package com.cocoon.util.payment_util;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,6 @@ import yapily.sdk.InstitutionsApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

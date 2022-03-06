@@ -5,7 +5,7 @@ import com.cocoon.entity.Institution;
 import com.cocoon.repository.InstitutionsRepo;
 import com.cocoon.service.InstitutionService;
 import com.cocoon.util.MapperUtil;
-import com.cocoon.util.payment.GetInstitutions;
+import com.cocoon.util.payment_util.GetInstitutions;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
