@@ -1,5 +1,6 @@
 package com.cocoon.controller;
 
+import com.cocoon.dto.ProfitDTO;
 import com.cocoon.entity.InvoiceProduct;
 import com.cocoon.repository.InvoiceProductRepo;
 import com.cocoon.service.*;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/report")
@@ -45,6 +47,15 @@ public class ReportController {
 
         return "report/stock-report.html";
     }
+
+    @GetMapping("/profit")
+    public String getProfit(Model model){
+        List<ProfitDTO> profit=  invoiceService.getProfitList();
+        model.addAttribute("profit", profit);
+
+        return "report/profit-loss-report.html";
+    }
+
 
     @ModelAttribute
     public void addAttributes(Model model) {
