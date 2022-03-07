@@ -1,22 +1,24 @@
 package com.cocoon.implementation;
 
 import com.cocoon.dto.InstitutionDTO;
-import com.cocoon.entity.Institution;
+import com.cocoon.entity.payment.Institution;
+import com.cocoon.entity.payment.InstitutionResponse;
 import com.cocoon.repository.InstitutionsRepo;
 import com.cocoon.service.InstitutionService;
 import com.cocoon.util.MapperUtil;
-import com.cocoon.util.payment.GetInstitutions;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class InstitutionServiceImpl implements InstitutionService {
 
-    List<String> institutionNames = GetInstitutions.institutions;
+    private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
 
     private final InstitutionsRepo institutionsRepo;
     private final MapperUtil mapperUtil;
@@ -41,18 +43,11 @@ public class InstitutionServiceImpl implements InstitutionService {
     @Override
     public List<InstitutionDTO> saveIfNotExist(List<String> institutionNames) {
 
-        Set<String> institutionSet = new HashSet<>(institutionNames);
-        List<Institution> institutions = institutionsRepo.findAll();
-        if (institutions.size() > 0){
-            institutions.stream()
-                    .peek(obj -> obj.setIsDeleted(true))
-                    .map(Institution::getName)
-                    .forEach(institutionSet::add);
-        }
+        institutionNames.stream()
+                .filter(name -> !name.equalsIgnoreCase(institutionsRepo.findDistinctByName(name).getName()))
+                .forEach(name1 -> institutionsRepo.save(new Institution(name1)));
 
-        return institutionSet.stream()
-                .map(Institution::new)
-                .peek(institutionsRepo::save)
+        return institutionsRepo.findAll().stream()
                 .map(obj -> mapperUtil.convert(obj, new InstitutionDTO()))
                 .collect(Collectors.toList());
     }
@@ -61,5 +56,32 @@ public class InstitutionServiceImpl implements InstitutionService {
     public InstitutionDTO save(InstitutionDTO institutionDTO) {
         Institution institution = mapperUtil.convert(institutionDTO, new Institution());
         return mapperUtil.convert(institutionsRepo.save(institution), new InstitutionDTO());
+    }
+
+    @Override
+    public List<String> getInstitutionsAtStartUp(){
+
+        List<String> result = new ArrayList<>();
+        var response = webClient
+                .get()
+                .uri("/institutions")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Basic ODZlM2ZmZWEtNjFkOC00MTQ5LTk2NmMtM2YzMjFiZWJhYTEyOmZkYTdkZGFlLTE5OWEtNDM3ZS1iMTRkLTI2ZmRjNGI2MmU4Nw==")
+                .retrieve()
+                .bodyToFlux(InstitutionResponse.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+
+        response.toStream()
+                .map(InstitutionResponse::getData)
+                .forEach(obj -> obj.stream()
+                        .map(Institution::getName)
+                        .forEach(result::add));
+
+        saveIfNotExist(result);
+
+        return result;
+
     }
 }
