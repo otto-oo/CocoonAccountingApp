@@ -4,6 +4,7 @@ import com.cocoon.dto.CompanyDTO;
 import com.cocoon.entity.Company;
 import com.cocoon.exception.CocoonException;
 
+import javax.swing.*;
 import java.util.List;
 
 public interface CompanyService {
@@ -23,4 +24,6 @@ public interface CompanyService {
     List<CompanyDTO> getAllCompanies();
 
     void save(CompanyDTO company) throws CocoonException;
+    CompanyDTO findCompanyByName(String companyTitle);
+
 }

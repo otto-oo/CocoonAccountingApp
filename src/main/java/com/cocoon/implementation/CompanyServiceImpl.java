@@ -10,6 +10,7 @@ import com.cocoon.repository.CompanyRepo;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.UserService;
 import com.cocoon.util.MapperUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
@@ -29,6 +31,9 @@ public class CompanyServiceImpl implements CompanyService {
     private MapperUtil mapperUtil;
     @Autowired
     private UserService userService;
+
+    private UserPrincipal userPrincipal;
+
 
     @Override
     public CompanyDTO getCompanyById(Long id) throws CocoonException {
@@ -114,6 +119,23 @@ public class CompanyServiceImpl implements CompanyService {
 
         //saving to database
         Company savedCompany = companyRepo.save(mapperUtil.convert(companyDTO, new Company()));
+    }
+
+    @Override
+    public CompanyDTO findCompanyByName(String companyTitle) {
+        return mapperUtil.convert(companyRepo.findByTitle(companyTitle), new CompanyDTO());
+    }
+/*
+    @Override
+    public Company getCurrentCompany() throws Exception {
+
+        userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("User Principal logged in USER NAME  : " + userPrincipal.getUsername());
+        log.info("User Principal logged in user COMPANY ID : " + userPrincipal.getLoggedInUserCompanyId());
+        return companyRepo
+                .findById(
+                        userPrincipal.getLoggedInUserCompanyId()
+                ).orElseThrow(() -> new Exception("This Company is not available"));
     }
 /*
     @Override
