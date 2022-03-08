@@ -50,8 +50,7 @@ public class PaymentUtil {
                 new BigDecimal(1),
                 "GBP",
                 "Domestic Payment",
-                // anyUniqueStringOver18characters NEEDS TO BE CHANGED...
-                "cydeoJavaDevMentorsAreTheBest3",
+                "cydeoJavaDevMentorsAreTheBest", // anyUniqueStringOver18characters
                 "Cocoon Accounting",
                 "700001",
                 "70000005"
