@@ -10,10 +10,10 @@ import com.cocoon.repository.PaymentRepository;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.PaymentService;
 import com.cocoon.util.MapperUtil;
-import com.cocoon.util.payment.ApiClientUtils;
-import com.cocoon.util.payment.Constants;
-import com.cocoon.util.payment.PaymentRequestUtils;
-import com.cocoon.util.payment.UserUtils;
+import com.cocoon.util.payment_util.ApiClientUtils;
+import com.cocoon.util.payment_util.Constants;
+import com.cocoon.util.payment_util.PaymentRequestUtils;
+import com.cocoon.util.payment_util.UserUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Service;
@@ -148,7 +148,7 @@ public class PaymentServiceImpl implements PaymentService {
                 // to implement with user input
                 //System.in.read();
                 // to implement WITHOUT user input
-                Thread.sleep(1000);
+                Thread.sleep(7000);
 
                 // Get user consents
                 final ConsentsApi consentsApi = new ConsentsApi(defaultClient);
