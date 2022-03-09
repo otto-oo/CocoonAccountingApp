@@ -56,7 +56,9 @@ public class ReportController {
     @GetMapping("/profit")
     public String getProfitList(Model model){
         ArrayList<ProfitDTO> profit=   (ArrayList<ProfitDTO>)invoiceService.getProfitList();
+
         model.addAttribute("profit", profit);
+        model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
 
         return "report/profit-report.html";
     }
@@ -68,6 +70,7 @@ public class ReportController {
         ArrayList<ProfitDTO> profit=   (ArrayList<ProfitDTO>)invoiceService.getProfitList();
         model.addAttribute("profit", profit);
         model.addAttribute("company", companyService.getCompanyByLoggedInUser());
+        model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
 
         return "report/Profit-printed.html";
     }
