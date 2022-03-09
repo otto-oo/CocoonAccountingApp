@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ProfitDTO {
 
-    private Long id;
+
     private String name;
     private int qty;
     private int profit;
