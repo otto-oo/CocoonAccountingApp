@@ -1,28 +1,42 @@
 package com.cocoon.entity;
 
+import com.cocoon.entity.payment.Institution;
+import com.cocoon.enums.Months;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import java.time.Month;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
 @Table(name="payment")
-public class Payment extends BaseEntity{
+@Where(clause = "is_deleted=false")
+public class Payment extends BaseEntity implements Serializable {
 
-    private String clientName;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "institution_id")
+    private Institution institution;
 
     @Enumerated(EnumType.STRING)
-    private Month month;
+    private Months month;
+
+    @Column(columnDefinition = "DATE")
+    private LocalDate year;
 
     private int amount;
     private boolean isPaid;
+
+
+
 
 }

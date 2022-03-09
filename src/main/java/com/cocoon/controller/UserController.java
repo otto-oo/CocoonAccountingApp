@@ -9,6 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -59,9 +64,17 @@ public class UserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id){
+    public String deleteUser(@PathVariable Long id) throws CocoonException {
         userService.delete(id);
         return "redirect:/user/list";
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("date", new Date());
+        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute("localDate", LocalDate.now());
+        model.addAttribute("java8Instant", Instant.now());
     }
 
 }
