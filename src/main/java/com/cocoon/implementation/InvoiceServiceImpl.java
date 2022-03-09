@@ -156,6 +156,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public List<InvoiceDTO> getDashboardInvoiceTop3(Long companyId) {
+        List<Invoice> invoices = invoiceRepository.getDashboardInvoiceTop3(companyId, companyId);
+        return invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
+    }
+
+    @Override
     public InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO) {
 
         Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(currentDTO.getId());
