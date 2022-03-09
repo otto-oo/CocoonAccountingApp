@@ -82,5 +82,4 @@ public class ReportController {
         model.addAttribute("localDate", LocalDate.now());
         model.addAttribute("java8Instant", Instant.now());
     }
-
 }
