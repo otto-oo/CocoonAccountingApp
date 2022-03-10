@@ -7,6 +7,7 @@ import com.cocoon.entity.Company;
 import com.cocoon.entity.Invoice;
 import com.cocoon.entity.InvoiceProduct;
 import com.cocoon.entity.User;
+import com.cocoon.entity.jpa_customization.IInvoiceForDashBoard;
 import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
 import com.cocoon.repository.InvoiceProductRepo;
@@ -156,9 +157,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDTO> getDashboardInvoiceTop3(Long companyId) {
-        List<Invoice> invoices = invoiceRepository.getDashboardInvoiceTop3(companyId, companyId);
-        return invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
+    public List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId) {
+        List<IInvoiceForDashBoard> invoiceForDashBoards = invoiceRepository.getDashboardInvoiceTop3Interface(companyId, companyId);
+        return invoiceForDashBoards;
     }
 
     @Override

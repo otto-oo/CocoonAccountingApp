@@ -3,6 +3,7 @@ package com.cocoon.controller;
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.currency.CurrencyDto;
 import com.cocoon.dto.currency.Rate;
+import com.cocoon.entity.jpa_customization.IInvoiceForDashBoard;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.InvoiceService;
 import com.cocoon.service.ProductService;
@@ -42,9 +43,7 @@ public class DashboardController {
         //added by kicchi to add the current currency rates
         model.addAttribute("rates", getExchangeRates());
 
-//        List<InvoiceDTO> invoices = invoiceService.getAllInvoicesSorted();
-//        List<InvoiceDTO> updatedInvoices = invoices.stream().map(invoiceService::calculateInvoiceCost).collect(Collectors.toList());
-        List<InvoiceDTO> updatedInvoices = invoiceService.getDashboardInvoiceTop3(companyService.getCompanyByLoggedInUser().getId());
+        List<IInvoiceForDashBoard> updatedInvoices = invoiceService.getDashboardInvoiceTop3(companyService.getCompanyByLoggedInUser().getId());
         model.addAttribute("invoices", updatedInvoices);
         model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
         return "dashboard";
