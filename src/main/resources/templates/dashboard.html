@@ -176,10 +176,10 @@
                                             </span>
                                     </h4>
                                     <p class="grey"><span><img th:src="@{/img/flags/europe.png}"
-                                                               class="flags flags-europe"></span><b>Paris</b>
+                                                               class="flags flags-europe"></span><b>İstanbul</b>
                                         <span> <img th:src="@{img/icons/clock.png}" class="clock"> </span>
-                                        <span ></span>
-                                        <span ></span>
+                                        <span id="paris-time"></span>
+<!--                                        <span ></span>-->
                                     </p>
                                     <ul class="list-group mb-3">
                                         <li class="list-group-item">
@@ -230,6 +230,13 @@
 <!-- BEGIN: Custom CSS-->
 <script th:src="@{/assets/js/scripts.js}"></script>
 <!-- END: Custom CSS-->
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var d = new Date();
+        var n = d.toLocaleTimeString();
+        document.getElementById("paris-time").textContent=n;
+    });
+</script>
 </body>
 <!-- END : Body-->
 </html>
