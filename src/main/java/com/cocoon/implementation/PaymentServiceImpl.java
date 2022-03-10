@@ -53,8 +53,9 @@ public class PaymentServiceImpl implements PaymentService {
         LocalDate instance = LocalDate.now().withYear(year);
         LocalDate dateStart = instance.with(firstDayOfYear());
         LocalDate dateEnd = instance.with(lastDayOfYear());
+        var company = companyService.getCompanyByLoggedInUser();
 
-        List<Payment> payments = paymentRepository.findAllByYearBetween(dateStart, dateEnd);
+        List<Payment> payments = paymentRepository.findAllByYearBetweenAndCompanyId(dateStart, dateEnd, company.getId());
         return payments.stream().map(obj -> mapperUtil.convert(obj, new PaymentDTO())).collect(Collectors.toList());
     }
 
@@ -64,9 +65,10 @@ public class PaymentServiceImpl implements PaymentService {
         LocalDate instance = LocalDate.now().withYear(year);
         LocalDate dateStart = instance.with(firstDayOfYear());
         LocalDate dateEnd = instance.with(lastDayOfYear());
-        List<Payment> payments = paymentRepository.findAllByYearBetween(dateStart, dateEnd);
-
         CompanyDTO companyDto = companyService.getCompanyByLoggedInUser();
+
+        List<Payment> payments = paymentRepository.findAllByYearBetweenAndCompanyId(dateStart, dateEnd, companyDto.getId());
+
 
         if (payments.size() == 0) {
             for (Months month : Months.values()){
@@ -205,7 +207,7 @@ public class PaymentServiceImpl implements PaymentService {
                 // to implement with user input
                 //System.in.read();
                 // to implement WITHOUT user input
-                Thread.sleep(10000);
+                Thread.sleep(12000);
 
                 // Get user consents
                 final ConsentsApi consentsApi = new ConsentsApi(defaultClient);
