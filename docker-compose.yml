@@ -20,8 +20,8 @@ services:
   cocoonapp:
     depends_on:
       - db
-    build: .
-    image: bahadockerhub/cocoonapp:02
+#    build: .
+    image: bahadockerhub/cocoonapp:10
     restart: on-failure
     env_file: ./.env
     ports:
