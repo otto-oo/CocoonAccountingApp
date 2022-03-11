@@ -48,5 +48,4 @@ public class Invoice extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "invoice")
     private List<InvoiceProduct> invoiceProduct;
 
-
 }

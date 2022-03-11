@@ -32,6 +32,8 @@ public interface InvoiceProductRepo extends JpaRepository<InvoiceProduct, Long> 
     @Query(value = "select iv from InvoiceProduct iv join Invoice  i on iv.invoice.id=i.id join Product p on iv.product.id=p.id")
     List<InvoiceProduct> getStockReportListProducts();
 
+
+
        /*
     @Query(nativeQuery = true, value = "SELECT * FROM product p INNER JOIN category c on p.category_id = c.id WHERE c.id =?1")
     List<Product> getProductsByCategoryId2(Long id);

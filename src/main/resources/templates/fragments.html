@@ -119,7 +119,7 @@
                     <div class="navbar-brand-center">
                         <div class="navbar-header">
                                 <a th:href="@{/dashboard}">
-                                    <h3 class="navbar-text mr-1"
+                                    <h3 class="navbar-text mr-1" style="color: #000066"
                                         th:text="${#authentication.getPrincipal().getUser().getCompany().getTitle()}"
                                         sec:authentication="principal.user.company.title"
                                         sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')">
@@ -129,6 +129,24 @@
                     </div>
 
                 </div>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item mr-2 d-none d-lg-block"><a class="nav-link apptogglefullscreen"
+                                                                   id="navbar-fullscreen" href="javascript:;"><i
+                            class="ft-maximize font-medium-3"></i></a></li>
+
+                </ul>
+                <div class="navbar-brand-center">
+                    <div class="navbar-header">
+                            <a th:href="@{/dashboard}">
+                                <h3 class="navbar-text mr-1"
+                                    th:text="${#authentication.getPrincipal().getUser().getCompany().getTitle()}"
+                                    sec:authentication="principal.user.company.title"
+                                    sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')">
+                                </h3>
+                            </a>
+                    </div>
+
                 <div class="navbar-container main-menu-content center-layout dropleft" data-menu="menu-container">
                     <ul class="navigation-main nav navbar-nav" data-menu="menu-navigation">
                         <li class="dropdown nav-item" data-menu="dropdown"><a
@@ -169,10 +187,12 @@
 
     <div class="navbar-container main-menu-content center-layout" data-menu="menu-container">
         <ul class="navigation-main nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #0c5c38"
+            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #000066"
+
                 sec:authorize="hasAnyAuthority('ROOT', 'ADMIN','MANAGER')">
                 <a  class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
-                    data-toggle="dropdown"><i class="ft-box"></i><span data-i18n="Apps" style="color: #0CC27E">Management</span></a>
+
+                    data-toggle="dropdown"><i class="ft-box" style="color: white"></i><span data-i18n="Apps" style="color: #ffffff">Management</span></a>
                 <ul class="dropdown-menu">
                     <li data-menu="" sec:authorize="hasAnyAuthority('ROOT')">
                         <a th:href="@{/company/list}"
@@ -195,11 +215,11 @@
                     </li>
                 </ul>
             </li>
-            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #0c5c38" sec:authorize="hasAnyAuthority('MANAGER', 'ADMIN', 'EMPLOYEE')" >
+            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #000066" sec:authorize="hasAnyAuthority('MANAGER', 'ADMIN', 'EMPLOYEE')" >
                 <a
                     class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
-                    data-toggle="dropdown"><i class="ft-aperture"></i><span
-                    data-i18n="UI Kit" style="color: #0CC27E">Stock Management</span></a>
+                    data-toggle="dropdown"><i class="ft-aperture" style="color: white"></i><span
+                    data-i18n="UI Kit" style="color: #ffffff">Stock Management</span></a>
                 <ul class="dropdown-menu">
                     <li data-menu=""><a th:href="@{/product/list}"
                             class="dropdown-item d-flex align-items-center"
@@ -213,9 +233,9 @@
                     </li>
                 </ul>
             </li>
-            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #0c5c38" sec:authorize="hasAnyAuthority('MANAGER', 'EMPLOYEE','ADMIN')" ><a
+            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #000066" sec:authorize="hasAnyAuthority('MANAGER', 'EMPLOYEE','ADMIN')" ><a
                     class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
-                    data-toggle="dropdown"><i class="ft-briefcase"></i><span data-i18n="Components" style="color: #0CC27E">Invoices</span></a>
+                    data-toggle="dropdown"><i class="ft-briefcase" style="color: white"></i><span data-i18n="Components" style="color: #ffffff">Invoices</span></a>
                 <ul class="dropdown-menu">
 
                     <li data-menu=""><a th:href="@{/purchase-invoice/list}"
@@ -231,9 +251,9 @@
                     </li>
                 </ul>
             </li>
-            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #0c5c38" sec:authorize="hasAnyAuthority('MANAGER', 'ADMIN') "><a
+            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #000066" sec:authorize="hasAnyAuthority('MANAGER', 'ADMIN') "><a
                     class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
-                    data-toggle="dropdown"><i class="ft-bar-chart"></i><span data-i18n="Components" style="color: #0CC27E">Reporting</span></a>
+                    data-toggle="dropdown"><i class="ft-bar-chart" style="color: white"></i><span data-i18n="Components" style="color: #ffffff">Reporting</span></a>
                 <ul class="dropdown-menu">
 
                     <li data-menu=""><a class="dropdown-item d-flex align-items-center" th:href="@{/report/stock}"
@@ -246,9 +266,11 @@
                     </li>
                 </ul>
             </li>
-            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #0c5c38" sec:authorize="hasAnyAuthority('ADMIN','ROOT','MANAGER')"><a
+
+            <li class="dropdown nav-item softer" data-menu="dropdown" style="background: #000066" sec:authorize="hasAnyAuthority('ADMIN','ROOT','MANAGER')"><a
+
                     class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
-                    data-toggle="dropdown"><i class="ft-archive"></i><span data-i18n="Components" style="color: #0CC27E">Administration</span></a>
+                    data-toggle="dropdown"><i class="ft-archive" style="color: white"></i><span data-i18n="Components" style="color: #ffffff">Administration</span></a>
                 <ul class="dropdown-menu">
                     <li data-menu=""><a th:href="@{/payment/list(year=${#temporals.year(localDateTime)})}"
                                         sec:authorize="hasAnyAuthority('ADMIN','MANAGER')"

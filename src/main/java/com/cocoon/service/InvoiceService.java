@@ -3,6 +3,8 @@ package com.cocoon.service;
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.ProfitDTO;
 import com.cocoon.entity.Company;
+import com.cocoon.entity.Invoice;
+import com.cocoon.entity.jpa_customization.IInvoiceForDashBoard;
 import com.cocoon.enums.InvoiceType;
 
 import java.util.List;
@@ -30,11 +32,7 @@ public interface InvoiceService {
 
     Map<String,Integer> calculateTotalProfitLoss();
 
+    List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId);
+
     List<ProfitDTO>  getProfitList();
-
-
-
-
-
-
 }
