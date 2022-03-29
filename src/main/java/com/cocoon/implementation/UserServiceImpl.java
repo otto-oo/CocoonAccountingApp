@@ -113,9 +113,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private Boolean isUserRoot() {
+        Set<String> roles=null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-        return roles.contains("ROOT");
+        if(authentication!= null){
+
+            roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        }
+        if(roles!=null){
+
+            return roles.contains("ROOT");
+        }
+        return false;
     }
 
 }
