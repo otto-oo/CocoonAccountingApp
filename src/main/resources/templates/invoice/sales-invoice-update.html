@@ -34,7 +34,7 @@
                                             <div class="tab-pane fade mt-2 show active" id="account" role="tabpanel"
                                                  aria-labelledby="account-tab">
                                                 <!-- INVOICE PART BEGIN-->
-                                                <form class="needs-validation" th:action="@{/sales-invoice/invoice-update/{id}(id=${invoice.id})}" method="post"
+                                                <form class="needs-validation" th:action="@{/sales-invoice/update/{id}(id=${invoice.id})}" method="post"
                                                       th:object="${invoice}" novalidate>
                                                     <div class="row">
                                                         <div class="col-12 col-md-3">
@@ -99,7 +99,7 @@
                                                 </form>
                                                 <hr class="solid">
                                                 <!-- INVOICE PART END -->
-                                                <form th:object="${product}" th:action="@{/sales-invoice/create-product-update/{id}(id=${invoice.id})}" method="post">
+                                                <form th:object="${product}" th:action="@{/sales-invoice/update/add-invoice-product}" method="post">
                                                     <div class="needs-validation" novalidate>
                                                         <div class="row">
                                                             <div class="col-12 col-md-3">
@@ -170,8 +170,15 @@
                                                                     <td th:text="'% '+${product.tax}"></td>
                                                                     <td th:text="'$ '+${(product.qty * product.price) + (product.qty * product.price * product.tax * 0.01)}"></td>
                                                                     <td>
-                                                                        <a class="ft-trash" th:href="@{/sales-invoice/delete-product-update/{id}/{name}(id=${invoice.id}, name=${product.name + product.price + product.qty + product.tax})}">
-                                                                        </a>
+                                                                        <form th:action="@{/sales-invoice/update/delete-invoice-product}" th:object="${product}" method="post">
+                                                                            <input type="hidden" th:value="${product.name}" name="name"/>
+                                                                            <input type="hidden" th:value="${product.qty}" name="qty"/>
+                                                                            <input type="hidden" th:value="${product.price}" name="price"/>
+                                                                            <input type="hidden" th:value="${product.tax}" name="tax"/>
+                                                                            <button type="submit" class="btn btn-default">
+                                                                                <i class="ft-trash"></i>
+                                                                            </button>
+                                                                        </form>
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>
