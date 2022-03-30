@@ -49,15 +49,10 @@ public class PurchaseInvoiceController {
     @GetMapping({"/list", "/list/{cancel}"})
     public String invoiceList(@RequestParam(required = false) String cancel, Model model){
 
-        if (cancel != null){
-            this.active = true;
-        }
-        currentInvoiceDTO = new InvoiceDTO();
-        List<InvoiceDTO> invoices = invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
-        List<InvoiceDTO> updatedInvoices = invoices.stream().map(invoiceService::calculateInvoiceCost).collect(Collectors.toList());
-        model.addAttribute("invoices", updatedInvoices);
-        model.addAttribute("client", new ClientDTO());
-        model.addAttribute("invoice", currentInvoiceDTO);
+        if (cancel != null) this.active = true;
+
+        model.addAttribute("invoices", invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE));
+        model.addAttribute("invoice", currentInvoiceDTO = new InvoiceDTO());
 
         return "invoice/purchase-invoice-list";
     }
@@ -65,9 +60,8 @@ public class PurchaseInvoiceController {
     @GetMapping("/create")
     public String purchaseInvoiceCreate(@RequestParam(required = false) Long id, Model model) throws CocoonException{
 
-        if (id != null){
-            currentInvoiceDTO.setClient(clientVendorRepo.getById(id));
-        }
+        if (id != null) currentInvoiceDTO.setClient(clientVendorRepo.getById(id));
+
         currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.PURCHASE));
         currentInvoiceDTO.setInvoiceDate(LocalDate.now());
         model.addAttribute("invoice", currentInvoiceDTO);
@@ -161,15 +155,11 @@ public class PurchaseInvoiceController {
     @ModelAttribute
     public void addAttributes(Model model) {
 
-        model.addAttribute("date", new Date());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("localDate", LocalDate.now());
-        model.addAttribute("java8Instant", Instant.now());
-
+        model.addAttribute("client", new ClientDTO());
         model.addAttribute("product", new InvoiceProductDTO());
         model.addAttribute("active", active);
         model.addAttribute("products", productService.getAllProductsByCompany());
-        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.CLIENT));
+        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
 
     }
 

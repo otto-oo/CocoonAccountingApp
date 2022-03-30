@@ -3,7 +3,6 @@ package com.cocoon.controller;
 import com.cocoon.dto.ClientDTO;
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
-import com.cocoon.dto.ProductDTO;
 import com.cocoon.enums.CompanyType;
 import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
@@ -12,16 +11,11 @@ import com.cocoon.repository.ClientVendorRepo;
 import com.cocoon.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/sales-invoice")
@@ -51,12 +45,8 @@ public class InvoiceController {
 
         if (cancel != null) this.active = true;
 
-        currentInvoiceDTO = new InvoiceDTO();
-        List<InvoiceDTO> invoices = invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-        List<InvoiceDTO> updatedInvoices = invoices.stream().map(invoiceService::calculateInvoiceCost).collect(Collectors.toList());
-        model.addAttribute("invoices", updatedInvoices);
-        model.addAttribute("client", new ClientDTO());
-        model.addAttribute("invoice", currentInvoiceDTO);
+        model.addAttribute("invoices", invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.SALE));
+        model.addAttribute("invoice", currentInvoiceDTO = new InvoiceDTO());
 
         return "invoice/sales-invoice-list";
     }
@@ -64,9 +54,8 @@ public class InvoiceController {
     @GetMapping("/create")
     public String salesInvoiceCreate(@RequestParam(required = false) Long id, Model model) throws CocoonException {
 
-        if (id != null){
-            currentInvoiceDTO.setClient(clientVendorRepo.getById(id));
-        }
+        if (id != null) currentInvoiceDTO.setClient(clientVendorRepo.getById(id));
+
         currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.SALE));
         currentInvoiceDTO.setInvoiceDate(LocalDate.now());
         model.addAttribute("invoice", currentInvoiceDTO);
@@ -80,16 +69,14 @@ public class InvoiceController {
 
         invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
 
-        if (!productService.validateProductQuantity(invoiceProductDTO) ||
-            !invoiceProductService.validateProductQtyForPendingInvoicesIncluded(invoiceProductDTO)) {
-            redirAttrs.addFlashAttribute("error", "Not enough quantity to sell, check your inventory... Your Pending Invoices might have this very same Product to be sold");
-            return "redirect:/sales-invoice/create";
-        }
+        if (validateQuantity(invoiceProductDTO, redirAttrs)) return "redirect:/sales-invoice/create";
 
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         this.active = false;
         return "redirect:/sales-invoice/create";
     }
+
+
 
     @PostMapping("/create/delete-invoice-product")
     public String deleteInvoiceProduct(InvoiceProductDTO invoiceProductDTO) {
@@ -128,11 +115,7 @@ public class InvoiceController {
     public String addInvoiceProductInUpdatePage(InvoiceProductDTO invoiceProductDTO, RedirectAttributes redirAttrs) throws CocoonException {
 
         invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
-        if (!productService.validateProductQuantity(invoiceProductDTO) ||
-            !invoiceProductService.validateProductQtyForPendingInvoicesIncluded(invoiceProductDTO)) {
-            redirAttrs.addFlashAttribute("error", "Not enough quantity to sell, check your inventory... Your Pending Invoices might have this very same Product to be sold");
-            return "redirect:/sales-invoice/update";
-        }
+        if (validateQuantity(invoiceProductDTO, redirAttrs)) return "redirect:/sales-invoice/update";
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         this.active = false;
         return "redirect:/sales-invoice/update";
@@ -197,15 +180,22 @@ public class InvoiceController {
     @ModelAttribute
     public void addAttributes(Model model) {
 
+        model.addAttribute("client", new ClientDTO());
         model.addAttribute("product", new InvoiceProductDTO());
         model.addAttribute("active", active);
         model.addAttribute("products", productService.getAllProductsByCompany());
         model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.CLIENT));
 
-        model.addAttribute("date", new Date());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("localDate", LocalDate.now());
-        model.addAttribute("java8Instant", Instant.now());
+    }
+
+
+    private boolean validateQuantity(InvoiceProductDTO invoiceProductDTO, RedirectAttributes redirAttrs) throws CocoonException {
+        if (!productService.validateProductQuantity(invoiceProductDTO) ||
+            !invoiceProductService.validateProductQtyForPendingInvoicesIncluded(invoiceProductDTO)) {
+            redirAttrs.addFlashAttribute("error", "Not enough quantity to sell, check your inventory... Your Pending Invoices might have this very same Product waiting to be sold");
+            return true;
+        }
+        return false;
     }
 
 }
