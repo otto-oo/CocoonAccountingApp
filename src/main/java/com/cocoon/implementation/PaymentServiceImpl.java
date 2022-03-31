@@ -41,7 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, MapperUtil mapperUtil, CompanyService companyService) {
+    public PaymentServiceImpl( PaymentRepository paymentRepository, MapperUtil mapperUtil, CompanyService companyService) {
         this.paymentRepository = paymentRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
@@ -138,7 +138,7 @@ public class PaymentServiceImpl implements PaymentService {
         // Send the payment authorisation request
         ApiResponseOfPaymentAuthorisationRequestResponse authorizationResponse = paymentsApi.createPaymentAuthorisationUsingPOST(paymentAuthorisationRequest, "", "", "", "");
 
-        java.net.URI url = new URI(authorizationResponse.getData().getAuthorisationUrl());
+        URI url = new URI(authorizationResponse.getData().getAuthorisationUrl());
 
         if (Desktop.isDesktopSupported()) {
             try {
@@ -205,9 +205,9 @@ public class PaymentServiceImpl implements PaymentService {
                 // After authentication, you should be redirected to a static page that can be closed
                 System.out.println("After completing authentication, press Enter to continue: [enter]");
                 // to implement with user input
-                //System.in.read();
+                System.in.read();
                 // to implement WITHOUT user input
-                Thread.sleep(12000);
+                //Thread.sleep(12000);
 
                 // Get user consents
                 final ConsentsApi consentsApi = new ConsentsApi(defaultClient);
@@ -230,6 +230,7 @@ public class PaymentServiceImpl implements PaymentService {
                         .filter(c -> c.getStatus().equals(Consent.StatusEnum.AUTHORIZED))
                         .findFirst()
                         .orElseThrow(() -> new RuntimeException(String.format("No consent token present for application user %s", Constants.APPLICATION_USER_ID)));
+
 
                 final String consentToken = consent.getConsentToken();
                 // to get the consent token

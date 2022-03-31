@@ -1,9 +1,6 @@
 package com.cocoon.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -11,6 +8,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class InvoiceProductDTO {
 
     private Long id;
