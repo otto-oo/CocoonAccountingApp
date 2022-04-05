@@ -22,7 +22,7 @@ import java.util.*;
 public class InvoiceController {
 
     private InvoiceDTO currentInvoiceDTO = new InvoiceDTO();
-    private boolean active = true;
+    private boolean createButtonDeactivate = true;
 
     private final InvoiceService invoiceService;
     private final ProductService productService;
@@ -43,7 +43,7 @@ public class InvoiceController {
     @GetMapping({"/list", "/list/{cancel}"})
     public String invoiceList(@RequestParam(required = false) String cancel, Model model){
 
-        if (cancel != null) this.active = true;
+        if (cancel != null) this.createButtonDeactivate = true;
 
         model.addAttribute("invoices", invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.SALE));
         model.addAttribute("invoice", currentInvoiceDTO = new InvoiceDTO());
@@ -72,7 +72,7 @@ public class InvoiceController {
         if (validateQuantity(invoiceProductDTO, redirAttrs)) return "redirect:/sales-invoice/create";
 
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
-        this.active = false;
+        this.createButtonDeactivate = false;
         return "redirect:/sales-invoice/create";
     }
 
@@ -82,7 +82,7 @@ public class InvoiceController {
     public String deleteInvoiceProduct(InvoiceProductDTO invoiceProductDTO) {
 
         currentInvoiceDTO.getInvoiceProduct().removeIf(obj -> obj.equals(invoiceProductDTO));
-        if (currentInvoiceDTO.getInvoiceProduct().size()==0) this.active = true;
+        if (currentInvoiceDTO.getInvoiceProduct().size()==0) this.createButtonDeactivate = true;
         return "redirect:/sales-invoice/create";
     }
 
@@ -91,8 +91,9 @@ public class InvoiceController {
     public String saveInvoice() throws CocoonException {
 
         currentInvoiceDTO.setInvoiceType(InvoiceType.SALE);
+        currentInvoiceDTO.setInvoiceStatus(InvoiceStatus.PENDING);
         invoiceService.save(currentInvoiceDTO);
-        this.active = true;
+        this.createButtonDeactivate = true;
 
         return "redirect:/sales-invoice/list";
     }
@@ -117,7 +118,7 @@ public class InvoiceController {
         invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
         if (validateQuantity(invoiceProductDTO, redirAttrs)) return "redirect:/sales-invoice/update";
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
-        this.active = false;
+        this.createButtonDeactivate = false;
         return "redirect:/sales-invoice/update";
     }
 
@@ -125,7 +126,7 @@ public class InvoiceController {
     public String deleteInvoiceProductInUpdatePage(InvoiceProductDTO invoiceProductDTO){
 
         currentInvoiceDTO.getInvoiceProduct().removeIf(obj -> obj.equals(invoiceProductDTO));
-        this.active = currentInvoiceDTO.getInvoiceProduct().size() == 0;
+        this.createButtonDeactivate = currentInvoiceDTO.getInvoiceProduct().size() == 0;
 
         return "redirect:/sales-invoice/update";
     }
@@ -133,10 +134,11 @@ public class InvoiceController {
     @PostMapping("/update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, InvoiceDTO invoiceDTO){
 
+        invoiceDTO.setInvoiceStatus(InvoiceStatus.PENDING);
         InvoiceDTO updatedInvoice = invoiceService.update(invoiceDTO, id);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(updatedInvoice));
         invoiceProductService.updateInvoiceProducts(id,currentInvoiceDTO.getInvoiceProduct());
-        this.active = true;
+        this.createButtonDeactivate = true;
         return "redirect:/sales-invoice/list";
     }
 
@@ -182,10 +184,9 @@ public class InvoiceController {
 
         model.addAttribute("client", new ClientDTO());
         model.addAttribute("product", new InvoiceProductDTO());
-        model.addAttribute("active", active);
+        model.addAttribute("active", createButtonDeactivate);
         model.addAttribute("products", productService.getAllProductsByCompany());
         model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.CLIENT));
-
     }
 
 

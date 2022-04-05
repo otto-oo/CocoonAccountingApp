@@ -61,7 +61,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice convertedInvoice = mapperUtil.convert(dto, new Invoice());
         Invoice invoice = invoiceRepository.getById(id);
         convertedInvoice.setInvoiceNumber(invoice.getInvoiceNumber());
-        convertedInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
         convertedInvoice.setCompany(invoice.getCompany());
         convertedInvoice.setInvoiceType(invoice.getInvoiceType());
         convertedInvoice.setEnabled(invoice.getEnabled());
