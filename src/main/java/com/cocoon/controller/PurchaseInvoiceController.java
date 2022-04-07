@@ -45,10 +45,12 @@ public class PurchaseInvoiceController {
     @GetMapping({"/list", "/list/{cancel}"})
     public String invoiceList(@RequestParam(required = false) String cancel, Model model){
 
+
         if (cancel != null) this.active = true;
 
         model.addAttribute("invoices", invoiceService.getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE));
         model.addAttribute("invoice", currentInvoiceDTO = new InvoiceDTO());
+
 
         return "invoice/purchase-invoice-list";
     }
@@ -83,7 +85,6 @@ public class PurchaseInvoiceController {
         return "redirect:/purchase-invoice/create";
     }
 
-
     @PostMapping("/save-invoice")
     public String createInvoice() throws CocoonException {
 
@@ -117,6 +118,7 @@ public class PurchaseInvoiceController {
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         this.active = false;
         return "redirect:/purchase-invoice/update";
+
     }
 
     @PostMapping("/update/delete-invoice-product")
@@ -127,6 +129,7 @@ public class PurchaseInvoiceController {
 
         return "redirect:/purchase-invoice/update";
     }
+
 
     @PostMapping("/update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, InvoiceDTO invoiceDTO){
@@ -156,6 +159,7 @@ public class PurchaseInvoiceController {
         model.addAttribute("active", active);
         model.addAttribute("products", productService.getAllProductsByCompany());
         model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
+
 
     }
 

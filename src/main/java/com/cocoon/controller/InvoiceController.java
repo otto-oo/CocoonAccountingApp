@@ -3,6 +3,7 @@ package com.cocoon.controller;
 import com.cocoon.dto.ClientDTO;
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
+import com.cocoon.dto.ProductDTO;
 import com.cocoon.enums.CompanyType;
 import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
@@ -65,10 +66,10 @@ public class InvoiceController {
         if (validateQuantity(invoiceProductDTO, redirAttrs)){
             return "redirect:/sales-invoice/create";
         }
+
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
         return "redirect:/sales-invoice/create?id="+currentInvoiceDTO.getClient().getId();
     }
-
 
 
     @PostMapping("/create/delete-invoice-product")
@@ -77,7 +78,6 @@ public class InvoiceController {
         currentInvoiceDTO.getInvoiceProduct().removeIf(obj -> obj.equals(invoiceProductDTO));
         return "redirect:/sales-invoice/create?id="+currentInvoiceDTO.getClient().getId();
     }
-
 
     @PostMapping("/save-invoice")
     public String saveInvoice() throws CocoonException {
@@ -107,10 +107,12 @@ public class InvoiceController {
     public String addInvoiceProductInUpdatePage(InvoiceProductDTO invoiceProductDTO, RedirectAttributes redirAttrs) throws CocoonException {
 
         invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
+
         if (validateQuantity(invoiceProductDTO, redirAttrs)){
             return "redirect:/sales-invoice/update";
         }
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
+
         return "redirect:/sales-invoice/update";
     }
 
@@ -124,7 +126,6 @@ public class InvoiceController {
     @PostMapping("/update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, InvoiceDTO invoiceDTO){
 
-        invoiceDTO.setInvoiceStatus(InvoiceStatus.PENDING);
         InvoiceDTO updatedInvoice = invoiceService.update(invoiceDTO, id);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(updatedInvoice));
         invoiceProductService.updateInvoiceProducts(id,currentInvoiceDTO.getInvoiceProduct());
@@ -186,6 +187,7 @@ public class InvoiceController {
             return true;
         }
         return false;
+
     }
 
 }
