@@ -25,6 +25,7 @@ import java.util.Date;
 @RequestMapping("/company")
 public class CompanyController {
 
+    //todo autowired injection is not recommended
     @Autowired
     private CompanyService companyService;
     @Autowired

@@ -58,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO save(ProductDTO productDTO) {
         Product product = mapperUtil.convert(productDTO, new Product());
+        // todo ??
         product.setEnabled((byte) 1);
         Company company = mapperUtil.convert(companyService.getCompanyByLoggedInUser(), new Company());
         product.setCompany(company);
@@ -70,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getProductById(Long id) throws CocoonException {
         Optional<Product> product = productRepository.findById(id);
         if(!product.isPresent()){
+            // todo can be replaced with bussiness exception
             throw new CocoonException("There is no product belongs to this id " + id);
         }
         return mapperUtil.convert(product.get(), new ProductDTO());

@@ -22,6 +22,7 @@ public class ProductController {
 
     private ProductService productService;
     private CategoryService categoryService;
+    // todo unused constructor
     private final CompanyService companyService;
 
     public ProductController(ProductService productService, CategoryService categoryService, CompanyService companyService) {

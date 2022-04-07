@@ -13,5 +13,6 @@ public interface CategoryService {
     void update(CategoryDTO categoryDTO) throws CocoonException;
     CategoryDTO getById(Long id);
     void delete(CategoryDTO categoryDTO) throws CocoonException;
+    // todo service method shouldn't have _
     List<CategoryDTO> getCategoryByCompany_Id();
 }

@@ -92,6 +92,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    // todo requires refactoring
     public String getInvoiceNumber(InvoiceType invoiceType) {
         List<Invoice> invoiceList = invoiceRepository
                 .findInvoicesByCompanyAndInvoiceType(getCompanyByLoggedInUser(), invoiceType)

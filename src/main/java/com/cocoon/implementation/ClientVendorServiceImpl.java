@@ -39,6 +39,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientDTO.setEnabled(true);
 
         //if the length of the address exceeds 254 then it should be shortened
+        //todo 254  value needs to be migrated static values with a well defined name for what it stands for
         if (clientDTO.getAddress().length() > 254)
             throw new CocoonException("Address length should be lesser then 255");
 
@@ -56,16 +57,20 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientDTO findById(Long id) throws CocoonException {
-        Client client = clientVendorRepo.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(() -> new CocoonException("Vendor/Client with " + id + " not exist"));
+        Client client = clientVendorRepo.findByIdAndCompanyId(id,
+                        companyService.getCompanyByLoggedInUser().getId())
+                .orElseThrow(() -> new CocoonException("Vendor/Client with " + id + " not exist"));
         return mapperUtil.convert(client, new ClientDTO());
     }
 
     @Override
     public ClientDTO update(ClientDTO clientDTO) throws CocoonException {
+        //todo 254  value needs to be migrated static values with a well defined name for what it stands for
         if (clientDTO.getAddress().length() > 254)
             throw new CocoonException("Address length should be lesser then 255");
         Client updatedClient = mapperUtil.convert(clientDTO, new Client());
 
+        // todo is it hard to read right ?
         updatedClient.setCompany(mapperUtil.convert(companyService.getCompanyByLoggedInUser(), new Company()));
 
         Client savedClient = clientVendorRepo.save(updatedClient);
@@ -75,6 +80,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public void deleteClientVendor(Long id) throws CocoonException {
         Client client = clientVendorRepo.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(()-> new CocoonException("Vendor/Client with " + id + " not exist"));
+        //todo setisdeleted ??
         client.setIsDeleted(true);
         clientVendorRepo.save(client);
     }

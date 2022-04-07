@@ -24,8 +24,10 @@ import java.util.Date;
 public class ClientVendorController {
 
     ClientVendorService clientVendorService;
+    //todo use final
     private StateRepo stateRepo;
     private MapperUtil mapperUtil;
+    // todo unused components needs to be deleted
     private final CompanyService companyService;
 
     public ClientVendorController(ClientVendorService clientVendorService, StateRepo stateRepo, MapperUtil mapperUtil, CompanyService companyService) {

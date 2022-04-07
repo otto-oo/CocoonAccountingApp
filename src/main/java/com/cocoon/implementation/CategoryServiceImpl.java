@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     private CategoryRepo categoryRepo;
     private MapperUtil mapperUtil;
@@ -39,14 +39,16 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepo.findAll();
-        return categories.stream().map(category -> mapperUtil.convert(category,new CategoryDTO())).collect(Collectors.toList());
+        return categories.stream().map(category -> mapperUtil.convert(category, new CategoryDTO())).collect(Collectors.toList());
     }
 
     @Override
+    // todo where is curly braces
     public void save(CategoryDTO categoryDTO) throws CocoonException {
         Category category = mapperUtil.convert(categoryDTO, new Category());
-        if (categoryRepo.existsByDescription(category.getDescription()))
-        throw new CocoonException("category is already exist");
+        if (categoryRepo.existsByDescription(category.getDescription())) {
+            throw new CocoonException("category is already exist");
+        }
         category.setEnabled(true);
 
         category.setCompany(mapperUtil.convert(companyService.getCompanyByLoggedInUser(), new Company()));
@@ -57,8 +59,9 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public CategoryDTO getCategoryByDescription(String descrition) throws CocoonException {
         Category category = categoryRepo.getByDescription(descrition);
-        if (category==null)
+        if (category == null)
             throw new CocoonException("there is no category which you search");
+        // todo no need to create new variable
         CategoryDTO categoryDTO = mapperUtil.convert(category, new CategoryDTO());
         return categoryDTO;
     }
@@ -66,7 +69,8 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void update(CategoryDTO categoryDTO) throws CocoonException {
         Category category = categoryRepo.getById(categoryDTO.getId());
-        if (category==null)
+        // todo no need to check here
+        if (category == null)
             throw new CocoonException("there is no cateory");
         category.setDescription(categoryDTO.getDescription());
         categoryRepo.save(category);
@@ -84,10 +88,10 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void delete(CategoryDTO categoryDTO) throws CocoonException {
         Category category = categoryRepo.getCategoryById(categoryDTO.getId());
-        if (category==null)
+        if (category == null)
             throw new CocoonException("category does not exist");
         List<ProductDTO> productDTOList = productService.findProductsByCategoryId(categoryDTO.getId());
-        if (productDTOList.size()>0)
+        if (productDTOList.size() > 0)
             throw new CocoonException("category has relation");
         category.setIsDeleted(true);
         categoryRepo.save(category);
@@ -96,7 +100,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public List<CategoryDTO> getCategoryByCompany_Id() {
         List<Category> categories = categoryRepo.getCategoryByCompany_Id(companyService.getCompanyByLoggedInUser().getId());
-        return categories.stream().map(category -> mapperUtil.convert(category,new CategoryDTO())).collect(Collectors.toList());
+        return categories.stream().map(category -> mapperUtil.convert(category, new CategoryDTO())).collect(Collectors.toList());
     }
 
 

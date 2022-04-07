@@ -18,6 +18,7 @@ import java.util.Date;
 public class CategoryCotroller {
 
     private final CategoryService categoryService;
+    // todo unused components needs to be deleted
     private final CompanyService companyService;
 
     public CategoryCotroller(CategoryService categoryService, CompanyService companyService) {
@@ -45,18 +46,21 @@ public class CategoryCotroller {
     }
 
     @GetMapping({"/edit/{id}","/"})
+    //todo once you write the class name category you don't need to add editCategory just edit is enough
     public String editCategory(@PathVariable("id") Long id, Model model) throws CocoonException {
         model.addAttribute("category",categoryService.getById(id));
         return "category/category-edit";
     }
 
     @PostMapping("/edit/{id}")
+    //todo once you write the class name category you don't need to add editCategory just edit is enough
     public String updateCategory(@PathVariable("id") String id,CategoryDTO categoryDTO) throws CocoonException {
         categoryService.update(categoryDTO);
         return "redirect:/category/list";
     }
 
     @GetMapping("/delete/{id}")
+    //todo once you write the class name category you don't need to add deleteCategory just detele is enough
     public String deleteCategory(@PathVariable("id") String id,CategoryDTO categoryDTO) throws CocoonException {
         categoryService.delete(categoryDTO);
         return "redirect:/category/list";

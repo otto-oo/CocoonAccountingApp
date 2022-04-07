@@ -35,6 +35,7 @@ public class PurchaseInvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
     private final ClientVendorRepo clientVendorRepo;
+    // todo unused constructor
     private final CompanyService companyService;
 
     public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ClientVendorRepo clientVendorRepo, CompanyService companyService) {
@@ -49,6 +50,7 @@ public class PurchaseInvoiceController {
     @GetMapping({"/list", "/list/{cancel}"})
     public String invoiceList(@RequestParam(required = false) String cancel, Model model){
 
+        // todo this active issue needs to be deleted
         if (cancel != null){
             this.active = true;
         }

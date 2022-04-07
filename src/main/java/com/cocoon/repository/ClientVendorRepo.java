@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+// todo repo ?
 public interface ClientVendorRepo extends JpaRepository<Client, Long> {
 
     List<Client> findAllByCompanyId(Long companyId);

@@ -30,9 +30,11 @@ public interface InvoiceService {
 
     InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO);
 
+    //todo we can delete profit & loss issues
     Map<String,Integer> calculateTotalProfitLoss();
 
     List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId);
 
+    //todo we can delete profit & loss issues
     List<ProfitDTO>  getProfitList();
 }

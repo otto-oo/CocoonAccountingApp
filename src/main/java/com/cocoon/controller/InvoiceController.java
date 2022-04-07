@@ -47,8 +47,10 @@ public class InvoiceController {
     }
 
     @GetMapping({"/list", "/list/{cancel}"})
+    //todo no bussiness in view class
     public String invoiceList(@RequestParam(required = false) String cancel, Model model){
 
+        // todo this issue needs to be removed
         if (cancel != null) this.active = true;
 
         currentInvoiceDTO = new InvoiceDTO();
@@ -64,6 +66,7 @@ public class InvoiceController {
     @GetMapping("/create")
     public String salesInvoiceCreate(@RequestParam(required = false) Long id, Model model) throws CocoonException {
 
+        // todo what is this id ?
         if (id != null){
             currentInvoiceDTO.setClient(clientVendorRepo.getById(id));
         }
@@ -110,6 +113,7 @@ public class InvoiceController {
         return "redirect:/sales-invoice/list";
     }
 
+    // todo we can delete invoice update
     // Update ----------------------------------------------------------------------------------------------------------
     @GetMapping({"/update", "/update/{id}"})
     public String updateInvoice(@PathVariable(value = "id", required = false) Long id, Model model){

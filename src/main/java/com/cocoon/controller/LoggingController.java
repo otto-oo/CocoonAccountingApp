@@ -22,6 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/logging")
+// todo this controller can be removed
 public class LoggingController {
     UserService userService;
     UserLogService userLogService;
