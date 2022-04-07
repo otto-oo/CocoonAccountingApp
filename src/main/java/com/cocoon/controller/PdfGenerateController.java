@@ -181,6 +181,7 @@ public class PdfGenerateController {
 
         /* extract output as bytes */
         byte[] bytes = target.toByteArray();
+        int x;
 
         /* Send the response as downloadable PDF */
 
