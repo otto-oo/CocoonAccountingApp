@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @ConfigurationPropertiesBinding
 public class ClientConverter implements Converter<String, ClientDTO> {

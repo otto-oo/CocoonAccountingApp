@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface InvoiceProductRepo extends JpaRepository<InvoiceProduct, Long> {
+public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, Long> {
 
     Set<InvoiceProduct> findAllByInvoiceId(Long id);
     List<InvoiceProduct> findAllByProductId(Long id);

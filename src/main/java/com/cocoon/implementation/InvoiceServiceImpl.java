@@ -11,7 +11,7 @@ import com.cocoon.entity.User;
 import com.cocoon.entity.jpa_customization.IInvoiceForDashBoard;
 import com.cocoon.enums.InvoiceStatus;
 import com.cocoon.enums.InvoiceType;
-import com.cocoon.repository.InvoiceProductRepo;
+import com.cocoon.repository.InvoiceProductRepository;
 import com.cocoon.repository.InvoiceRepository;
 import com.cocoon.service.InvoiceProductService;
 import com.cocoon.service.InvoiceService;
@@ -29,14 +29,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final MapperUtil mapperUtil;
     private final InvoiceRepository invoiceRepository;
-    private final InvoiceProductRepo invoiceProductRepo;
+    private final InvoiceProductRepository invoiceProductRepository;
     private final InvoiceProductService invoiceProductService;
     private final UserService userService;
 
-    public InvoiceServiceImpl(MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceProductRepo invoiceProductRepo, InvoiceProductService invoiceProductService, UserService userService) {
+    public InvoiceServiceImpl(MapperUtil mapperUtil, InvoiceRepository invoiceRepository, InvoiceProductRepository invoiceProductRepository, InvoiceProductService invoiceProductService, UserService userService) {
         this.mapperUtil = mapperUtil;
         this.invoiceRepository = invoiceRepository;
-        this.invoiceProductRepo = invoiceProductRepo;
+        this.invoiceProductRepository = invoiceProductRepository;
         this.invoiceProductService = invoiceProductService;
         this.userService = userService;
     }
@@ -45,7 +45,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDTO save(InvoiceDTO dto) {
 
         Invoice invoice = mapperUtil.convert(dto, new Invoice());
-        invoice.setInvoiceStatus(invoice.getInvoiceType().equals(InvoiceType.SALE) ? InvoiceStatus.PENDING : InvoiceStatus.APPROVED);
         invoice.setEnabled((byte) 1);
         invoice.setCompany(getCompanyByLoggedInUser());
         Invoice savedInvoice = invoiceRepository.save(invoice);
@@ -86,8 +85,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void deleteInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.getById(id);
-        Set<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByInvoiceId(invoice.getId());
-        invoiceProducts.stream().peek(obj -> obj.setIsDeleted(true)).forEach(invoiceProductRepo::save);
+        Set<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(invoice.getId());
+        invoiceProducts.stream().peek(obj -> obj.setIsDeleted(true)).forEach(invoiceProductRepository::save);
         invoice.setIsDeleted(true);
         invoiceRepository.save(invoice);
     }
@@ -106,15 +105,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         int number = Integer.parseInt(invoiceList.get(0).getInvoiceNumber().substring(5)) + 1;
         if (invoiceType.name().equals("PURCHASE")) return "P-INV" + String.format("%03d", number);
         else return "S-INV" + String.format("%03d", number);
-    }
-
-    @Override
-    public List<InvoiceDTO> getAllInvoicesSorted() {
-
-        List<Invoice> invoices = invoiceRepository.findInvoiceByCompany(getCompanyByLoggedInUser());
-        invoices.sort((o2, o1) -> Integer.compare(o2.getInvoiceDate().compareTo(o1.getInvoiceDate()), 0));
-        return invoices.stream().limit(3).map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
-
     }
 
     @Override
