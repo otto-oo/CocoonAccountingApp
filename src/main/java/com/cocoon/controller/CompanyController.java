@@ -100,14 +100,5 @@ public class CompanyController {
         return "redirect:/company/list";
     }
 */
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        model.addAttribute("date", new Date());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("localDate", LocalDate.now());
-        model.addAttribute("java8Instant", Instant.now());
-    }
-
-
 
 }

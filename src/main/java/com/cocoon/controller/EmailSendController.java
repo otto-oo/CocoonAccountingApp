@@ -21,28 +21,26 @@ import java.io.ByteArrayOutputStream;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/pdf")
+@RequestMapping("/email")
 public class EmailSendController {
 
     private final CompanyService companyService;
     private final ServletContext servletContext;
     private final TemplateEngine templateEngine;
-    private final UserService userService;
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
     private final EmailSender emailSender;
 
-    public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, UserService userService, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSender emailSender) {
+    public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSender emailSender) {
         this.companyService = companyService;
         this.servletContext = servletContext;
         this.templateEngine = templateEngine;
-        this.userService = userService;
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.emailSender = emailSender;
     }
 
-    @GetMapping("/sendEmail/{id}")
+    @GetMapping("/send/{id}")
     public void sendMail(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         InvoiceDTO invoiceDTO = invoiceService.getInvoiceById(id);

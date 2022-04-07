@@ -143,9 +143,9 @@ public class PurchaseInvoiceController {
     public void addAttributes(Model model) {
 
         model.addAttribute("client", new ClientDTO());
+        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
         model.addAttribute("product", new InvoiceProductDTO());
         model.addAttribute("products", productService.getAllProductsByCompany());
-        model.addAttribute("clients", clientVendorService.getAllClientVendorsByType(CompanyType.VENDOR));
 
     }
 
