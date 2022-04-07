@@ -124,7 +124,6 @@ public class InvoiceController {
     @PostMapping("/update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, InvoiceDTO invoiceDTO){
 
-        invoiceDTO.setInvoiceStatus(InvoiceStatus.PENDING);
         InvoiceDTO updatedInvoice = invoiceService.update(invoiceDTO, id);
         currentInvoiceDTO.getInvoiceProduct().forEach(obj -> obj.setInvoiceDTO(updatedInvoice));
         invoiceProductService.updateInvoiceProducts(id,currentInvoiceDTO.getInvoiceProduct());
