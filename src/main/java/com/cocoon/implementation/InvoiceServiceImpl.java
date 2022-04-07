@@ -107,9 +107,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         else return "S-INV" + String.format("%03d", number);
     }
 
-
-    //TODO Profit-Loss Section will be simplified......................................................................
-
     @Override
     public Map<String, Integer> calculateTotalProfitLoss() {
 
