@@ -4,7 +4,6 @@ import com.cocoon.dto.CompanyDTO;
 import com.cocoon.entity.Company;
 import com.cocoon.repository.CompanyRepo;
 import com.cocoon.util.MapperUtil;
-import lombok.AllArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;

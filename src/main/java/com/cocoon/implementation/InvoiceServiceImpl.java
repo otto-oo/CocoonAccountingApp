@@ -71,9 +71,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDTO> getAllInvoices() {
-        List<Invoice> invoices = invoiceRepository.findInvoiceByCompany(getCompanyByLoggedInUser());
-        return invoices.stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
+    public List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type) {
+        List<Invoice> invoices = invoiceRepository.findInvoicesByCompanyAndInvoiceType(getCompanyByLoggedInUser(), type);
+        List<InvoiceDTO> invoiceDTOS = invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
+        return invoiceDTOS.stream().map(this::calculateInvoiceCost).collect(Collectors.toList());
     }
 
     @Override
@@ -114,12 +115,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoices.sort((o2, o1) -> Integer.compare(o2.getInvoiceDate().compareTo(o1.getInvoiceDate()), 0));
         return invoices.stream().limit(3).map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
 
-    }
-
-    @Override
-    public List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type) {
-        List<Invoice> invoices = invoiceRepository.findInvoicesByCompanyAndInvoiceType(getCompanyByLoggedInUser(), type);
-        return invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
     }
 
     @Override

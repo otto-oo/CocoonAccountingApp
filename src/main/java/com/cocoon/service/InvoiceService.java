@@ -14,8 +14,6 @@ public interface InvoiceService {
 
     InvoiceDTO save(InvoiceDTO invoice);
 
-    List<InvoiceDTO> getAllInvoices();
-
     InvoiceDTO getInvoiceById(Long id);
 
     InvoiceDTO update(InvoiceDTO dto, Long id);
