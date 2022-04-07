@@ -23,7 +23,7 @@ import java.util.Date;
 @RequestMapping("/client-vendor")
 public class ClientVendorController {
 
-    ClientVendorService clientVendorService;
+    private ClientVendorService clientVendorService;
     private StateRepo stateRepo;
     private MapperUtil mapperUtil;
 

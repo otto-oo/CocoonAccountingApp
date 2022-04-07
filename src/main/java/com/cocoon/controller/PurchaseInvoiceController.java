@@ -34,16 +34,12 @@ public class PurchaseInvoiceController {
     private final ProductService productService;
     private final InvoiceProductService invoiceProductService;
     private final ClientVendorService clientVendorService;
-    private final ClientVendorRepo clientVendorRepo;
-    private final CompanyService companyService;
 
-    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService, ClientVendorRepo clientVendorRepo, CompanyService companyService) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, ProductService productService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
         this.invoiceService = invoiceService;
         this.productService = productService;
         this.invoiceProductService = invoiceProductService;
         this.clientVendorService = clientVendorService;
-        this.clientVendorRepo = clientVendorRepo;
-        this.companyService = companyService;
     }
 
     @GetMapping({"/list", "/list/{cancel}"})
@@ -60,7 +56,7 @@ public class PurchaseInvoiceController {
     @GetMapping("/create")
     public String purchaseInvoiceCreate(@RequestParam(required = false) Long id, Model model) throws CocoonException{
 
-        if (id != null) currentInvoiceDTO.setClient(clientVendorRepo.getById(id));
+        if (id != null) currentInvoiceDTO.setClient(clientVendorService.findById(id));
 
         currentInvoiceDTO.setInvoiceNumber(invoiceService.getInvoiceNumber(InvoiceType.PURCHASE));
         currentInvoiceDTO.setInvoiceDate(LocalDate.now());

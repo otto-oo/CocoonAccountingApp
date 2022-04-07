@@ -25,12 +25,16 @@ import java.util.Date;
 @RequestMapping("/company")
 public class CompanyController {
 
-    @Autowired
+
     private CompanyService companyService;
-    @Autowired
     private StateRepo stateRepo;
-    @Autowired
     private MapperUtil mapperUtil;
+
+    public CompanyController(CompanyService companyService, StateRepo stateRepo, MapperUtil mapperUtil) {
+        this.companyService = companyService;
+        this.stateRepo = stateRepo;
+        this.mapperUtil = mapperUtil;
+    }
 
     @GetMapping("/list")
     public String getCompanies(Model model) {
