@@ -22,8 +22,6 @@ public interface InvoiceService {
 
     void deleteInvoiceById(Long id);
 
-    List<InvoiceDTO> getAllInvoicesSorted();
-
     List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type);
 
     InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO);

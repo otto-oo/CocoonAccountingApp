@@ -23,16 +23,14 @@ import java.util.Date;
 @RequestMapping("/client-vendor")
 public class ClientVendorController {
 
-    ClientVendorService clientVendorService;
+    private ClientVendorService clientVendorService;
     private StateRepo stateRepo;
     private MapperUtil mapperUtil;
-    private final CompanyService companyService;
 
-    public ClientVendorController(ClientVendorService clientVendorService, StateRepo stateRepo, MapperUtil mapperUtil, CompanyService companyService) {
+    public ClientVendorController(ClientVendorService clientVendorService, StateRepo stateRepo, MapperUtil mapperUtil) {
         this.clientVendorService = clientVendorService;
         this.stateRepo = stateRepo;
         this.mapperUtil = mapperUtil;
-        this.companyService = companyService;
     }
 
     @ExecutionTimeLog()
@@ -94,11 +92,4 @@ public class ClientVendorController {
         }
     }
 
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        model.addAttribute("date", new Date());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("localDate", LocalDate.now());
-        model.addAttribute("java8Instant", Instant.now());
-    }
 }
