@@ -2,7 +2,6 @@ package com.cocoon.controller;
 
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
-import com.cocoon.dto.PaymentDTO;
 import com.cocoon.entity.common.UserPrincipal;
 import com.cocoon.service.*;
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -32,9 +31,8 @@ public class EmailSendController {
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
     private final EmailSender emailSender;
-    private final PaymentService paymentService;
 
-    public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, UserService userService, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSender emailSender, PaymentService paymentService) {
+    public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, UserService userService, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSender emailSender) {
         this.companyService = companyService;
         this.servletContext = servletContext;
         this.templateEngine = templateEngine;
@@ -42,7 +40,6 @@ public class EmailSendController {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.emailSender = emailSender;
-        this.paymentService = paymentService;
     }
 
     @GetMapping("/sendEmail/{id}")
@@ -75,33 +72,4 @@ public class EmailSendController {
         emailSender.sendEmailWithAttachment("omererden18@gmail.com", updatedInvoiceDTO.getClient().getEmail(), invoiceDTO.getInvoiceNumber(), "Your invoice ...", bytes);
     }
 
-
-
-    @GetMapping("/sendEmail-payment/{id}")
-    public void sendMailPayment(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PaymentDTO paymentDTO = paymentService.getPaymentById(id);
-
-        /*Create HTML using Thymeleaf template*/
-        WebContext context = new WebContext(request, response, servletContext);
-
-        context.setVariable("company", companyService.getCompanyByLoggedInUser());
-        context.setVariable("payment", paymentDTO);
-
-        String companyListHTML = templateEngine.process("payment/payment-success-print.html", context);
-
-        /*Setup Source and target I/O streams*/
-        ByteArrayOutputStream target = new ByteArrayOutputStream();
-        ConverterProperties converterProperties = new ConverterProperties();
-        converterProperties.setBaseUri("http://localhost:8080");
-        /* Call convert method */
-        HtmlConverter.convertToPdf(companyListHTML, target, converterProperties);
-
-        /* extract output as bytes */
-        byte[] bytes = target.toByteArray();
-
-        // send with email
-        emailSender.sendEmailWithAttachment("omererden18@gmail.com", userPrincipal.getUsername(), ""+paymentDTO.getMonth()+" / "+paymentDTO.getYear().getYear()+" Invoice", "Your invoice ...", bytes);
-    }
 }
