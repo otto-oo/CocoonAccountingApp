@@ -1,7 +1,5 @@
 package com.cocoon.implementation;
 
-import com.cocoon.dto.CompanyDTO;
-import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
 import com.cocoon.dto.ProductDTO;
 import com.cocoon.entity.*;
@@ -9,8 +7,7 @@ import com.cocoon.enums.InvoiceType;
 import com.cocoon.enums.ProductStatus;
 import com.cocoon.enums.Unit;
 import com.cocoon.exception.CocoonException;
-import com.cocoon.repository.CompanyRepo;
-import com.cocoon.repository.InvoiceProductRepo;
+import com.cocoon.repository.InvoiceProductRepository;
 import com.cocoon.repository.ProductRepository;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.InvoiceService;
@@ -19,10 +16,8 @@ import com.cocoon.util.MapperUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,14 +27,14 @@ public class ProductServiceImpl implements ProductService {
     private InvoiceService invoiceService;
     private MapperUtil mapperUtil;
     private CompanyService companyService;
-    private InvoiceProductRepo invoiceProductRepo;
+    private InvoiceProductRepository invoiceProductRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, @Lazy InvoiceService invoiceService, MapperUtil mapperUtil, CompanyService companyService, @Lazy InvoiceProductRepo invoiceProductRepo) {
+    public ProductServiceImpl(ProductRepository productRepository, @Lazy InvoiceService invoiceService, MapperUtil mapperUtil, CompanyService companyService, @Lazy InvoiceProductRepository invoiceProductRepository) {
         this.productRepository = productRepository;
         this.invoiceService = invoiceService;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
-        this.invoiceProductRepo = invoiceProductRepo;
+        this.invoiceProductRepository = invoiceProductRepository;
     }
 
     @Override
@@ -111,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
             throw new CocoonException("There is no product belongs to this id " + id);
         }
         // check if product has related invoice or not
-        List<InvoiceProduct> invoiceProducts = invoiceProductRepo.findAllByProductId(id);
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByProductId(id);
         if (invoiceProducts.size() ==0) {
             product.get().setIsDeleted(true); // soft delete
             productRepository.save(product.get());
