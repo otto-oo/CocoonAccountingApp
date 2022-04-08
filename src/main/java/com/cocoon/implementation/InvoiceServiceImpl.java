@@ -113,38 +113,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         Map<String, Integer> map = new HashMap<>();
 
         List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-
         List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).collect(Collectors.toList());
-
         List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-
-
         List<InvoiceDTO> purchaseInvoices = getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
         List<Set<InvoiceProductDTO>> allPurchasedInvoiceProducts = purchaseInvoices.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
 
 
-        int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithoutTax)
-                .sum();
-
-        int totalIncomeFromSoldProductsWithTax = allSoldInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithTax)
-                .sum();
-
-        int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithoutTax)
-                .sum();
-
-        int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithTax)
-                .sum();
-
-        int totalPurchasedProductQty = allPurchasedInvoiceProducts.stream()
-                .mapToInt(this::calculateTotalQty)
-                .sum();
-        int totalSoldProductQty = allSoldInvoiceProducts.stream()
-                .mapToInt(this::calculateTotalQty)
-                .sum();
+        int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
+        int totalIncomeFromSoldProductsWithTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
+        int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
+        int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
+        int totalPurchasedProductQty = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
+        int totalSoldProductQty = allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
         int eachProductsPurchasedCost = totalSpendForPurchasedProductsWithoutTax / totalPurchasedProductQty;
         int eachProductsSellCost = totalIncomeFromSoldProductsWithoutTax / totalSoldProductQty;
         int eachProductProfit = eachProductsSellCost - eachProductsPurchasedCost;

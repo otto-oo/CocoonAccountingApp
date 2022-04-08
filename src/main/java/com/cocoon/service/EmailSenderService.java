@@ -1,6 +1,6 @@
 package com.cocoon.service;
 
-public interface EmailSender {
+public interface EmailSenderService {
 
     void sendEmailWithAttachment(String from, String to, String subject, String body, byte[] content);
 }

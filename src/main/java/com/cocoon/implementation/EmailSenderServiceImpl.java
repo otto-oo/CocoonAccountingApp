@@ -1,6 +1,6 @@
 package com.cocoon.implementation;
 
-import com.cocoon.service.EmailSender;
+import com.cocoon.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,7 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
-public class EmailSenderImpl implements EmailSender {
+public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Autowired
     private JavaMailSender mailSender;

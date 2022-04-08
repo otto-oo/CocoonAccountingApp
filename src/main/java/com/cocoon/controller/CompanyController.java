@@ -1,25 +1,16 @@
 package com.cocoon.controller;
 
 import com.cocoon.dto.CompanyDTO;
-import com.cocoon.entity.State;
-import com.cocoon.enums.ProductStatus;
 import com.cocoon.entity.Company;
 import com.cocoon.exception.CocoonException;
-import com.cocoon.repository.StateRepo;
+import com.cocoon.repository.StateRepository;
 import com.cocoon.service.CompanyService;
 import com.cocoon.util.MapperUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/company")
@@ -27,12 +18,12 @@ public class CompanyController {
 
 
     private CompanyService companyService;
-    private StateRepo stateRepo;
+    private StateRepository stateRepository;
     private MapperUtil mapperUtil;
 
-    public CompanyController(CompanyService companyService, StateRepo stateRepo, MapperUtil mapperUtil) {
+    public CompanyController(CompanyService companyService, StateRepository stateRepository, MapperUtil mapperUtil) {
         this.companyService = companyService;
-        this.stateRepo = stateRepo;
+        this.stateRepository = stateRepository;
         this.mapperUtil = mapperUtil;
     }
 
@@ -46,7 +37,7 @@ public class CompanyController {
     @GetMapping("/create")
     public String getCreatePage(Model model) {
         model.addAttribute("company", new Company());
-        model.addAttribute("states", stateRepo.findAll());
+        model.addAttribute("states", stateRepository.findAll());
 
         return "company/company-add";
     }
@@ -64,7 +55,7 @@ public class CompanyController {
                 result.addError(error);
             }
 
-            model.addAttribute("states", stateRepo.findAll());
+            model.addAttribute("states", stateRepository.findAll());
             return "company/company-add";
         }
     }
@@ -72,7 +63,7 @@ public class CompanyController {
     @GetMapping("/update/{id}")
     public String getUpdatePage(@PathVariable("id") String id, Model model) throws CocoonException {
         model.addAttribute("company", companyService.getCompanyById(Long.valueOf(id)));
-        model.addAttribute("states", stateRepo.findAll());
+        model.addAttribute("states", stateRepository.findAll());
         return "company/company-edit";
     }
 

@@ -6,7 +6,7 @@ import com.cocoon.entity.UserLog;
 import com.cocoon.enums.ActionType;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.repository.UserLogRepository;
-import com.cocoon.repository.UserRepo;
+import com.cocoon.repository.UserRepository;
 import com.cocoon.service.UserLogService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -21,11 +21,11 @@ import java.util.stream.Stream;
 public class UserLogServiceImpl implements UserLogService {
 
     UserLogRepository userLogRepository;
-    UserRepo userRepo;
+    UserRepository userRepository;
 
-    public UserLogServiceImpl(UserLogRepository userLogRepository, UserRepo userRepo) {
+    public UserLogServiceImpl(UserLogRepository userLogRepository, UserRepository userRepository) {
         this.userLogRepository = userLogRepository;
-        this.userRepo = userRepo;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class UserLogServiceImpl implements UserLogService {
     public void save(String username, String signature) {
         ActionType actionType = getActionType(signature);
         if (actionType == null) return;
-        User user = userRepo.findByEmail(username);
+        User user = userRepository.findByEmail(username);
         UserLog userLog = new UserLog();
         userLog.setUser(user);
         userLog.setActionType(actionType);
@@ -51,7 +51,7 @@ public class UserLogServiceImpl implements UserLogService {
         if (roles.contains("ROOT")) {
             return retrieveAllLogs(searchDTO);
         } else {
-            Long companyId = userRepo.findByEmail(authentication.getName()).getCompany().getId();
+            Long companyId = userRepository.findByEmail(authentication.getName()).getCompany().getId();
             return retrieveCompanyLogs(searchDTO, companyId);
         }
     }
