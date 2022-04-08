@@ -4,9 +4,8 @@ import com.cocoon.annotation.ExecutionTimeLog;
 import com.cocoon.dto.ClientDTO;
 import com.cocoon.entity.Client;
 import com.cocoon.exception.CocoonException;
-import com.cocoon.repository.StateRepo;
+import com.cocoon.repository.StateRepository;
 import com.cocoon.service.ClientVendorService;
-import com.cocoon.service.CompanyService;
 import com.cocoon.util.MapperUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,22 +13,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-
 @Controller
 @RequestMapping("/client-vendor")
 public class ClientVendorController {
 
     private ClientVendorService clientVendorService;
-    private StateRepo stateRepo;
+    private StateRepository stateRepository;
     private MapperUtil mapperUtil;
 
-    public ClientVendorController(ClientVendorService clientVendorService, StateRepo stateRepo, MapperUtil mapperUtil) {
+    public ClientVendorController(ClientVendorService clientVendorService, StateRepository stateRepository, MapperUtil mapperUtil) {
         this.clientVendorService = clientVendorService;
-        this.stateRepo = stateRepo;
+        this.stateRepository = stateRepository;
         this.mapperUtil = mapperUtil;
     }
 
@@ -46,7 +40,7 @@ public class ClientVendorController {
     @GetMapping("/update/{id}")
     public String editCompany(@PathVariable("id") long id, Model model) throws CocoonException {
         model.addAttribute("client", clientVendorService.findById(id));
-        model.addAttribute("states", stateRepo.findAll());
+        model.addAttribute("states", stateRepository.findAll());
         return "clientvendor/client-vendor-edit";
     }
 
@@ -68,7 +62,7 @@ public class ClientVendorController {
     @GetMapping("/create")
     public String getCreatePage(Model model){
         model.addAttribute("client", new Client());
-        model.addAttribute("states", stateRepo.findAll());
+        model.addAttribute("states", stateRepository.findAll());
 
         return "clientvendor/client-vendor-add";
     }
@@ -87,7 +81,7 @@ public class ClientVendorController {
                 result.addError(error);
             }
 
-            model.addAttribute("states", stateRepo.findAll());
+            model.addAttribute("states", stateRepository.findAll());
             return "clientvendor/client-vendor-add";
         }
     }

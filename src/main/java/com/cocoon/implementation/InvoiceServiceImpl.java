@@ -113,38 +113,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         Map<String, Integer> map = new HashMap<>();
 
         List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-
         List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).collect(Collectors.toList());
-
         List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-
-
         List<InvoiceDTO> purchaseInvoices = getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
         List<Set<InvoiceProductDTO>> allPurchasedInvoiceProducts = purchaseInvoices.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
 
 
-        int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithoutTax)
-                .sum();
-
-        int totalIncomeFromSoldProductsWithTax = allSoldInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithTax)
-                .sum();
-
-        int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithoutTax)
-                .sum();
-
-        int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream()
-                .mapToInt(this::calculateCostWithTax)
-                .sum();
-
-        int totalPurchasedProductQty = allPurchasedInvoiceProducts.stream()
-                .mapToInt(this::calculateTotalQty)
-                .sum();
-        int totalSoldProductQty = allSoldInvoiceProducts.stream()
-                .mapToInt(this::calculateTotalQty)
-                .sum();
+        int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
+        int totalIncomeFromSoldProductsWithTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
+        int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
+        int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
+        int totalPurchasedProductQty = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
+        int totalSoldProductQty = allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
         int eachProductsPurchasedCost = totalSpendForPurchasedProductsWithoutTax / totalPurchasedProductQty;
         int eachProductsSellCost = totalIncomeFromSoldProductsWithoutTax / totalSoldProductQty;
         int eachProductProfit = eachProductsSellCost - eachProductsPurchasedCost;
@@ -159,6 +139,45 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return map;
     }
+
+    @Override
+    public InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO) {
+
+        Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(currentDTO.getId());
+        int costWithoutTax = calculateCostWithoutTax(invoiceProducts);
+        currentDTO.setInvoiceCostWithoutTax(costWithoutTax);
+        int costWithTax = calculateCostWithTax(invoiceProducts);
+        currentDTO.setTotalCost(costWithTax);
+        currentDTO.setInvoiceCostWithTax(costWithTax - costWithoutTax);
+
+        return currentDTO;
+    }
+
+    private int calculateCostWithoutTax(Set<InvoiceProductDTO> products) {
+        int result = 0;
+        for (InvoiceProductDTO product : products) {
+            result += (product.getPrice() * product.getQty());
+        }
+        return result;
+    }
+
+    private int calculateCostWithTax(Set<InvoiceProductDTO> products) {
+        int result = 0;
+        for (InvoiceProductDTO product : products) {
+            result += (product.getPrice() * product.getQty()) + (product.getPrice() * product.getQty() * product.getTax() * 0.01);
+        }
+        return result;
+    }
+
+    private int calculateTotalQty(Set<InvoiceProductDTO> products) {
+        int result = 0;
+        for (InvoiceProductDTO product : products) {
+            result += product.getQty();
+        }
+        return result;
+    }
+
+    // Get top 3 invoices section----------------------------------------------------------------------------------------
 
     @Override
     public List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId) {
@@ -189,19 +208,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         return user.getCompany();
     }
 
-    @Override
-    public InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO) {
 
-        Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(currentDTO.getId());
-        int costWithoutTax = calculateCostWithoutTax(invoiceProducts);
-        currentDTO.setInvoiceCostWithoutTax(costWithoutTax);
-        int costWithTax = calculateCostWithTax(invoiceProducts);
-        currentDTO.setTotalCost(costWithTax);
-        currentDTO.setInvoiceCostWithTax(costWithTax - costWithoutTax);
 
-        return currentDTO;
-    }
-
+    // Profit / Loss Section -----------------------------------------------------------------------------------------------------
 
     public List<ProfitDTO> calculateBuyandSellCostforeachProducts(List<Set<InvoiceProductDTO>> productssold, List<Set<InvoiceProductDTO>> productsbougt) {
 
@@ -264,31 +273,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             }
         }
         return list;
-    }
-
-    private int calculateCostWithoutTax(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += (product.getPrice() * product.getQty());
-        }
-        return result;
-    }
-
-    private int calculateCostWithTax(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += (product.getPrice() * product.getQty()) + (product.getPrice() * product.getQty() * product.getTax() * 0.01);
-        }
-        return result;
-    }
-
-
-    private int calculateTotalQty(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += product.getQty();
-        }
-        return result;
     }
 
 }

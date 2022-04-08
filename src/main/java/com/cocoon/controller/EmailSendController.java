@@ -2,18 +2,16 @@ package com.cocoon.controller;
 
 import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.InvoiceProductDTO;
-import com.cocoon.entity.common.UserPrincipal;
 import com.cocoon.service.*;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,15 +27,18 @@ public class EmailSendController {
     private final TemplateEngine templateEngine;
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
-    private final EmailSender emailSender;
 
-    public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSender emailSender) {
+    private final EmailSenderService emailSenderService;
+
+    public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSenderService emailSenderService) {
+
         this.companyService = companyService;
         this.servletContext = servletContext;
         this.templateEngine = templateEngine;
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
-        this.emailSender = emailSender;
+        this.emailSenderService = emailSenderService;
+
     }
 
     @GetMapping("/send/{id}")
@@ -67,7 +68,8 @@ public class EmailSendController {
         byte[] bytes = target.toByteArray();
 
         // send with email
-        emailSender.sendEmailWithAttachment("omererden18@gmail.com", updatedInvoiceDTO.getClient().getEmail(), invoiceDTO.getInvoiceNumber(), "Your invoice ...", bytes);
+        emailSenderService.sendEmailWithAttachment("omererden18@gmail.com", updatedInvoiceDTO.getClient().getEmail(), invoiceDTO.getInvoiceNumber(), "Your invoice ...", bytes);
+
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClientVendorRepo extends JpaRepository<Client, Long> {
+public interface ClientVendorRepository extends JpaRepository<Client, Long> {
 
     List<Client> findAllByCompanyId(Long companyId);
 
