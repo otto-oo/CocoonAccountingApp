@@ -5,6 +5,7 @@ import com.cocoon.dto.InvoiceProductDTO;
 import com.cocoon.service.*;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,15 +28,18 @@ public class EmailSendController {
     private final TemplateEngine templateEngine;
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
+
     private final EmailSenderService emailSenderService;
 
     public EmailSendController(CompanyService companyService, ServletContext servletContext, TemplateEngine templateEngine, InvoiceService invoiceService, InvoiceProductService invoiceProductService, EmailSenderService emailSenderService) {
+
         this.companyService = companyService;
         this.servletContext = servletContext;
         this.templateEngine = templateEngine;
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.emailSenderService = emailSenderService;
+
     }
 
     @GetMapping("/send/{id}")
@@ -66,6 +70,7 @@ public class EmailSendController {
 
         // send with email
         emailSenderService.sendEmailWithAttachment("omererden18@gmail.com", updatedInvoiceDTO.getClient().getEmail(), invoiceDTO.getInvoiceNumber(), "Your invoice ...", bytes);
+
     }
 
 }
