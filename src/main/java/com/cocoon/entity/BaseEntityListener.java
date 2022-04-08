@@ -1,11 +1,7 @@
 package com.cocoon.entity;
 
-import com.cocoon.dto.UserDTO;
 import com.cocoon.entity.common.UserPrincipal;
 import com.cocoon.exception.CocoonException;
-import com.cocoon.service.IAuthenticationFacade;
-import com.cocoon.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

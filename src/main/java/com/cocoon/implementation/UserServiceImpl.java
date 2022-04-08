@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private MapperUtil mapperUtil;
-    private PasswordEncoder passwordEncoder;
-    private CompanyService companyService;
+    private final UserRepository userRepository;
+    private final MapperUtil mapperUtil;
+    private final PasswordEncoder passwordEncoder;
+    private final CompanyService companyService;
 
     public UserServiceImpl(UserRepository userRepository, MapperUtil mapperUtil, PasswordEncoder passwordEncoder, @Lazy CompanyService companyService) {
         this.userRepository = userRepository;

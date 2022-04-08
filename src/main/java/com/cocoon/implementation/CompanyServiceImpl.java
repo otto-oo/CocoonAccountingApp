@@ -8,7 +8,6 @@ import com.cocoon.repository.CompanyRepository;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.UserService;
 import com.cocoon.util.MapperUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,12 +23,15 @@ import java.util.stream.Collectors;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
-    @Autowired
-    private CompanyRepository companyRepository;
-    @Autowired
-    private MapperUtil mapperUtil;
-    @Autowired
-    private UserService userService;
+    private final CompanyRepository companyRepository;
+    private final MapperUtil mapperUtil;
+    private final UserService userService;
+
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserService userService) {
+        this.companyRepository = companyRepository;
+        this.mapperUtil = mapperUtil;
+        this.userService = userService;
+    }
 
     @Override
     public CompanyDTO getCompanyById(Long id) throws CocoonException {
@@ -65,7 +67,6 @@ public class CompanyServiceImpl implements CompanyService {
         convertedCompanyEntity.setId(company.getId());
         convertedCompanyEntity.setEnabled((byte) 0);
         companyRepository.save(convertedCompanyEntity);
-
     }
 
     @Override

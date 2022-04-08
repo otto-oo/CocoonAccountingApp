@@ -18,13 +18,12 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
-    private CategoryRepository categoryRepository;
-    private MapperUtil mapperUtil;
-    private ProductService productService;
-    private CompanyService companyService;
+    private final CategoryRepository categoryRepository;
+    private final MapperUtil mapperUtil;
+    private final ProductService productService;
+    private final CompanyService companyService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil,
-                               ProductService productService, CompanyService companyService) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, ProductService productService, CompanyService companyService) {
         this.categoryRepository = categoryRepository;
         this.mapperUtil = mapperUtil;
         this.productService = productService;

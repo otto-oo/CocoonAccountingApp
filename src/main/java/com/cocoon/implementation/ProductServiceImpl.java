@@ -23,15 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
-    private InvoiceService invoiceService;
-    private MapperUtil mapperUtil;
-    private CompanyService companyService;
-    private InvoiceProductRepository invoiceProductRepository;
+    private final ProductRepository productRepository;
+    private final MapperUtil mapperUtil;
+    private final CompanyService companyService;
+    private final InvoiceProductRepository invoiceProductRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, @Lazy InvoiceService invoiceService, MapperUtil mapperUtil, CompanyService companyService, @Lazy InvoiceProductRepository invoiceProductRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService, @Lazy InvoiceProductRepository invoiceProductRepository) {
         this.productRepository = productRepository;
-        this.invoiceService = invoiceService;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
         this.invoiceProductRepository = invoiceProductRepository;
