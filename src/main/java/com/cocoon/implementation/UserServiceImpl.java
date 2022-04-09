@@ -3,6 +3,7 @@ package com.cocoon.implementation;
 import com.cocoon.dto.UserDTO;
 import com.cocoon.entity.User;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.exception.UserDoesNotExistException;
 import com.cocoon.repository.UserRepository;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.UserService;
@@ -66,12 +67,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findById(Long id) throws CocoonException {
+    public UserDTO findById(Long id) {
         if (isUserRoot()) {
-            User user = userRepository.findById(id).orElseThrow(() -> new CocoonException("User with " + id + " not exist"));
+            User user = userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
             return mapperUtil.convert(user, new UserDTO());
         } else {
-            User user = userRepository.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(() -> new CocoonException("User with " + id + " not exist"));
+            User user = userRepository.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(() -> new UserDoesNotExistException(id));
             return mapperUtil.convert(user, new UserDTO());
         }
     }
@@ -83,14 +84,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) throws CocoonException {
+    public void delete(Long id) {
 
         if (isUserRoot()) {
-            User user = userRepository.findById(id).orElseThrow(() -> new CocoonException("User with " + id + " not exist"));
+            User user = userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
             user.setIsDeleted(true);
             userRepository.save(user);
         } else {
-            User user = userRepository.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(() -> new CocoonException("User with " + id + " not exist"));
+            User user = userRepository.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(() -> new UserDoesNotExistException(id));
             user.setIsDeleted(true);
             userRepository.save(user);
         }

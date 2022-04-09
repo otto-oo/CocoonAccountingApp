@@ -4,6 +4,7 @@ import com.cocoon.dto.CategoryDTO;
 import com.cocoon.dto.ProductDTO;
 import com.cocoon.entity.Category;
 import com.cocoon.entity.Company;
+import com.cocoon.exception.CategoryDoesNotExistException;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.repository.CategoryRepository;
 import com.cocoon.service.CategoryService;
@@ -49,10 +50,10 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public CategoryDTO getCategoryByDescription(String descrition) throws CocoonException {
+    public CategoryDTO getCategoryByDescription(String descrition) {
         Category category = categoryRepository.getByDescription(descrition);
         if (category==null)
-            throw new CocoonException("there is no category which you search");
+            throw new CategoryDoesNotExistException();
         CategoryDTO categoryDTO = mapperUtil.convert(category, new CategoryDTO());
         return categoryDTO;
     }
@@ -61,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService{
     public void update(CategoryDTO categoryDTO) throws CocoonException {
         Category category = categoryRepository.getById(categoryDTO.getId());
         if (category==null)
-            throw new CocoonException("there is no cateory");
+            throw new CategoryDoesNotExistException();
         category.setDescription(categoryDTO.getDescription());
         categoryRepository.save(category);
 
@@ -76,10 +77,10 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void delete(CategoryDTO categoryDTO) throws CocoonException {
+    public void delete(CategoryDTO categoryDTO) {
         Category category = categoryRepository.getCategoryById(categoryDTO.getId());
         if (category==null)
-            throw new CocoonException("category does not exist");
+            throw new CategoryDoesNotExistException();
         List<ProductDTO> productDTOList = productService.findProductsByCategoryId(categoryDTO.getId());
         if (productDTOList.size()>0)
             throw new CocoonException("category has relation");

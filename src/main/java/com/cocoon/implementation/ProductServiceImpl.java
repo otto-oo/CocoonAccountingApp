@@ -7,6 +7,7 @@ import com.cocoon.enums.InvoiceType;
 import com.cocoon.enums.ProductStatus;
 import com.cocoon.enums.Unit;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.exception.NoSuchProductException;
 import com.cocoon.repository.InvoiceProductRepository;
 import com.cocoon.repository.ProductRepository;
 import com.cocoon.service.CompanyService;
@@ -60,10 +61,10 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductDTO getProductById(Long id) throws CocoonException {
+    public ProductDTO getProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if(!product.isPresent()){
-            throw new CocoonException("There is no product belongs to this id " + id);
+            throw new NoSuchProductException(id);
         }
         return mapperUtil.convert(product.get(), new ProductDTO());
     }
@@ -80,28 +81,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductStatus getProductStatusById(Long id) throws CocoonException {
+    public ProductStatus getProductStatusById(Long id) {
         Optional<Product> product =productRepository.findById(id);
         if(!product.isPresent()){
-            throw new CocoonException("There is no product belongs to this id " + id);
+            throw new NoSuchProductException(id);
         }
         return product.get().getProductStatus();
     }
 
     @Override
-    public Unit getUnitById(Long id) throws CocoonException {
+    public Unit getUnitById(Long id) {
         Optional<Product> product =productRepository.findById(id);
         if(!product.isPresent()){
-            throw new CocoonException("There is no product belongs to this id " + id);
+            throw new NoSuchProductException(id);
         }
         return product.get().getUnit();
     }
 
     @Override
-    public void deleteById(Long id) throws CocoonException {
+    public void deleteById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if(!product.isPresent()){
-            throw new CocoonException("There is no product belongs to this id " + id);
+            throw new NoSuchProductException(id);
         }
         // check if product has related invoice or not
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByProductId(id);

@@ -5,7 +5,9 @@ import com.cocoon.dto.CompanyDTO;
 import com.cocoon.entity.Client;
 import com.cocoon.entity.Company;
 import com.cocoon.enums.CompanyType;
+import com.cocoon.enums.InputConstraint;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.exception.InputLengthExceededException;
 import com.cocoon.repository.ClientVendorRepository;
 import com.cocoon.service.ClientVendorService;
 import com.cocoon.service.CompanyService;
@@ -29,7 +31,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
 
     @Override
-    public void save(ClientDTO clientDTO) throws CocoonException {
+    public void save(ClientDTO clientDTO) {
         CompanyDTO userCompany = companyService.getCompanyByLoggedInUser();
         //if same client name already exists in client_vendor table an exception is thrown
         if (clientVendorRepository.existsByCompanyNameAndCompanyId(clientDTO.getCompanyName(), userCompany.getId()))
@@ -39,8 +41,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientDTO.setEnabled(true);
 
         //if the length of the address exceeds 254 then it should be shortened
-        if (clientDTO.getAddress().length() > 254)
-            throw new CocoonException("Address length should be lesser then 255");
+        if (clientDTO.getAddress().length() > InputConstraint.ADDRESS_INPUT.getMaxLength())
+            throw new InputLengthExceededException(InputConstraint.ADDRESS_INPUT);
 
         Client toSave = mapperUtil.convert(clientDTO, new Client());
         toSave.setCompany(mapperUtil.convert(userCompany, new Company()));
@@ -55,15 +57,15 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
 
     @Override
-    public ClientDTO findById(Long id) throws CocoonException {
+    public ClientDTO findById(Long id) {
         Client client = clientVendorRepository.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(() -> new CocoonException("Vendor/Client with " + id + " not exist"));
         return mapperUtil.convert(client, new ClientDTO());
     }
 
     @Override
-    public ClientDTO update(ClientDTO clientDTO) throws CocoonException {
-        if (clientDTO.getAddress().length() > 254)
-            throw new CocoonException("Address length should be lesser then 255");
+    public ClientDTO update(ClientDTO clientDTO) {
+        if (clientDTO.getAddress().length() > InputConstraint.ADDRESS_INPUT.getMaxLength())
+            throw new InputLengthExceededException(InputConstraint.ADDRESS_INPUT);
         Client updatedClient = mapperUtil.convert(clientDTO, new Client());
 
         updatedClient.setCompany(mapperUtil.convert(companyService.getCompanyByLoggedInUser(), new Company()));
@@ -73,7 +75,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
 
     @Override
-    public void deleteClientVendor(Long id) throws CocoonException {
+    public void deleteClientVendor(Long id) {
         Client client = clientVendorRepository.findByIdAndCompanyId(id, companyService.getCompanyByLoggedInUser().getId()).orElseThrow(()-> new CocoonException("Vendor/Client with " + id + " not exist"));
         client.setIsDeleted(true);
         clientVendorRepository.save(client);
