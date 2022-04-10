@@ -18,9 +18,9 @@ import java.util.Date;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserService userService;
-    private RoleService roleService;
-    private CompanyService companyService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final CompanyService companyService;
 
     public UserController(UserService userService, RoleService roleService, CompanyService companyService) {
         this.userService = userService;

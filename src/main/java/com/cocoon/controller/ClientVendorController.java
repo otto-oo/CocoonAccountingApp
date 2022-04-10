@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/client-vendor")
 public class ClientVendorController {
 
-    private ClientVendorService clientVendorService;
-    private StateRepository stateRepository;
-    private MapperUtil mapperUtil;
+    private final ClientVendorService clientVendorService;
+    private final StateRepository stateRepository;
+    private final MapperUtil mapperUtil;
 
     public ClientVendorController(ClientVendorService clientVendorService, StateRepository stateRepository, MapperUtil mapperUtil) {
         this.clientVendorService = clientVendorService;

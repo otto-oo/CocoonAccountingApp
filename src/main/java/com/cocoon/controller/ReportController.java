@@ -21,17 +21,13 @@ import java.util.Date;
 @RequestMapping("/report")
 public class ReportController {
 
-
-    private ProductService productService;
-    private InvoiceService invoiceService;
-    private InvoiceProductService invoiceProductService;
-    private InvoiceProductRepository invoiceProductRepository;
+    private final InvoiceService invoiceService;
+    private final InvoiceProductService invoiceProductService;
+    private final InvoiceProductRepository invoiceProductRepository;
     private final CompanyService companyService;
 
-    public ReportController(InvoiceService invoiceService, ProductService productService,
-                            InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, CompanyService companyService) {
+    public ReportController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, CompanyService companyService) {
         this.invoiceService = invoiceService;
-        this.productService = productService;
         this.invoiceProductService = invoiceProductService;
         this.invoiceProductRepository = invoiceProductRepository;
         this.companyService = companyService;

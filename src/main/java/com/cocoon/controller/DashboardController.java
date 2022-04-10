@@ -1,27 +1,16 @@
 package com.cocoon.controller;
 
-import com.cocoon.dto.InvoiceDTO;
 import com.cocoon.dto.currency.CurrencyDto;
 import com.cocoon.dto.currency.Rate;
 import com.cocoon.entity.jpa_customization.IInvoiceForDashBoard;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.InvoiceService;
-import com.cocoon.service.ProductService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dashboard")
