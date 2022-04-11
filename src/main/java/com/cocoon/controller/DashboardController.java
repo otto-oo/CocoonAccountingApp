@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.reactive.function.client.WebClient;
 import java.util.*;
 
 @Controller
@@ -18,6 +19,7 @@ public class DashboardController {
     private final CompanyService companyService;
     private final InvoiceService invoiceService;
 
+    private WebClient webClient = WebClient.create("http://data.fixer.io");
 
     public DashboardController(CompanyService companyService, InvoiceService invoiceService) {
         this.companyService = companyService;
