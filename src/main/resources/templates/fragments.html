@@ -272,7 +272,7 @@
                     class="dropdown-toggle nav-link d-flex align-items-center" href="javascript:;"
                     data-toggle="dropdown"><i class="ft-archive" style="color: white"></i><span data-i18n="Components" style="color: #ffffff">Administration</span></a>
                 <ul class="dropdown-menu">
-                    <li data-menu=""><a th:href="@{/payment/list(year=${#temporals.year(localDateTime)})}"
+                    <li data-menu=""><a th:href="@{/payment/list(year=${#dates.format(#dates.createNow(), 'yyyy')})}"
                                         sec:authorize="hasAnyAuthority('ADMIN','MANAGER')"
                                         class="dropdown-item d-flex align-items-center"
                                         data-toggle="dropdown"><i class="ft-arrow-right submenu-icon"></i><span
