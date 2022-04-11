@@ -4,27 +4,15 @@ import com.cocoon.dto.PaymentDTO;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.PaymentService;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.servlet.ModelAndView;
-import yapily.ApiException;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
 
-    private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
     private final PaymentService paymentService;
     private final CompanyService companyService;
 
@@ -46,7 +34,7 @@ public class PaymentController {
 
 
     @GetMapping("/newpayment/{id}")
-    public String selectInstitution(@PathVariable("id") Long id, Model model) throws ApiException {
+    public String selectInstitution(@PathVariable("id") Long id, Model model) {
 
         model.addAttribute("payment", paymentService.getPaymentById(id));
 
@@ -54,7 +42,7 @@ public class PaymentController {
     }
 
     @PostMapping("/newpayment/{id}")
-    public String selectInstitutionPost(@PathVariable("id") Long id, PaymentDTO paymentDTO) throws ApiException, URISyntaxException, IOException {
+    public String selectInstitutionPost(@PathVariable("id") Long id, PaymentDTO paymentDTO) {
 
         PaymentDTO convertedPaymentDto = paymentService.getPaymentById(id);
         paymentService.updatePayment(convertedPaymentDto);
@@ -71,15 +59,6 @@ public class PaymentController {
         model.addAttribute("company", companyService.getCompanyByLoggedInUser());
 
         return "payment/payment-success";
-    }
-
-
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        model.addAttribute("date", new Date());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("localDate", LocalDate.now());
-        model.addAttribute("java8Instant", Instant.now());
     }
 
 

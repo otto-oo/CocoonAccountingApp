@@ -10,8 +10,6 @@ import com.cocoon.service.CompanyService;
 import com.cocoon.service.PaymentService;
 import com.cocoon.util.MapperUtil;
 import org.springframework.stereotype.Service;
-import yapily.ApiException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +81,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void makePaymentWithSelectedInstitution(String id) throws ApiException, URISyntaxException {
+    public void makePaymentWithSelectedInstitution(String id) {
 
     }
 
