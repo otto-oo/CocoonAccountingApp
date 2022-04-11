@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public CategoryDTO getCategoryByDescription(String descrition) {
+    public CategoryDTO getCategoryByDescription(String descrition) throws CocoonException {
         Category category = categoryRepository.getByDescription(descrition);
         if (category==null)
             throw new CategoryDoesNotExistException();
@@ -77,10 +77,10 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void delete(CategoryDTO categoryDTO) {
+    public void delete(CategoryDTO categoryDTO) throws CocoonException {
         Category category = categoryRepository.getCategoryById(categoryDTO.getId());
         if (category==null)
-            throw new CategoryDoesNotExistException();
+            throw new CocoonException("category does not exist");
         List<ProductDTO> productDTOList = productService.findProductsByCategoryId(categoryDTO.getId());
         if (productDTOList.size()>0)
             throw new CocoonException("category has relation");

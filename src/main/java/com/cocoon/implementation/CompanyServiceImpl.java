@@ -101,7 +101,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void save(CompanyDTO companyDTO){
+    public void save(CompanyDTO companyDTO) throws CocoonException{
         //if same company name already exists in company table we have to throw exception
         if (companyRepository.existsByTitle(companyDTO.getTitle()))
             throw new CocoonException("This company name already saved to database.");

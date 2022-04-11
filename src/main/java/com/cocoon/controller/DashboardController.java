@@ -1,6 +1,8 @@
 package com.cocoon.controller;
 
 import com.cocoon.client.CurrencyClient;
+import com.cocoon.dto.currency.CurrencyDto;
+import com.cocoon.dto.currency.Rate;
 import com.cocoon.entity.jpa_customization.IInvoiceForDashBoard;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.InvoiceService;
@@ -42,6 +44,7 @@ public class DashboardController {
         List<IInvoiceForDashBoard> updatedInvoices = invoiceService.getDashboardInvoiceTop3(companyService.getCompanyByLoggedInUser().getId());
         model.addAttribute("invoices", updatedInvoices);
         model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
+        return "dashboard";
     }
 
     //getting the current exchange rates

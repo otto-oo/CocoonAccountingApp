@@ -226,6 +226,14 @@
                         <div class="card">
                             <div class="card-body">
                                 <div id="invoice">
+                                    <div class="toolbar hidden-print">
+                                        <div class="text-end">
+                                            <!--                                            <a th:href="@{/pdf/generate-payment/{id}(id=${payment.id})}" target="_blank" type="button" class="btn btn-dark"><i class="fa fa-edit mr-1"  ></i>Overview</a>-->
+                                            <!--                                            <a th:href="@{/pdf/download-payment/{id}(id=${payment.id})}"  type="button" class="btn btn-danger"><i class="fa fa-file-pdf-o mr-1" ></i> Export as PDF</a>-->
+                                            <!--                                            <a th:href="@{/pdf/sendEmail-payment/{id}(id=${payment.id})}" target="_blank" type="button" class="btn btn-primary"><i class="fa fa-paper-plane mr-1" ></i>Send Email</a>-->
+                                        </div>
+                                        <hr>
+                                    </div>
                                     <div class="invoice overflow-auto">
                                         <div style="min-width: 600px">
                                             <header>
@@ -238,7 +246,7 @@
                                                     <div class="col company-details">
                                                         <h2 class="name">
                                                             <a target="_blank" href="javascript:;"
-                                                               >CacoonCompany L.L.C.
+                                                            >CacoonCompany L.L.C.
 
                                                             </a>
                                                         </h2>
@@ -314,8 +322,8 @@
                                                     <div>NOTICE:</div>
                                                     <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
                                                 </div>
-                                            <footer>Invoice was created on a computer and is valid without the signature and seal.</footer>
-                                          </main>
+                                                <footer>Invoice was created on a computer and is valid without the signature and seal.</footer>
+                                            </main>
                                         </div>
                                         <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
                                         <div></div>
