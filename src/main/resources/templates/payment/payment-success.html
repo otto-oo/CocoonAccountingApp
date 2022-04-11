@@ -225,111 +225,16 @@
                     <div class="container">
                         <div class="card">
                             <div class="card-body">
-                                <div id="invoice">
-                                    <div class="toolbar hidden-print">
-                                        <div class="text-end">
-                                            <a th:href="@{/pdf/generate-payment/{id}(id=${payment.id})}" target="_blank" type="button" class="btn btn-dark"><i class="fa fa-edit mr-1"  ></i>Overview</a>
-                                            <a th:href="@{/pdf/download-payment/{id}(id=${payment.id})}"  type="button" class="btn btn-danger"><i class="fa fa-file-pdf-o mr-1" ></i> Export as PDF</a>
-                                            <a th:href="@{/pdf/sendEmail-payment/{id}(id=${payment.id})}" target="_blank" type="button" class="btn btn-primary"><i class="fa fa-paper-plane mr-1" ></i>Send Email</a>
-                                        </div>
-                                        <hr>
-                                    </div>
-                                    <div class="invoice overflow-auto">
-                                        <div style="min-width: 600px">
-                                            <header>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <a href="javascript:;">
-                                                            <img src="assets/images/logo-icon.png" width="80" alt="">
-                                                        </a>
-                                                    </div>
-                                                    <div class="col company-details">
-                                                        <h2 class="name">
-                                                            <a target="_blank" href="javascript:;"
-                                                               >CacoonCompany L.L.C.
 
-                                                            </a>
-                                                        </h2>
-                                                        <div>455 Foggy Heights, AZ 85004, US</div>
-                                                        <div>(123) 456-789</div>
-                                                        <div>CacoonCompany@example.com</div>
-                                                    </div>
-                                                </div>
-                                            </header>
-                                            <main>
-                                                <div class="row contacts">
-                                                    <div class="col invoice-to">
-                                                        <div class="text-gray-light">INVOICE TO:</div>
-                                                        <h2 class="to" th:text="${company.getTitle()}"></h2>
-                                                        <div class="address" th:text="${company.address1}"></div>
-                                                        <div class="address" th:text="${company.getZip()} + ' / ' + ${company.state.stateName}"></div>
-                                                        <div class="email"><a href="mailto:john@example.com" th:text="${company.email}"></a></div>
-                                                    </div>
-                                                    <div class="col invoice-details">
-                                                        <div class="date" th:text="'Invoice For: '+${payment.getMonth().value + ' / ' + payment.year.getYear()}">Due Date: 01/01/2022</div>
-                                                    </div>
-                                                </div>
-                                                <table>
-                                                    <col style="width:10%">
-                                                    <col style="width:60%">
-                                                    <col style="width:15%">
-                                                    <col style="width:15%">
-                                                    <thead>
-                                                    <tr>
-                                                        <th class="text-center">#</th>
-                                                        <th class="text-left">DESCRIPTION</th>
-                                                        <th class="text-right">MEMBERSHIP PRICE</th>
-                                                        <th class="text-right">EXTRA</th>
-                                                        <th class="text-right">TOTAL</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="text-center total" th:text="${payment.getMonth().ordinal() + 1}">01</td>
-                                                        <td class="text-left">
-                                                            <h3>
-                                                                <a target="_blank" href="javascript:;">
-                                                                    Cacoon-Pay Monthly Membership Payment
-                                                                </a>
-                                                            </h3>
-                                                            <a target="_blank" href="javascript:;">
-                                                                MemberShip details<br>
-                                                            </a> You can reach out your agreement details with this link</td>
-                                                        <td class="unit" th:text="'$ '+${payment.getAmount() - 70}"></td>
-                                                        <td class="unit" >$ 20</td>
-                                                        <td class="total" th:text="'$ '+${payment.getAmount() - 50}"></td>
-                                                    </tr>
-                                                    </tbody>
-                                                    <tfoot>
-                                                    <tr>
-                                                        <td colspan="2"></td>
-                                                        <td colspan="2">SUBTOTAL</td>
-                                                        <td th:text="'$ '+${payment.getAmount() - 50}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2"></td>
-                                                        <td colspan="2">TAX 25%</td>
-                                                        <td th:text="'$ '+${payment.getAmount() - 200}"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2"></td>
-                                                        <td colspan="2">GRAND TOTAL</td>
-                                                        <td th:text="'$ '+${payment.getAmount()}"></td>
-                                                    </tr>
-                                                    </tfoot>
-                                                </table>
-                                                <div class="notices">
-                                                    <div>NOTICE:</div>
-                                                    <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-                                                </div>
-                                            <footer>Invoice was created on a computer and is valid without the signature and seal.</footer>
-                                          </main>
-                                        </div>
-                                        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
-                                        <div></div>
-                                    </div>
+                            </h3 th:if='${error}' th:text='${error}' style='color: red;'></h3>
+                                <div th:unless='${error}'>
+                                    <h3 style='color: green;'>Success!</h3>
+                                    <div>Id.: <span th:text='${id}' /></div>
+                                    <div>Status: <span th:text='${status}' /></div>
+                                    <div>Charge id.: <span th:text='${chargeId}' /></div>
+                                    <div>Balance transaction id.: <span th:text='${balance_transaction}' /></div>
                                 </div>
-                            </div>
+                                <a href='payment-method.html'>Checkout again</a>div>
                         </div>
                     </div>
                 </section>
