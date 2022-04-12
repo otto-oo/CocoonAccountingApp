@@ -35,7 +35,7 @@
                                                     Payment Method</p>
                                                 </h4>
                                                 <p>Please select your prefered payment method.</p>
-                                                <form th:action="@{/charge/{id}(id=${modelId})}" method='POST' id='checkout-form'>
+                                                <form th:action="@{/payment/charge/{id}(id=${modelId})}" method='POST' id='checkout-form'>
                                                     <input type='hidden' th:value='${modelId}' name='modelId'/>
                                                     <input type='hidden' th:value='${amount}' name='amount'/>
                                                     <label>Price: $ <span th:text='${amount/100}'></span></label>
