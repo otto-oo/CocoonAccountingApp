@@ -8,7 +8,6 @@ import com.cocoon.repository.StockRepository;
 import com.cocoon.service.StockService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -30,6 +29,7 @@ public class StockServiceImpl implements StockService {
                     .quantity(invoiceProduct.getQty())
                     .price(invoiceProduct.getPrice())
                     .remainingQuantity(invoiceProduct.getQty())
+                    .profitLoss(0)
                     .invoiceDate(invoiceProduct.getInvoice().getInvoiceDate())
                     .build();
             stockRepository.save(productStock);
@@ -39,10 +39,12 @@ public class StockServiceImpl implements StockService {
                 Stock queuedProductStock = stockRepository.findFirstByProduct_IdAndRemainingQuantityNot(invoiceProduct.getProduct().getId(), 0);
                 if (soldProductQty < queuedProductStock.getRemainingQuantity()){
                     queuedProductStock.setRemainingQuantity(queuedProductStock.getRemainingQuantity() - soldProductQty);
+                    queuedProductStock.setProfitLoss(queuedProductStock.getProfitLoss() + (soldProductQty * (invoiceProduct.getPrice() - queuedProductStock.getPrice())));
                     stockRepository.save(queuedProductStock);
                     break;
                 } else {
                     soldProductQty -= queuedProductStock.getRemainingQuantity();
+                    queuedProductStock.setProfitLoss(queuedProductStock.getProfitLoss() + (queuedProductStock.getRemainingQuantity() * (invoiceProduct.getPrice() - queuedProductStock.getPrice())));
                     queuedProductStock.setRemainingQuantity(0);
                     stockRepository.save(queuedProductStock);
                 }

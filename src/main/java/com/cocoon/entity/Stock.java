@@ -24,6 +24,7 @@ public class Stock {
     private int quantity;
     private int remainingQuantity;
     private int price;
+    private int profitLoss;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_id")
