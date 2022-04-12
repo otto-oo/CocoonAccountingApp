@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ChargeController {
 
     @Autowired
-    private StripeService paymentsService;
+    private PaymentServiceImpl paymentsService;
 
     @PostMapping
     public String charge(ChargeRequest chargeRequest, Model model)

@@ -18,7 +18,7 @@ public class PaymentDTO {
 
     private Long id;
     private CompanyDTO company;
-    private InstitutionDTO institution;
+//    private InstitutionDTO institution;
     private Months month;
     private int amount;
     private boolean isPaid;
