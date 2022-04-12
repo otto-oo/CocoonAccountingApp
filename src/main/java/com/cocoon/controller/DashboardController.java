@@ -44,7 +44,6 @@ public class DashboardController {
         List<IInvoiceForDashBoard> updatedInvoices = invoiceService.getDashboardInvoiceTop3(companyService.getCompanyByLoggedInUser().getId());
         model.addAttribute("invoices", updatedInvoices);
         model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
-        return "dashboard";
     }
 
     //getting the current exchange rates
