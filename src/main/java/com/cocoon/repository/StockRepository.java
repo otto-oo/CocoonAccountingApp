@@ -10,6 +10,6 @@ import java.time.chrono.IsoChronology;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-
     Stock findFirstByProduct_IdAndRemainingQuantityNot(Long product_id, int qty);
+
 }
