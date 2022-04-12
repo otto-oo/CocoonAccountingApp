@@ -29,7 +29,4 @@ public class Stock {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Stock(Product product) {
-        this.product = product;
-    }
 }

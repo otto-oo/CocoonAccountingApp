@@ -1,9 +1,12 @@
 package com.cocoon.controller;
 
 import com.cocoon.dto.PaymentDTO;
+import com.cocoon.entity.Payment;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.entity.common.ChargeRequest;
 import com.cocoon.service.CompanyService;
 import com.cocoon.service.PaymentService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,9 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
+
+    @Value("${STRIPE_PUBLIC_KEY}")
+    private String stripePublicKey;
 
     private final PaymentService paymentService;
     private final CompanyService companyService;
@@ -34,20 +40,15 @@ public class PaymentController {
 
 
     @GetMapping("/newpayment/{id}")
-    public String selectInstitution(@PathVariable("id") Long id, Model model) {
+    public String checkout(@PathVariable("id") Long id, Model model) {
 
-        model.addAttribute("payment", paymentService.getPaymentById(id));
-
+        PaymentDTO dto = paymentService.getPaymentById(id);
+        model.addAttribute("payment", dto);
+        model.addAttribute("amount", dto.getAmount() * 100); // in cents
+        model.addAttribute("stripePublicKey", stripePublicKey);
+        model.addAttribute("currency", ChargeRequest.Currency.EUR);
+        model.addAttribute("modelId", id);
         return "payment/payment-method";
-    }
-
-    @PostMapping("/newpayment/{id}")
-    public String selectInstitutionPost(@PathVariable("id") Long id, PaymentDTO paymentDTO) {
-
-        PaymentDTO convertedPaymentDto = paymentService.getPaymentById(id);
-        paymentService.updatePayment(convertedPaymentDto);
-
-        return "redirect:/payment/list";
     }
 
     // To invoice

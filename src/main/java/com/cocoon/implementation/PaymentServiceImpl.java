@@ -73,9 +73,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentDTO updatePayment(PaymentDTO paymentDTO) {
+    public PaymentDTO updatePayment(Long id) {
 
-        Payment payment = paymentRepository.getById(paymentDTO.getId());
+        Payment payment = paymentRepository.getById(id);
         payment.setPaid(true);
         return mapperUtil.convert(paymentRepository.save(payment), new PaymentDTO());
     }

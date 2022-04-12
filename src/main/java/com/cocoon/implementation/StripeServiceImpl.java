@@ -1,5 +1,6 @@
-package com.cocoon.implementation.payment;
+package com.cocoon.implementation;
 
+import com.cocoon.entity.common.ChargeRequest;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class StripeService {
+public class StripeServiceImpl {
 
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="loading" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html class="loading" lang="en" xmlns='http://www.w3.org/1999/xhtml' xmlns:th='http://www.thymeleaf.org'>
 <!-- BEGIN : Head-->
 <head th:replace="fragments :: page_head">
     <title>Sales Invoice List</title>
@@ -35,10 +35,12 @@
                                                     Payment Method</p>
                                                 </h4>
                                                 <p>Please select your prefered payment method.</p>
-                                                <form th:action="@{/charge}" method='POST' id='checkout-form'>
+                                                <form th:action="@{/charge/{id}(id=${modelId})}" method='POST' id='checkout-form'>
+                                                    <input type='hidden' th:value='${modelId}' name='modelId'/>
                                                     <input type='hidden' th:value='${amount}' name='amount'/>
-                                                    <label>Price:<span th:text='${amount}'/></label>
+                                                    <label>Price: $ <span th:text='${amount/100}'></span></label>
                                                     <!-- NOTE: data-key/data-amount/data-currency will be rendered by Thymeleaf -->
+
                                                     <script
                                                             src='https://checkout.stripe.com/checkout.js'
                                                             class='stripe-button'
@@ -52,28 +54,6 @@
                                                             data-zip-code='false'>
                                                     </script>
                                                 </form>
-                                                <!-- ************ Legacy Form   ***********-->
-                                                <!--                                                <form th:object="${payment}" th:action="@{/payment/newpayment/{id}(id=${payment.id})}" method="post">-->
-                                                <!--                                                    <div class="form-group mb-1">-->
-                                                <!--                                                        <select th:field="*{institution}" class="custom-select" required="required" id="clientvendor">-->
-                                                <!--                                                            <option th:value=" ''" th:text="Select"></option>-->
-                                                <!--                                                            <option th:each="institude : ${institutions}" th:value="${institude.id}"-->
-                                                <!--                                                                    th:text="${institude.name}"></option>-->
-                                                <!--                                                        </select>-->
-                                                <!--                                                    </div>-->
-                                                <!--                                                    <div class="d-sm-flex justify-content-between mb-3 font-small-2">-->
-                                                <!--                                                        <div class="remember-me mb-2 mb-sm-0">-->
-                                                <!--                                                            <div class="checkbox auth-checkbox">-->
-                                                <!--                                                                <input type="checkbox" id="auth-ligin" class="mb-1"-->
-                                                <!--                                                                       name="remember-me">-->
-                                                <!--                                                                <label for="auth-ligin"><span>Remember My Choice</span></label>-->
-                                                <!--                                                            </div>-->
-                                                <!--                                                        </div>-->
-                                                <!--                                                    </div>-->
-                                                <!--                                                    <div class="d-flex justify-content-between flex-sm-row flex-column">-->
-                                                <!--                                                        <button type="submit" class="btn btn-primary">Next</button>-->
-                                                <!--                                                    </div>-->
-                                                <!--                                                </form>-->
                                                 <hr>
                                             </div>
                                         </div>
