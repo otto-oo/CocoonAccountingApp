@@ -7,8 +7,8 @@ import com.cocoon.entity.Payment;
 import com.cocoon.enums.Months;
 import com.cocoon.repository.PaymentRepository;
 import com.cocoon.service.CompanyService;
+import com.cocoon.service.PaymentService;
 import com.cocoon.util.MapperUtil;
-import com.fasterxml.jackson.databind.deser.impl.JavaUtilCollectionsDeserializers;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 
@@ -29,7 +29,7 @@ import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 @Service
-public class PaymentServiceImpl implements com.cocoon.service.PaymentService {
+public class PaymentServiceImpl implements PaymentService {
 
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;

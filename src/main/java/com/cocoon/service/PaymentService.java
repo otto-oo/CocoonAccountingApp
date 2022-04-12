@@ -4,7 +4,6 @@ import com.cocoon.dto.PaymentDTO;
 import yapily.ApiException;
 
 import java.net.URISyntaxException;
-import java.time.LocalDate;
 import java.util.List;
 
 public interface PaymentService {
@@ -13,9 +12,6 @@ public interface PaymentService {
     void createPaymentsIfNotExist(int year);
     PaymentDTO getPaymentById(Long id);
     PaymentDTO updatePayment(PaymentDTO paymentDTO);
-
     void makePaymentWithSelectedInstitution(String id) throws ApiException, URISyntaxException;
-
-
 
 }

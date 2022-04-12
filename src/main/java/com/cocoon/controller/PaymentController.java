@@ -1,16 +1,14 @@
 package com.cocoon.controller;
 
 
+import com.cocoon.dto.PaymentDTO;
 import com.cocoon.exception.CocoonException;
 import com.cocoon.service.CompanyService;
 
 import com.cocoon.service.PaymentService;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 import yapily.ApiException;
 
 import java.io.IOException;
@@ -24,20 +22,14 @@ import java.util.*;
 @RequestMapping("/payment")
 public class PaymentController {
 
-    private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
+
     private final PaymentService paymentService;
     private final CompanyService companyService;
 
     public PaymentController(PaymentService paymentService, CompanyService companyService) {
         this.paymentService = paymentService;
-
         this.companyService = companyService;
     }
-
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void getInstitutionsAfterStartUp() {
-//        System.out.println(institutionService.getInstitutionsAtStartUp());
-//    }
 
 
     @GetMapping({"/list", "/list/{year}"})
@@ -54,7 +46,6 @@ public class PaymentController {
     @GetMapping("/newpayment/{id}")
     public String selectInstitution(@PathVariable("id") Long id, Model model) throws ApiException {
 
-        model.addAttribute("institutions", institutionService.getInstitutionsFromApi());
         model.addAttribute("payment", paymentService.getPaymentById(id));
 
         return "payment/payment-method";
@@ -64,8 +55,6 @@ public class PaymentController {
     public String selectInstitutionPost(@PathVariable("id") Long id, PaymentDTO paymentDTO) throws ApiException, URISyntaxException, IOException {
 
         PaymentDTO convertedPaymentDto = paymentService.getPaymentById(id);
-        convertedPaymentDto.setInstitution(paymentDTO.getInstitution());
-        paymentService.makePaymentWithSelectedInstitution(paymentDTO.getInstitution().getId());
         paymentService.updatePayment(convertedPaymentDto);
 
         return "redirect:/payment/list";
