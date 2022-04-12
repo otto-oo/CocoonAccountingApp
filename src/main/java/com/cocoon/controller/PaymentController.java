@@ -55,17 +55,6 @@ public class PaymentController {
         return "payment/payment-method";
     }
 
-    // To invoice
-
-    @GetMapping("/toInvoice/{id}")
-    public String toInvoice(@PathVariable("id") Long id, Model model) throws CocoonException {
-
-        model.addAttribute("payment", paymentService.getPaymentById(id));
-        model.addAttribute("company", companyService.getCompanyByLoggedInUser());
-
-        return "payment/payment-success";
-    }
-
     // charge controller
 
     @PostMapping("/charge/{id}")
@@ -87,6 +76,18 @@ public class PaymentController {
     @ExceptionHandler(StripeException.class)
     public String handleError(Model model, StripeException ex) {
         model.addAttribute("error", ex.getMessage());
+        return "payment/payment-success";
+    }
+
+
+    // To invoice
+
+    @GetMapping("/toInvoice/{id}")
+    public String toInvoice(@PathVariable("id") Long id, Model model) throws CocoonException {
+
+        model.addAttribute("payment", paymentService.getPaymentById(id));
+        model.addAttribute("company", companyService.getCompanyByLoggedInUser());
+
         return "payment/payment-success";
     }
 
