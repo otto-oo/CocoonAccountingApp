@@ -1,12 +1,10 @@
 package com.cocoon.service;
 
 
-import com.cocoon.entity.Stock;
-
-import java.util.List;
+import com.cocoon.entity.InvoiceProduct;
 
 public interface StockService {
 
-    List<Stock> getStocks();
+    void saveToStock(InvoiceProduct invoiceProduct);
 
 }

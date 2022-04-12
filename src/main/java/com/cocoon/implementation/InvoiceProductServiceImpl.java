@@ -10,6 +10,7 @@ import com.cocoon.repository.InvoiceProductRepository;
 import com.cocoon.repository.InvoiceRepository;
 import com.cocoon.service.InvoiceProductService;
 import com.cocoon.service.ProductService;
+import com.cocoon.service.StockService;
 import com.cocoon.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +24,14 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final InvoiceRepository invoiceRepository;
     private final MapperUtil mapperUtil;
     private final ProductService productService;
+    private final StockService stockService;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, ProductService productService) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, InvoiceRepository invoiceRepository, MapperUtil mapperUtil, ProductService productService, StockService stockService) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.productService = productService;
-    }
-
-    @Override
-    public InvoiceProductDTO save(InvoiceProductDTO invoiceProductDTO) {
-        InvoiceProduct invoiceProduct = mapperUtil.convert(invoiceProductDTO, new InvoiceProduct());
-        InvoiceProduct savedInvoiceProduct = invoiceProductRepository.save(invoiceProduct);
-        return mapperUtil.convert(savedInvoiceProduct, new InvoiceProductDTO());
+        this.stockService = stockService;
     }
 
     @Override
@@ -44,6 +40,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         return invoiceProductDTOSet
                 .stream()
                 .map(dto -> mapperUtil.convert(dto, new InvoiceProduct()))
+                .peek(stockService::saveToStock)
                 .map(invoiceProductRepository::save)
                 .map(entity -> mapperUtil.convert(entity,new InvoiceProductDTO()))
                 .collect(Collectors.toSet());
@@ -54,13 +51,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
         Set<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(id);
         return invoiceProducts.stream().map(obj -> mapperUtil.convert(obj, new InvoiceProductDTO())).collect(Collectors.toSet());
-    }
-
-    @Override
-    public List<InvoiceProductDTO> getAllInvoiceProductsByProductId(Long id) {
-
-        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByProductId(id);
-        return invoiceProducts.stream().map(obj -> mapperUtil.convert(obj, new InvoiceProductDTO())).collect(Collectors.toList());
     }
 
     @Override

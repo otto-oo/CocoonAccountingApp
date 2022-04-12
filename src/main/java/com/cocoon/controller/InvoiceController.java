@@ -105,12 +105,10 @@ public class InvoiceController {
     public String addInvoiceProductInUpdatePage(InvoiceProductDTO invoiceProductDTO, RedirectAttributes redirAttrs) throws CocoonException {
 
         invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
-
         if (validateQuantity(invoiceProductDTO, redirAttrs)){
             return "redirect:/sales-invoice/update";
         }
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
-
         return "redirect:/sales-invoice/update";
     }
 
