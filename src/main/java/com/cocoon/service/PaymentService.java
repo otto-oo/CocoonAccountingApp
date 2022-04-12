@@ -11,7 +11,7 @@ public interface PaymentService {
 
     PaymentDTO getPaymentById(Long id);
 
-    PaymentDTO updatePayment(PaymentDTO paymentDTO);
+    PaymentDTO updatePayment(Long id);
 
     void makePaymentWithSelectedInstitution(String id);
 

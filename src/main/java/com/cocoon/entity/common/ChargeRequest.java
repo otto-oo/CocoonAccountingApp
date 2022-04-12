@@ -1,4 +1,4 @@
-package com.cocoon.implementation.payment;
+package com.cocoon.entity.common;
 
 import lombok.Data;
 
