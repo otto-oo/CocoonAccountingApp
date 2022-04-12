@@ -62,7 +62,7 @@ public class InvoiceController {
 
         invoiceProductDTO.setName(invoiceProductDTO.getProductDTO().getName());
         if (validateQuantity(invoiceProductDTO, redirAttrs)){
-            return "redirect:/sales-invoice/create";
+            return "redirect:/sales-invoice/create?id="+currentInvoiceDTO.getClient().getId();
         }
 
         currentInvoiceDTO.getInvoiceProduct().add(invoiceProductDTO);
