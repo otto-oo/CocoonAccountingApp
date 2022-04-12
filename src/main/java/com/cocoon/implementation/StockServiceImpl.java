@@ -40,11 +40,13 @@ public class StockServiceImpl implements StockService {
                 if (soldProductQty < queuedProductStock.getRemainingQuantity()){
                     queuedProductStock.setRemainingQuantity(queuedProductStock.getRemainingQuantity() - soldProductQty);
                     queuedProductStock.setProfitLoss(queuedProductStock.getProfitLoss() + (soldProductQty * (invoiceProduct.getPrice() - queuedProductStock.getPrice())));
+
                     stockRepository.save(queuedProductStock);
                     break;
                 } else {
                     soldProductQty -= queuedProductStock.getRemainingQuantity();
                     queuedProductStock.setProfitLoss(queuedProductStock.getProfitLoss() + (queuedProductStock.getRemainingQuantity() * (invoiceProduct.getPrice() - queuedProductStock.getPrice())));
+
                     queuedProductStock.setRemainingQuantity(0);
                     stockRepository.save(queuedProductStock);
                 }
