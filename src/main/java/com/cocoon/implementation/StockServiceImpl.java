@@ -23,24 +23,31 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public void saveToStock(InvoiceProduct invoiceProduct) {
-        Stock productStock = Stock.builder()
-                .product(invoiceProduct.getProduct())
-                .quantity(invoiceProduct.getQty())
-                .price(invoiceProduct.getPrice())
-                .remainingQuantity(this.calculateQty(invoiceProduct))
-                .invoiceDate(invoiceProduct.getInvoice().getInvoiceDate())
-                .build();
-        stockRepository.save(productStock);
-    }
 
-    private int calculateQty(InvoiceProduct invoiceProduct) {
-        int formerQuantity = productRepository.findById(invoiceProduct.getProduct().getId()).get().getQty();
-        if (invoiceProduct.getInvoice().getInvoiceType().equals(InvoiceType.SALE)){
-            return formerQuantity - invoiceProduct.getQty();
+        if (invoiceProduct.getInvoice().getInvoiceType().equals(InvoiceType.PURCHASE)){
+            Stock productStock = Stock.builder()
+                    .product(invoiceProduct.getProduct())
+                    .quantity(invoiceProduct.getQty())
+                    .price(invoiceProduct.getPrice())
+                    .remainingQuantity(invoiceProduct.getQty())
+                    .invoiceDate(invoiceProduct.getInvoice().getInvoiceDate())
+                    .build();
+            stockRepository.save(productStock);
+        } else {
+            int soldProductQty = invoiceProduct.getQty();
+            while ( soldProductQty > 0){
+                Stock queuedProductStock = stockRepository.findFirstByProduct_IdAndRemainingQuantityNot(invoiceProduct.getProduct().getId(), 0);
+                if (soldProductQty < queuedProductStock.getRemainingQuantity()){
+                    queuedProductStock.setRemainingQuantity(queuedProductStock.getRemainingQuantity() - soldProductQty);
+                    stockRepository.save(queuedProductStock);
+                    break;
+                } else {
+                    soldProductQty -= queuedProductStock.getRemainingQuantity();
+                    queuedProductStock.setRemainingQuantity(0);
+                    stockRepository.save(queuedProductStock);
+                }
+            }
         }
-        return formerQuantity + invoiceProduct.getQty();
     }
-
-
 
 }

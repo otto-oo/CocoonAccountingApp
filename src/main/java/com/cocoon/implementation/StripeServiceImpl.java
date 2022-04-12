@@ -22,6 +22,7 @@ public class StripeServiceImpl {
     public void init() {
         Stripe.apiKey = secretKey;
     }
+
     public Charge charge(ChargeRequest chargeRequest) throws StripeException {
         Map<String, Object> chargeParams = new HashMap<>();
 
