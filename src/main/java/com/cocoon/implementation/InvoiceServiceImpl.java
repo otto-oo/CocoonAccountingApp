@@ -185,8 +185,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<IInvoiceForDashBoard> invoiceForDashBoards = invoiceRepository.getDashboardInvoiceTop3Interface(companyId, companyId);
         return invoiceForDashBoards;
     }
-  
+    @Override
     public List<ProfitDTO> getProfitList() {
+
+        List<ProfitDTO> list=new ArrayList<>();
 
         List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
 
@@ -194,19 +196,23 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
 
-        List<ProfitDTO> list=allSoldInvoiceProducts.stream().collect(Collectors.toList()).stream().collect(Collectors.toList());
+        allSoldInvoiceProducts.stream().forEach(p->p.stream().forEach(product->{
+            if (list.isEmpty()) {
+                list.add(new ProfitDTO(product.getName(), product.getQty(),product..);
+            } else {
+                list.stream().filter(e->e.getName()==product.getName())..map(v->v.setQty(v.getQty()+product.getQty()));
+                for (ProfitDTO profitDTO : list) {
+                    if (profitDTO.getName().equals(product.getName())) {
+                        profitDTO.setProfit(profitDTO.getProfit() + product.getProfit());
+                        profitDTO.setQty(profitDTO.getQty() + product.getQty());
+                    }
+                }
+                list.add(new ProfitDTO(product.getName(), product.getQty(), product.getProfit()));
+            }
+        }));
+        list.stream().
+        return list;
 
-        .toList());)collect(Collectors.groupingBy(allSoldInvoiceProducts::p:)toList())collect(Collectors.groupingBy(p->)toList())
-                        .
-                flatMap(p->p.stream().Collectors.groupingBy(allSoldInvoiceProducts::getName, Collectors.summingInt(Item::getQty)));
-
-
-
-
-        List<InvoiceDTO> purchaseInvoices = getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
-        List<Set<InvoiceProductDTO>> allPurchasedInvoiceProducts = purchaseInvoices.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-
-        return orderTotalProfitList(calculateBuyandSellCostforeachProducts(allSoldInvoiceProducts,allPurchasedInvoiceProducts));
 
     }
 
