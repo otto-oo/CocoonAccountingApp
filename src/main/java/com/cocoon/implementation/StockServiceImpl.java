@@ -32,7 +32,6 @@ public class StockServiceImpl implements StockService {
                     .quantity(invoiceProduct.getQty())
                     .price(invoiceProduct.getPrice())
                     .remainingQuantity(invoiceProduct.getQty())
-                    .profitLoss(0)
                     .invoiceDate(invoiceProduct.getInvoice().getInvoiceDate())
                     .build();
             stockRepository.save(productStock);
@@ -69,13 +68,13 @@ public class StockServiceImpl implements StockService {
                 Stock queuedProductStock = stockRepository.findFirstByProduct_IdAndRemainingQuantityNot(invoiceProduct.getProduct().getId(), 0);
                 if (soldProductQty < queuedProductStock.getRemainingQuantity()) {
                     queuedProductStock.setRemainingQuantity(queuedProductStock.getRemainingQuantity() - soldProductQty);
-                    profit = (queuedProductStock.getProfitLoss() + (soldProductQty * (invoiceProduct.getPrice() - queuedProductStock.getPrice())));
+                    profit =  (soldProductQty * (invoiceProduct.getPrice() - queuedProductStock.getPrice()));
 
                     stockRepository.save(queuedProductStock);
                     break;
                 } else {
                     soldProductQty -= queuedProductStock.getRemainingQuantity();
-                    profit = (queuedProductStock.getProfitLoss() + (queuedProductStock.getRemainingQuantity() * (invoiceProduct.getPrice() - queuedProductStock.getPrice())));
+                    profit = (queuedProductStock.getRemainingQuantity() * (invoiceProduct.getPrice() - queuedProductStock.getPrice()));
 
                     queuedProductStock.setRemainingQuantity(0);
                     stockRepository.save(queuedProductStock);

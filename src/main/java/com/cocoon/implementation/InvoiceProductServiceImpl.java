@@ -77,11 +77,15 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
         Invoice invoice = invoiceRepository.getById(id);
         Set<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(id);
-        invoiceProducts.stream().map(obj -> {
-            int profit=stockService.updateStockbySale(obj);
-            obj.setProfit(profit);
-            return obj;
-        });
+        //invoiceProducts.stream().forEach(obj -> {
+            for (InvoiceProduct each:invoiceProducts){
+                int profit=stockService.updateStockbySale(each);
+                each.setProfit(profit);
+
+            }
+
+
+       // });
             //productService.updateProductQuantity(invoice.getInvoiceType(), obj));
         invoiceProductRepository.saveAll(invoiceProducts);
     }

@@ -119,6 +119,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Set<InvoiceProductDTO>> allPurchasedInvoiceProducts = purchaseInvoices.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
 
 
+
         int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
         int totalIncomeFromSoldProductsWithTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
         int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
@@ -130,12 +131,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         int eachProductProfit = eachProductsSellCost - eachProductsPurchasedCost;
 
 
-        int pro =calculateTotalProfit(calculateBuyandSellCostforeachProducts(allSoldInvoiceProducts,allPurchasedInvoiceProducts));
+        //int pro =calculateTotalProfit(calculateBuyandSellCostforeachProducts(allSoldInvoiceProducts,allPurchasedInvoiceProducts));
 
         map.put("totalCost", totalSpendForPurchasedProductsWithTax );
         map.put("totalTax", totalSpendForPurchasedProductsWithTax - totalSpendForPurchasedProductsWithoutTax);
         map.put("totalSales", totalIncomeFromSoldProductsWithTax);
-        map.put("totalEarning", pro);
+        map.put("totalEarning", totalIncomeFromSoldProductsWithoutTax-totalSpendForPurchasedProductsWithoutTax);
 
         return map;
     }
@@ -192,6 +193,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).collect(Collectors.toList());
 
         List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
+
+        List<ProfitDTO> list=allSoldInvoiceProducts.stream().collect(Collectors.toList()).stream().collect(Collectors.toList());
+
+        .toList());)collect(Collectors.groupingBy(allSoldInvoiceProducts::p:)toList())collect(Collectors.groupingBy(p->)toList())
+                        .
+                flatMap(p->p.stream().Collectors.groupingBy(allSoldInvoiceProducts::getName, Collectors.summingInt(Item::getQty)));
+
+
 
 
         List<InvoiceDTO> purchaseInvoices = getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
