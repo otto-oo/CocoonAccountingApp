@@ -21,6 +21,7 @@ import com.cocoon.util.MapperUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,15 +129,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         int totalSoldProductQty = allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
         int eachProductsPurchasedCost = totalSpendForPurchasedProductsWithoutTax / totalPurchasedProductQty;
         int eachProductsSellCost = totalIncomeFromSoldProductsWithoutTax / totalSoldProductQty;
-        int eachProductProfit = eachProductsSellCost - eachProductsPurchasedCost;
+        int totalProfit=allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalProfit).sum();
 
 
-        //int pro =calculateTotalProfit(calculateBuyandSellCostforeachProducts(allSoldInvoiceProducts,allPurchasedInvoiceProducts));
 
         map.put("totalCost", totalSpendForPurchasedProductsWithTax );
         map.put("totalTax", totalSpendForPurchasedProductsWithTax - totalSpendForPurchasedProductsWithoutTax);
         map.put("totalSales", totalIncomeFromSoldProductsWithTax);
-        map.put("totalEarning", totalIncomeFromSoldProductsWithoutTax-totalSpendForPurchasedProductsWithoutTax);
+        map.put("totalEarning", totalProfit);
 
         return map;
     }
@@ -178,6 +178,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         return result;
     }
 
+    private int calculateTotalProfit(Set<InvoiceProductDTO> products) {
+        int result = 0;
+        for (InvoiceProductDTO product : products) {
+            result += product.getProfit();
+        }
+        return result;
+    }
+
     // Get top 3 invoices section----------------------------------------------------------------------------------------
 
     @Override
@@ -188,16 +196,40 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<ProfitDTO> getProfitList() {
 
-        List<ProfitDTO> list=new ArrayList<>();
-
+        // List<InvoiceProductDTO> products=new ArrayList<>();
+        List<ProfitDTO> profitList = new ArrayList<>();
         List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-
-        List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).collect(Collectors.toList());
-
+        List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).filter(obj -> obj.getInvoiceDate().getMonth() == LocalDate.now().getMonth()).collect(Collectors.toList());
         List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
+        List<InvoiceProductDTO> list=allSoldInvoiceProducts.stream().flatMap(p ->p.stream()).collect(Collectors.toList());
 
 
+        list
+
+                .collect(Collectors.groupingBy(
+                        Collectors.mapping(a -> new User(a.getUserName(), a.getAddress(), a.getEmail()),
+                                Collectors.toList())))
+
+
+                        g.toList()).stream().forEach(product-> {
+                    for (ProfitDTO profit : profitList) {
+                        if (profit.getName().equals(product.getName())) {
+                            profit.setQty(profit.getQty() + product.getQty());
+                            profit.setProfit(profit.getProfit() + product.getProfit());
+                        }
+                    }
+                });
+        return profitList;
     }
+    List<ResultObject> resultObjects = samples.stream()
+            .collect(Collectors.groupingBy(Sample::getId,
+                    Collectors.mapping(a -> new User(a.getUserName(), a.getAddress(), a.getEmail()),
+                            Collectors.toList())))
+            .entrySet().stream()
+            .map(e -> new ResultObject(e.getKey(), e.getValue()))
+            .collect(Collectors.toList());
+
+
     private Company getCompanyByLoggedInUser(){
         var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDTO userDTO = userService.findByEmail(currentUserEmail);
@@ -207,69 +239,5 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
 
-    // Profit / Loss Section -----------------------------------------------------------------------------------------------------
-
-    public List<ProfitDTO> calculateBuyandSellCostforeachProducts(List<Set<InvoiceProductDTO>> productssold, List<Set<InvoiceProductDTO>> productsbougt) {
-
-        List<ProfitDTO> list=new ArrayList<>();
-        int a=0;
-        int a1=0;
-        int b=0;
-        int b1=0;
-        int profit = 0;
-
-        for (Set<InvoiceProductDTO> soldlist : productssold) {
-            for (InvoiceProductDTO soldproduct : soldlist) {
-                for (Set<InvoiceProductDTO> boughtlist : productsbougt) {
-                    for (InvoiceProductDTO boughtproduct : boughtlist) {
-                        if (soldproduct.getName().equals(boughtproduct.getName())&&(soldproduct.getQty()!=0)&&(boughtproduct.getQty()!=0)) {
-                            if (soldproduct.getQty() ==boughtproduct.getQty()){
-                                profit =  (soldproduct.getPrice() - boughtproduct.getPrice()) * soldproduct.getQty();
-                                list.add(new ProfitDTO( soldproduct.getName(), soldproduct.getQty(),profit ));
-                                soldproduct.setQty(0);
-                                boughtproduct.setQty(0);
-                            }
-                            else if (soldproduct.getQty() < boughtproduct.getQty()) {
-                                profit =  (soldproduct.getPrice() - boughtproduct.getPrice()) * soldproduct.getQty();
-                                list.add(new ProfitDTO(soldproduct.getName(), soldproduct.getQty(),profit ));
-                                boughtproduct.setQty(boughtproduct.getQty() - soldproduct.getQty());
-                                soldproduct.setQty(0);
-                                a = soldproduct.getQty();
-                                a1= boughtproduct.getQty();
-                                break;
-                            } else if (soldproduct.getQty() > boughtproduct.getQty()) {
-                                profit = (soldproduct.getPrice() - boughtproduct.getPrice()) * boughtproduct.getQty();
-                                list.add(new ProfitDTO( soldproduct.getName(), soldproduct.getQty(),profit ));
-                                soldproduct.setQty(soldproduct.getQty() - boughtproduct.getQty());
-                                boughtproduct.setQty(0);
-                                b = soldproduct.getQty();
-                                b1= boughtproduct.getQty();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return list;
-    }
-
-    private int calculateTotalProfit(List<ProfitDTO> list){
-        return list.stream().mapToInt(value -> value.getProfit()).sum();
-    }
-
-    private List<ProfitDTO> orderTotalProfitList(List<ProfitDTO> list){
-        for(int i=0; i< list.size(); i++){
-            for (int j=list.size()-1; j!=i;j-- ){
-                if(list.get(i).getName().equals(list.get(j).getName())){
-                    int k=list.get(i).getProfit()+list.get(j).getProfit();
-                    list.get(i).setProfit(list.get(i).getProfit()+list.get(j).getProfit());
-                    list.get(i).setQty(list.get(i).getQty()+list.get(j).getQty());
-                    list.remove(j);
-                   // if ((j>i+1)||(list.size()==3)) j=j-1;
-                }
-            }
-        }
-        return list;
-    }
 
 }

@@ -81,12 +81,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             for (InvoiceProduct each:invoiceProducts){
                 int profit=stockService.updateStockbySale(each);
                 each.setProfit(profit);
-
             }
+            invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
 
 
        // });
             //productService.updateProductQuantity(invoice.getInvoiceType(), obj));
+        invoiceRepository.save(invoice);
         invoiceProductRepository.saveAll(invoiceProducts);
     }
 
