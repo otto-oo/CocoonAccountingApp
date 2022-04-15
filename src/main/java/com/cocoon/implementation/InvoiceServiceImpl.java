@@ -122,20 +122,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
         int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
-        int totalIncomeFromSoldProductsWithTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
         int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
         int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
-        int totalPurchasedProductQty = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
-        int totalSoldProductQty = allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalQty).sum();
-        int eachProductsPurchasedCost = totalSpendForPurchasedProductsWithoutTax / totalPurchasedProductQty;
-        int eachProductsSellCost = totalIncomeFromSoldProductsWithoutTax / totalSoldProductQty;
         int totalProfit=allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalProfit).sum();
 
 
 
         map.put("totalCost", totalSpendForPurchasedProductsWithTax );
         map.put("totalTax", totalSpendForPurchasedProductsWithTax - totalSpendForPurchasedProductsWithoutTax);
-        map.put("totalSales", totalIncomeFromSoldProductsWithTax);
+        map.put("totalSales", totalIncomeFromSoldProductsWithoutTax);
         map.put("totalEarning", totalProfit);
 
         return map;
@@ -170,13 +165,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return result;
     }
 
-    private int calculateTotalQty(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += product.getQty();
-        }
-        return result;
-    }
 
     private int calculateTotalProfit(Set<InvoiceProductDTO> products) {
         int result = 0;
@@ -196,38 +184,33 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<ProfitDTO> getProfitList() {
 
-        // List<InvoiceProductDTO> products=new ArrayList<>();
-        List<ProfitDTO> profitList = new ArrayList<>();
         List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
         List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).filter(obj -> obj.getInvoiceDate().getMonth() == LocalDate.now().getMonth()).collect(Collectors.toList());
         List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-        List<InvoiceProductDTO> list=allSoldInvoiceProducts.stream().flatMap(p ->p.stream()).collect(Collectors.toList());
-
-
-        list
-
-                .collect(Collectors.groupingBy(
-                        Collectors.mapping(a -> new User(a.getUserName(), a.getAddress(), a.getEmail()),
-                                Collectors.toList())))
-
-
-                        g.toList()).stream().forEach(product-> {
-                    for (ProfitDTO profit : profitList) {
-                        if (profit.getName().equals(product.getName())) {
-                            profit.setQty(profit.getQty() + product.getQty());
-                            profit.setProfit(profit.getProfit() + product.getProfit());
-                        }
-                    }
-                });
-        return profitList;
+        return (getProfit(allSoldInvoiceProducts.stream().flatMap(p -> p.stream()).collect(Collectors.toList())));
     }
-    List<ResultObject> resultObjects = samples.stream()
-            .collect(Collectors.groupingBy(Sample::getId,
-                    Collectors.mapping(a -> new User(a.getUserName(), a.getAddress(), a.getEmail()),
-                            Collectors.toList())))
-            .entrySet().stream()
-            .map(e -> new ResultObject(e.getKey(), e.getValue()))
-            .collect(Collectors.toList());
+
+
+    private List<ProfitDTO> getProfit(List<InvoiceProductDTO> profitList) {
+
+        boolean pointer = false;
+        List<ProfitDTO> list = new ArrayList<>();
+        for (InvoiceProductDTO product : profitList) {
+            for (ProfitDTO profitDTO : list) {
+                if (profitDTO.getName().equals(product.getName())) {
+                    profitDTO.setProfit(profitDTO.getProfit() + product.getProfit());
+                    profitDTO.setQty(profitDTO.getQty() + product.getQty());
+                    pointer = true;
+                    break;
+                }
+            }
+            if (pointer == false) {
+                list.add(new ProfitDTO(product.getName(), product.getQty(), product.getProfit()));
+            }
+            pointer=false;
+        }
+        return list;
+    }
 
 
     private Company getCompanyByLoggedInUser(){
