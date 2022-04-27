@@ -101,6 +101,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         else return "S-INV" + String.format("%03d", number);
     }
 
+
+    @Override
+    public InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO) {
+
+        Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(currentDTO.getId());
+        int costWithoutTax = calculateCostWithoutTax(invoiceProducts);
+        currentDTO.setInvoiceCostWithoutTax(costWithoutTax);
+        int costWithTax = calculateCostWithTax(invoiceProducts);
+        currentDTO.setTotalCost(costWithTax);
+        currentDTO.setInvoiceCostWithTax(costWithTax - costWithoutTax);
+
+        return currentDTO;
+    }
+
     @Override
     public Map<String, Integer> calculateTotalProfitLoss() {
 
