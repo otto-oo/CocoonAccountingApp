@@ -22,13 +22,11 @@ public interface InvoiceService {
 
     void deleteInvoiceById(Long id);
 
-    List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type);
-
-    InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO);
-
     Map<String,Integer> calculateTotalProfitLoss();
 
     List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId);
 
     List<ProfitDTO>  getProfitList();
+
+    InvoiceDTO calculateInvoiceCost(InvoiceDTO invoiceDTO);
 }

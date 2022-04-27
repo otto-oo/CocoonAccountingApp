@@ -71,13 +71,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type) {
-        List<Invoice> invoices = invoiceRepository.findInvoicesByCompanyAndInvoiceType(getCompanyByLoggedInUser(), type);
-        List<InvoiceDTO> invoiceDTOS = invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
-        return invoiceDTOS.stream().map(this::calculateInvoiceCost).collect(Collectors.toList());
-    }
-
-    @Override
     public InvoiceDTO getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.getById(id);
         return mapperUtil.convert(invoice, new InvoiceDTO());
@@ -113,20 +106,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Map<String, Integer> map = new HashMap<>();
 
-        List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-        List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).collect(Collectors.toList());
-        List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-        List<InvoiceDTO> purchaseInvoices = getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
-        List<Set<InvoiceProductDTO>> allPurchasedInvoiceProducts = purchaseInvoices.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-
-
-
-        int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
-        int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
-        int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
-        int totalProfit=allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalProfit).sum();
-
-
+        int totalSpendForPurchasedProductsWithoutTax= invoiceProductRepository.findAllByProfitEquals(0).stream().mapToInt(InvoiceProduct::getPrice).sum();
+        int totalSpendForPurchasedProductsWithTax=invoiceProductRepository.findAllByProfitEquals(0).stream().mapToInt(InvoiceProduct::getTax).sum();
+        int totalIncomeFromSoldProductsWithoutTax=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream().mapToInt(InvoiceProduct::getTax).sum();
+        int totalProfit= invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream().mapToInt(InvoiceProduct::getProfit).sum();
 
         map.put("totalCost", totalSpendForPurchasedProductsWithTax );
         map.put("totalTax", totalSpendForPurchasedProductsWithTax - totalSpendForPurchasedProductsWithoutTax);
@@ -134,44 +117,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         map.put("totalEarning", totalProfit);
 
         return map;
-    }
-
-    @Override
-    public InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO) {
-
-        Set<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProductsByInvoiceId(currentDTO.getId());
-        int costWithoutTax = calculateCostWithoutTax(invoiceProducts);
-        currentDTO.setInvoiceCostWithoutTax(costWithoutTax);
-        int costWithTax = calculateCostWithTax(invoiceProducts);
-        currentDTO.setTotalCost(costWithTax);
-        currentDTO.setInvoiceCostWithTax(costWithTax - costWithoutTax);
-
-        return currentDTO;
-    }
-
-    private int calculateCostWithoutTax(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += (product.getPrice() * product.getQty());
-        }
-        return result;
-    }
-
-    private int calculateCostWithTax(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += (product.getPrice() * product.getQty()) + (product.getPrice() * product.getQty() * product.getTax() * 0.01);
-        }
-        return result;
-    }
-
-
-    private int calculateTotalProfit(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += product.getProfit();
-        }
-        return result;
     }
 
     // Get top 3 invoices section----------------------------------------------------------------------------------------
@@ -184,14 +129,53 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<ProfitDTO> getProfitList() {
 
-        List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-        List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).filter(obj -> obj.getInvoiceDate().getMonth() == LocalDate.now().getMonth()).collect(Collectors.toList());
-        List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-        return (getProfit(allSoldInvoiceProducts.stream().flatMap(p -> p.stream()).collect(Collectors.toList())));
+        List<ProfitDTO> list=new ArrayList<>();
+
+        invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream().forEach(p->{
+
+            int productProfit=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream()
+                                                        .filter(product->product.getName().equals(p.getName()))
+                                                        .mapToInt(InvoiceProduct::getProfit).sum();
+
+            int productQuantity=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream()
+                    .filter(product->product.getName().equals(p.getName()))
+                    .mapToInt(InvoiceProduct::getQty).sum();
+
+
+
+            list.add(new ProfitDTO(p.getName(),productQuantity,productProfit));
+
+        });
+
+        //return (getProfit(invoiceProductRepository.findAllByProfitIsGreaterThan(0)));
+        return list;
     }
 
+/*
+    private List<ProfitDTO> getProfit(List<InvoiceProduct> profitList) {
 
-    private List<ProfitDTO> getProfit(List<InvoiceProductDTO> profitList) {
+        boolean pointer = false;
+        List<ProfitDTO> list = new ArrayList<>();
+        for (InvoiceProduct product : profitList) {
+            for (ProfitDTO profitDTO : list) {
+                if (profitDTO.getName().equals(product.getName())) {
+                    profitDTO.setProfit(profitDTO.getProfit() + product.getProfit());
+                    profitDTO.setQty(profitDTO.getQty() + product.getQty());
+                    pointer = true;
+                    break;
+                }
+            }
+            if (pointer == false) {
+                list.add(new ProfitDTO(product.getName(), product.getQty(), product.getProfit()));
+            }
+            pointer=false;
+        }
+        return list;
+    }
+
+    private List<ProfitDTO> getProfit1(List<InvoiceProductDTO> profitList) {
+
+
 
         boolean pointer = false;
         List<ProfitDTO> list = new ArrayList<>();
@@ -212,7 +196,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return list;
     }
 
-
+*/
     private Company getCompanyByLoggedInUser(){
         var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDTO userDTO = userService.findByEmail(currentUserEmail);
