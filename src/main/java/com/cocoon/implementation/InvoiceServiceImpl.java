@@ -165,6 +165,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         return list;
     }
 
+    private int calculateCostWithoutTax(Set<InvoiceProductDTO> products) {
+        int result = 0;
+        for (InvoiceProductDTO product : products) {
+            result += (product.getPrice() * product.getQty());
+        }
+        return result;
+    }
+
+    private int calculateCostWithTax(Set<InvoiceProductDTO> products) {
+        int result = 0;
+        for (InvoiceProductDTO product : products) {
+            result += (product.getPrice() * product.getQty()) + (product.getPrice() * product.getQty() * product.getTax() * 0.01);
+        }
+        return result;
+    }
+
 /*
     private List<ProfitDTO> getProfit(List<InvoiceProduct> profitList) {
 

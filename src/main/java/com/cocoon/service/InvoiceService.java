@@ -29,4 +29,5 @@ public interface InvoiceService {
     List<ProfitDTO>  getProfitList();
 
     InvoiceDTO calculateInvoiceCost(InvoiceDTO invoiceDTO);
-}
+
+   }
