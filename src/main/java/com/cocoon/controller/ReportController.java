@@ -46,7 +46,7 @@ public class ReportController {
 
     @GetMapping("/profit")
     public String getProfitList(Model model){
-        ArrayList<ProfitDTO> profit=   (ArrayList<ProfitDTO>)invoiceService.getProfitList();
+        ArrayList<ProfitDTO> profit=   (ArrayList<ProfitDTO>)invoiceService.getProfitReport();
 
         model.addAttribute("profit", profit);
         model.addAttribute("result", invoiceService.calculateTotalProfitLoss());
@@ -58,7 +58,7 @@ public class ReportController {
     @GetMapping("/toProfit")
     public String ProfittoPDF( Model model) throws CocoonException {
 
-        ArrayList<ProfitDTO> profit=   (ArrayList<ProfitDTO>)invoiceService.getProfitList();
+        ArrayList<ProfitDTO> profit=   (ArrayList<ProfitDTO>)invoiceService.getProfitReport();
         model.addAttribute("profit", profit);
         model.addAttribute("company", companyService.getCompanyByLoggedInUser());
         model.addAttribute("result", invoiceService.calculateTotalProfitLoss());

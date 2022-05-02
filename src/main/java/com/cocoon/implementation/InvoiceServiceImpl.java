@@ -71,13 +71,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type) {
-        List<Invoice> invoices = invoiceRepository.findInvoicesByCompanyAndInvoiceType(getCompanyByLoggedInUser(), type);
-        List<InvoiceDTO> invoiceDTOS = invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
-        return invoiceDTOS.stream().map(this::calculateInvoiceCost).collect(Collectors.toList());
-    }
-
-    @Override
     public InvoiceDTO getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.getById(id);
         return mapperUtil.convert(invoice, new InvoiceDTO());
@@ -109,31 +102,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Map<String, Integer> calculateTotalProfitLoss() {
-
-        Map<String, Integer> map = new HashMap<>();
-
-        List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-        List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).collect(Collectors.toList());
-        List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-        List<InvoiceDTO> purchaseInvoices = getAllInvoicesByCompanyAndType(InvoiceType.PURCHASE);
-        List<Set<InvoiceProductDTO>> allPurchasedInvoiceProducts = purchaseInvoices.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-
-
-
-        int totalIncomeFromSoldProductsWithoutTax = allSoldInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
-        int totalSpendForPurchasedProductsWithoutTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithoutTax).sum();
-        int totalSpendForPurchasedProductsWithTax = allPurchasedInvoiceProducts.stream().mapToInt(this::calculateCostWithTax).sum();
-        int totalProfit=allSoldInvoiceProducts.stream().mapToInt(this::calculateTotalProfit).sum();
-
-
-
-        map.put("totalCost", totalSpendForPurchasedProductsWithTax );
-        map.put("totalTax", totalSpendForPurchasedProductsWithTax - totalSpendForPurchasedProductsWithoutTax);
-        map.put("totalSales", totalIncomeFromSoldProductsWithoutTax);
-        map.put("totalEarning", totalProfit);
-
-        return map;
+    public List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type) {
+        List<Invoice> invoices = invoiceRepository.findInvoicesByCompanyAndInvoiceType(getCompanyByLoggedInUser(), type);
+        List<InvoiceDTO> invoiceDTOS = invoices.stream().map(obj -> mapperUtil.convert(obj, new InvoiceDTO())).collect(Collectors.toList());
+        return invoiceDTOS.stream().map(this::calculateInvoiceCost).collect(Collectors.toList());
     }
 
     @Override
@@ -147,6 +119,52 @@ public class InvoiceServiceImpl implements InvoiceService {
         currentDTO.setInvoiceCostWithTax(costWithTax - costWithoutTax);
 
         return currentDTO;
+    }
+    // Dashboard Items -----------------------------------------------------//
+    @Override
+    public Map<String, Integer> calculateTotalProfitLoss() {
+
+        Map<String, Integer> map = new HashMap<>();
+
+        int totalSpendForPurchasedProductsWithoutTax= invoiceProductRepository.findAllByProfitEquals(0).stream().mapToInt(p-> p.getPrice()*p.getQty()).sum();
+        int totalTaxForPurchasedProducts=invoiceProductRepository.findAllByProfitEquals(0).stream().mapToInt(p-> p.getTax()*p.getQty()).sum();
+        int totalIncomeFromSoldProductsWithoutTax=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream().mapToInt(p-> p.getPrice()*p.getQty()).sum();
+        int totalProfit=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream().mapToInt(InvoiceProduct::getProfit).sum();
+
+        map.put("totalCost", totalSpendForPurchasedProductsWithoutTax+totalTaxForPurchasedProducts );
+        map.put("totalTax",  totalTaxForPurchasedProducts);
+        map.put("totalSales", totalIncomeFromSoldProductsWithoutTax);
+        map.put("totalEarning", totalProfit);
+
+        return map;
+    }
+
+    // Profit Report  -----------------------------------------------------//
+    @Override
+    public List<ProfitDTO> getProfitReport() {
+
+        List<ProfitDTO> list=new ArrayList<>();
+        invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream().forEach(p->{
+
+            int productProfit=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream()
+                    .filter(product->product.getName().equals(p.getName()))
+                    .mapToInt(InvoiceProduct::getProfit).sum();
+
+            int productQuantity=invoiceProductRepository.findAllByProfitIsGreaterThan(0).stream()
+                    .filter(product->product.getName().equals(p.getName()))
+                    .mapToInt(InvoiceProduct::getQty).sum();
+            list.add(new ProfitDTO(p.getName(),productQuantity,productProfit));
+
+        });
+        return list;
+    }
+
+    // Get top 3 invoices section----------------------------------------------------------------------------------------
+
+    @Override
+    public List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId) {
+        List<IInvoiceForDashBoard> invoiceForDashBoards = invoiceRepository.getDashboardInvoiceTop3Interface(companyId, companyId);
+        return invoiceForDashBoards;
     }
 
     private int calculateCostWithoutTax(Set<InvoiceProductDTO> products) {
@@ -165,62 +183,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         return result;
     }
 
-
-    private int calculateTotalProfit(Set<InvoiceProductDTO> products) {
-        int result = 0;
-        for (InvoiceProductDTO product : products) {
-            result += product.getProfit();
-        }
-        return result;
-    }
-
-    // Get top 3 invoices section----------------------------------------------------------------------------------------
-
-    @Override
-    public List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId) {
-        List<IInvoiceForDashBoard> invoiceForDashBoards = invoiceRepository.getDashboardInvoiceTop3Interface(companyId, companyId);
-        return invoiceForDashBoards;
-    }
-    @Override
-    public List<ProfitDTO> getProfitList() {
-
-        List<InvoiceDTO> saleInvoiceDTOS = getAllInvoicesByCompanyAndType(InvoiceType.SALE);
-        List<InvoiceDTO> approvedSaleInvoiceDTOS = saleInvoiceDTOS.stream().filter(obj -> obj.getInvoiceStatus() == InvoiceStatus.APPROVED).filter(obj -> obj.getInvoiceDate().getMonth() == LocalDate.now().getMonth()).collect(Collectors.toList());
-        List<Set<InvoiceProductDTO>> allSoldInvoiceProducts = approvedSaleInvoiceDTOS.stream().map(obj -> invoiceProductService.getAllInvoiceProductsByInvoiceId(obj.getId())).collect(Collectors.toList());
-        return (getProfit(allSoldInvoiceProducts.stream().flatMap(p -> p.stream()).collect(Collectors.toList())));
-    }
-
-
-    private List<ProfitDTO> getProfit(List<InvoiceProductDTO> profitList) {
-
-        boolean pointer = false;
-        List<ProfitDTO> list = new ArrayList<>();
-        for (InvoiceProductDTO product : profitList) {
-            for (ProfitDTO profitDTO : list) {
-                if (profitDTO.getName().equals(product.getName())) {
-                    profitDTO.setProfit(profitDTO.getProfit() + product.getProfit());
-                    profitDTO.setQty(profitDTO.getQty() + product.getQty());
-                    pointer = true;
-                    break;
-                }
-            }
-            if (pointer == false) {
-                list.add(new ProfitDTO(product.getName(), product.getQty(), product.getProfit()));
-            }
-            pointer=false;
-        }
-        return list;
-    }
-
-
     private Company getCompanyByLoggedInUser(){
         var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDTO userDTO = userService.findByEmail(currentUserEmail);
         User user = mapperUtil.convert(userDTO, new User());
         return user.getCompany();
     }
-
-
-
 
 }
