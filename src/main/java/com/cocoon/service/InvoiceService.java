@@ -26,8 +26,9 @@ public interface InvoiceService {
 
     List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId);
 
-    List<ProfitDTO>  getProfitList();
+    List<ProfitDTO>  getProfitReport();
 
     InvoiceDTO calculateInvoiceCost(InvoiceDTO invoiceDTO);
 
-   }
+    List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type);
+}

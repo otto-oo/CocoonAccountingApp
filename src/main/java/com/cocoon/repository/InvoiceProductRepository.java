@@ -1,6 +1,7 @@
 package com.cocoon.repository;
 
 import com.cocoon.dto.InvoiceProductDTO;
+import com.cocoon.dto.ProfitDTO;
 import com.cocoon.entity.InvoiceProduct;
 import com.cocoon.enums.InvoiceStatus;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,9 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
     List<InvoiceProduct> findAllByProfitEquals(Integer num);
 
 
+
+
+
     //findAllByInvoiceStatus(InvoiceStatus status);
 
 //    @Query(nativeQuery = true, value = "select ip.id, ip.invoice_id, ip.product_id, ip.qty, ip.price, i.invoice_type, i.invoice_date, p.name, p.unit from invoice_product ip " +
@@ -37,7 +41,6 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
 
     @Query(value = "select iv from InvoiceProduct iv join Invoice  i on iv.invoice.id=i.id join Product p on iv.product.id=p.id")
     List<InvoiceProduct> getStockReportListProducts();
-
 
 
        /*
