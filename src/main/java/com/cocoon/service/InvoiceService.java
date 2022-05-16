@@ -14,8 +14,6 @@ public interface InvoiceService {
 
     InvoiceDTO save(InvoiceDTO invoice);
 
-    List<InvoiceDTO> getAllInvoices();
-
     InvoiceDTO getInvoiceById(Long id);
 
     InvoiceDTO update(InvoiceDTO dto, Long id);
@@ -24,15 +22,13 @@ public interface InvoiceService {
 
     void deleteInvoiceById(Long id);
 
-    List<InvoiceDTO> getAllInvoicesSorted();
-
-    List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type);
-
-    InvoiceDTO calculateInvoiceCost(InvoiceDTO currentDTO);
-
     Map<String,Integer> calculateTotalProfitLoss();
 
     List<IInvoiceForDashBoard> getDashboardInvoiceTop3(Long companyId);
 
-    List<ProfitDTO>  getProfitList();
+    List<ProfitDTO>  getProfitReport();
+
+    InvoiceDTO calculateInvoiceCost(InvoiceDTO invoiceDTO);
+
+    List<InvoiceDTO> getAllInvoicesByCompanyAndType(InvoiceType type);
 }

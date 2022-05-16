@@ -43,7 +43,4 @@ public class Product extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
-    @OneToMany(mappedBy = "product")
-    private List<InvoiceProduct> invoiceProduct;
-
 }

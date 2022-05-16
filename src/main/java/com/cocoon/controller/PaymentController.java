@@ -2,43 +2,34 @@ package com.cocoon.controller;
 
 import com.cocoon.dto.PaymentDTO;
 import com.cocoon.exception.CocoonException;
+import com.cocoon.entity.common.ChargeRequest;
+import com.cocoon.implementation.StripeServiceImpl;
 import com.cocoon.service.CompanyService;
-import com.cocoon.service.InstitutionService;
 import com.cocoon.service.PaymentService;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
-import yapily.ApiException;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
 
-    private WebClient webClient = WebClient.builder().baseUrl("https://api.yapily.com").build();
+    @Value("${STRIPE_PUBLIC_KEY}")
+    private String stripePublicKey;
+
+    private final StripeServiceImpl stripeServiceImpl;
     private final PaymentService paymentService;
-    private final InstitutionService institutionService;
     private final CompanyService companyService;
 
-    public PaymentController(PaymentService paymentService, InstitutionService institutionService, CompanyService companyService) {
+    public PaymentController(StripeServiceImpl stripeServiceImpl, PaymentService paymentService, CompanyService companyService) {
+        this.stripeServiceImpl = stripeServiceImpl;
         this.paymentService = paymentService;
-        this.institutionService = institutionService;
         this.companyService = companyService;
     }
-
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void getInstitutionsAfterStartUp() {
-//        System.out.println(institutionService.getInstitutionsAtStartUp());
-//    }
 
 
     @GetMapping({"/list", "/list/{year}"})
@@ -53,23 +44,39 @@ public class PaymentController {
 
 
     @GetMapping("/newpayment/{id}")
-    public String selectInstitution(@PathVariable("id") Long id, Model model) throws ApiException {
+    public String checkout(@PathVariable("id") Long id, Model model) {
 
-        model.addAttribute("institutions", institutionService.getInstitutionsFromApi());
-        model.addAttribute("payment", paymentService.getPaymentById(id));
-
+        PaymentDTO dto = paymentService.getPaymentById(id);
+        model.addAttribute("payment", dto);
+        model.addAttribute("amount", dto.getAmount() * 100); // in cents
+        model.addAttribute("stripePublicKey", stripePublicKey);
+        model.addAttribute("currency", ChargeRequest.Currency.EUR);
+        model.addAttribute("modelId", id);
         return "payment/payment-method";
     }
 
-    @PostMapping("/newpayment/{id}")
-    public String selectInstitutionPost(@PathVariable("id") Long id, PaymentDTO paymentDTO) throws ApiException, URISyntaxException, IOException {
+    // charge controller
 
-        PaymentDTO convertedPaymentDto = paymentService.getPaymentById(id);
-        convertedPaymentDto.setInstitution(paymentDTO.getInstitution());
-        paymentService.makePaymentWithSelectedInstitution(paymentDTO.getInstitution().getId());
-        paymentService.updatePayment(convertedPaymentDto);
+    @PostMapping("/charge/{id}")
+    public String charge(ChargeRequest chargeRequest, @PathVariable("id") Long id, Model model)
+            throws StripeException {
+        chargeRequest.setDescription("Example charge");
+        chargeRequest.setCurrency(ChargeRequest.Currency.EUR);
+        Charge charge = stripeServiceImpl.charge(chargeRequest);
+        PaymentDTO dto = paymentService.updatePayment(id);
+        model.addAttribute("id", charge.getId());
+        model.addAttribute("status", charge.getStatus());
+        model.addAttribute("chargeId", charge.getId());
+        model.addAttribute("balance_transaction", charge.getBalanceTransaction());
+        model.addAttribute("company", companyService.getCompanyByLoggedInUser());
+        model.addAttribute("payment", dto);
+        return "payment/payment-success";
+    }
 
-        return "redirect:/payment/list";
+    @ExceptionHandler(StripeException.class)
+    public String handleError(Model model, StripeException ex) {
+        model.addAttribute("error", ex.getMessage());
+        return "payment/payment-success";
     }
 
     // To invoice
@@ -83,14 +90,8 @@ public class PaymentController {
         return "payment/payment-success";
     }
 
+    // charge controller
 
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        model.addAttribute("date", new Date());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("localDate", LocalDate.now());
-        model.addAttribute("java8Instant", Instant.now());
-    }
 
 
 }

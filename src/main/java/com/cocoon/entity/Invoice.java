@@ -45,7 +45,7 @@ public class Invoice extends BaseEntity implements Serializable {
     @JoinColumn(name = "sptable_id")
     private Client client;
 
-    @OneToMany(mappedBy = "invoice")
-    private List<InvoiceProduct> invoiceProduct;
+
+
 
 }

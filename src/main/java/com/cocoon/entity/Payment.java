@@ -1,6 +1,5 @@
 package com.cocoon.entity;
 
-import com.cocoon.entity.payment.Institution;
 import com.cocoon.enums.Months;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +21,6 @@ public class Payment extends BaseEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-
-    @ManyToOne
-    @JoinColumn(name = "institution_id")
-    private Institution institution;
 
     @Enumerated(EnumType.STRING)
     private Months month;
